@@ -115,10 +115,17 @@ export const EscalateTicketBody = zod.object({
 
 export const EscalateTicketResponse = zod.object({
   success: zod.boolean(),
-  ticketPayload: zod.object({
+  ticket: zod.object({
     subject: zod.string(),
-    comment: zod.string(),
+    comment: zod.object({
+      body: zod.string(),
+    }),
     priority: zod.string(),
-    sessionHash: zod.string(),
+    custom_fields: zod.array(
+      zod.object({
+        id: zod.string(),
+        value: zod.string(),
+      }),
+    ),
   }),
 });

@@ -19,13 +19,20 @@ export function TrustBadge({ score, ciBreakdown, sourceUrl, lastUpdated }: Trust
   const percentage = Math.round(score * 100);
   
   let statusColor = "text-emerald-400 bg-emerald-400/10 border-emerald-400/20";
+  let statusLabel = "Verified";
   let Icon = ShieldCheck;
   
-  if (percentage < 70) {
+  if (percentage < 60) {
     statusColor = "text-destructive bg-destructive/10 border-destructive/20";
+    statusLabel = "Low Confidence";
     Icon = AlertTriangle;
-  } else if (percentage < 90) {
+  } else if (percentage < 75) {
+    statusColor = "text-amber-400 bg-amber-400/10 border-amber-400/20";
+    statusLabel = "Verification Required";
+    Icon = AlertTriangle;
+  } else if (percentage < 92) {
     statusColor = "text-warning bg-warning/10 border-warning/20";
+    statusLabel = "Good";
     Icon = Info;
   }
 

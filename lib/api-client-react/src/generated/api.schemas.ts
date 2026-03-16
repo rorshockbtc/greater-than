@@ -55,16 +55,25 @@ export interface EscalateRequest {
   chatHistory: ChatMessage[];
 }
 
-export type EscalateResponseTicketPayload = {
+export type EscalateResponseTicketComment = {
+  body: string;
+};
+
+export type EscalateResponseTicketCustomField = {
+  id: string;
+  value: string;
+};
+
+export type EscalateResponseTicket = {
   subject: string;
-  comment: string;
+  comment: EscalateResponseTicketComment;
   priority: string;
-  sessionHash: string;
+  custom_fields: EscalateResponseTicketCustomField[];
 };
 
 export interface EscalateResponse {
   success: boolean;
-  ticketPayload: EscalateResponseTicketPayload;
+  ticket: EscalateResponseTicket;
 }
 
 export type ListArticlesParams = {

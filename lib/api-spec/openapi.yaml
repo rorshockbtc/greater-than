@@ -243,22 +243,37 @@ components:
       properties:
         success:
           type: boolean
-        ticketPayload:
+        ticket:
           type: object
           properties:
             subject:
               type: string
             comment:
-              type: string
+              type: object
+              properties:
+                body:
+                  type: string
+              required:
+                - body
             priority:
               type: string
-            sessionHash:
-              type: string
+            custom_fields:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  value:
+                    type: string
+                required:
+                  - id
+                  - value
           required:
             - subject
             - comment
             - priority
-            - sessionHash
+            - custom_fields
       required:
         - success
-        - ticketPayload
+        - ticket
