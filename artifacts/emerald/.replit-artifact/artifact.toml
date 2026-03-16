@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Emerald Support"
+version = "1.0.0"
+id = "artifacts/emerald"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+localPort = 25794
+name = "web"
+paths = ["/"]
+
+[services.development]
+run = "pnpm --filter @workspace/emerald run dev"
+
+[services.env]
+PORT = "25794"
+BASE_PATH = "/"
+
+[services.production]
+build = ["pnpm", "--filter", "@workspace/emerald", "run", "build"]
+publicDir = "artifacts/emerald/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
