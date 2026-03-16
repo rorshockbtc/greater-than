@@ -22,11 +22,7 @@ export function TrustBadge({ score, ciBreakdown, sourceUrl, lastUpdated }: Trust
   let statusLabel = "Verified";
   let Icon = ShieldCheck;
   
-  if (percentage < 60) {
-    statusColor = "text-destructive bg-destructive/10 border-destructive/20";
-    statusLabel = "Low Confidence";
-    Icon = AlertTriangle;
-  } else if (percentage < 75) {
+  if (percentage < 75) {
     statusColor = "text-amber-400 bg-amber-400/10 border-amber-400/20";
     statusLabel = "Verification Required";
     Icon = AlertTriangle;
