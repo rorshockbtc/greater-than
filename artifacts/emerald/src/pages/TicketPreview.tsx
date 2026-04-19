@@ -137,14 +137,40 @@ function TicketPreviewInner({ stored }: { stored: StoredTranscript }) {
       transcriptText,
     ].join("\n");
 
+    /**
+     * Hard 5s cap on local summarization. WebGPU generation is
+     * usually sub-second after the model is warm, but cold-start or
+     * a backed-up CPU fallback can stall for tens of seconds — we'd
+     * rather show the heuristic summary than leave the spinner up.
+     * The race resolves to either the model answer or a `__timeout`
+     * sentinel; either way the spinner clears.
+     */
+    const TIMEOUT_MS = 5000;
+    let timeoutHandle: ReturnType<typeof setTimeout> | null = null;
+    const timeoutPromise = new Promise<{ text: "__timeout" }>((resolve) => {
+      timeoutHandle = setTimeout(
+        () => resolve({ text: "__timeout" }),
+        TIMEOUT_MS,
+      );
+    });
+
     (async () => {
       try {
-        const ans = await llm.ask([], prompt, {
+        const ans = await Promise.race([
           // No bias prompt for the summarizer — it's a meta task,
           // not a user-facing answer. Keep retrieval off too: the
           // transcript is already in the prompt, no need to RAG it.
-        });
+          llm.ask([], prompt, {}),
+          timeoutPromise,
+        ]);
         if (cancelled) return;
+        if (ans.text === "__timeout") {
+          setSummaryState({
+            status: "fallback",
+            summary: heuristicSummary(stored),
+          });
+          return;
+        }
         const parsed = parseSummary(ans.text) ?? heuristicSummary(stored);
         setSummaryState({ status: "ready", summary: parsed });
       } catch {
@@ -153,11 +179,14 @@ function TicketPreviewInner({ stored }: { stored: StoredTranscript }) {
           status: "fallback",
           summary: heuristicSummary(stored),
         });
+      } finally {
+        if (timeoutHandle !== null) clearTimeout(timeoutHandle);
       }
     })();
 
     return () => {
       cancelled = true;
+      if (timeoutHandle !== null) clearTimeout(timeoutHandle);
     };
   }, [llm, redacted.turns, stored]);
 
