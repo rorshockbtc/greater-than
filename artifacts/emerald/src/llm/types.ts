@@ -36,6 +36,7 @@ export type JobKind =
   | "page"
   | "sitemap"
   | "rss"
+  | "crawl"
   | "seed"
   | "bitcoin-bundle"
   | "seed-bundle";
@@ -99,18 +100,34 @@ export interface IndexedSource {
 }
 
 export interface IngestProgress {
-  /** Pages discovered (1 for single-page mode, N for sitemap/RSS). */
+  /** Pages discovered (1 for single-page mode, N for sitemap/RSS/crawl). */
   total_pages: number;
   /** Pages whose extraction + chunking + embedding finished. */
   done_pages: number;
   /** Total chunks added so far across all pages. */
   done_chunks: number;
   /** Stage label for the UI. */
-  stage: "discovering" | "extracting" | "embedding" | "complete" | "error";
+  stage:
+    | "discovering"
+    | "extracting"
+    | "embedding"
+    | "crawling"
+    | "complete"
+    | "error";
   /** URL currently being worked on, if any. */
   current_url?: string;
   /** Error message; only set when stage === 'error'. */
   error?: string;
+  /**
+   * Crawl-only: number of pages the server reported as fetched
+   * (extracted) so far. May lead `done_pages` because embedding
+   * happens client-side after each fetch event arrives.
+   */
+  pages_fetched?: number;
+  /** Crawl-only: cumulative skip/error count from the server stream. */
+  errors?: number;
+  /** Most recent error messages, capped to a small window. */
+  recent_errors?: string[];
 }
 
 export interface RetrievedChunk extends KbChunk {

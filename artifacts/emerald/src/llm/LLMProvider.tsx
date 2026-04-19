@@ -20,7 +20,13 @@ import type {
   ThoughtTrace,
   WorkerOutbound,
 } from "./types";
-import { ingestUrl, type IngestOptions, type IngestResult } from "./ingest";
+import {
+  ingestCrawl,
+  ingestUrl,
+  type CrawlOptions,
+  type IngestOptions,
+  type IngestResult,
+} from "./ingest";
 // IMPORTANT: import constants from the worker-safe config module, NOT
 // from `./llmWorker`. Importing the worker module on the main thread
 // would drag the entire @huggingface/transformers runtime into the
@@ -168,6 +174,12 @@ interface LLMContextValue {
   embed: (text: string) => Promise<number[]>;
   /** Run a full ingestion (single page or sitemap) and store chunks locally. */
   ingest: (options: IngestOptions) => Promise<IngestResult>;
+  /**
+   * Run a streaming site crawl rooted at `options.root`. Embeds and
+   * stores each fetched page locally as it arrives. Supports cancel
+   * via `options.signal` from an `AbortController`.
+   */
+  crawl: (options: CrawlOptions) => Promise<IngestResult>;
   /**
    * Progress for whichever optional seed bundle is currently being
    * indexed. `null` when no bundle is loading. Multiple bundle requests
@@ -732,6 +744,26 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
     [status, embed],
   );
 
+  const crawl = useCallback(
+    async (options: CrawlOptions): Promise<IngestResult> => {
+      // Mirrors the `ingest` guard — embedding requires the local
+      // sentence-transformer to be ready, otherwise every fetched
+      // page would error and burn the per-IP daily page cap.
+      if (status !== "ready") {
+        options.onProgress?.({
+          total_pages: 0,
+          done_pages: 0,
+          done_chunks: 0,
+          stage: "error",
+          error: "Local model not ready — wait for download to finish.",
+        } satisfies IngestProgress);
+        throw new Error("Local model not ready");
+      }
+      return ingestCrawl(embed, options);
+    },
+    [status, embed],
+  );
+
   const value: LLMContextValue = {
     status,
     progress,
@@ -741,6 +773,7 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
     ask,
     embed,
     ingest,
+    crawl,
     bundleProgress,
     requestSeedBundle,
     cloudBudget: {

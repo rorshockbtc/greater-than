@@ -12,6 +12,13 @@ import {
   IngestSitemapBody,
   IngestSitemapResponse,
 } from "@workspace/api-zod";
+import { isPathAllowed, parseRobotsTxt } from "../lib/robotsTxt";
+import {
+  DAILY_PAGE_CAP,
+  getUsage,
+  refundPage,
+  reservePages,
+} from "../lib/dailyPageCap";
 
 const router: IRouter = Router();
 
@@ -510,6 +517,330 @@ router.post("/ingest/rss", async (req: Request, res: Response): Promise<void> =>
     const message = err instanceof Error ? err.message : "Feed fetch failed";
     res.status(502).json({ error: `Failed to parse feed: ${message}` });
   }
+});
+
+/* -------------------------------------------------------------- */
+/*  /ingest/crawl  (NDJSON-streaming site walk)                   */
+/* -------------------------------------------------------------- */
+
+/**
+ * Crawl request body. Tight upper bounds because we are running on
+ * shared infrastructure and a careless input would saturate it.
+ *
+ * - `maxPages`: hard cap on pages fetched in this single crawl.
+ * - `maxDepth`: link-graph depth from the root, where the root is 0.
+ * - `delayMs`: polite delay between page fetches. We do NOT skip the
+ *   delay even when fetches fail — the client signaled "be polite",
+ *   and an error response can still imply load on the upstream.
+ *
+ * Validated inline rather than via the @workspace/api-zod codegen
+ * because `/ingest/crawl` returns a NDJSON stream — orval doesn't
+ * model streaming responses, and the front-end consumes the stream
+ * with raw `fetch` for the same reason.
+ */
+interface IngestCrawlInput {
+  root: string;
+  maxPages: number;
+  maxDepth: number;
+  delayMs: number;
+}
+
+function parseCrawlBody(raw: unknown): IngestCrawlInput | { error: string } {
+  if (!raw || typeof raw !== "object") return { error: "Body must be a JSON object." };
+  const obj = raw as Record<string, unknown>;
+  const root = obj["root"];
+  if (typeof root !== "string" || !root.trim()) {
+    return { error: "`root` must be a non-empty string URL." };
+  }
+  const maxPages = clampInt(obj["maxPages"], 1, 200, 50);
+  const maxDepth = clampInt(obj["maxDepth"], 0, 4, 2);
+  const delayMs = clampInt(obj["delayMs"], 0, 10_000, 1_000);
+  return { root, maxPages, maxDepth, delayMs };
+}
+
+function clampInt(value: unknown, lo: number, hi: number, fallback: number): number {
+  const n = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(n)) return fallback;
+  const i = Math.floor(n);
+  if (i < lo) return lo;
+  if (i > hi) return hi;
+  return i;
+}
+
+/**
+ * Stream a NewlineDelimited JSON event. We flush after each line so
+ * the browser orchestrator sees progress in real time rather than in
+ * one buffered burst at the end.
+ */
+function emit(res: Response, event: Record<string, unknown>): void {
+  res.write(JSON.stringify(event) + "\n");
+}
+
+/**
+ * Same-origin link extractor. We ONLY follow links whose URL.origin
+ * matches the root — this keeps the crawler bounded and prevents it
+ * from wandering into ad networks or analytics domains via embedded
+ * 3p anchors.
+ */
+function extractSameOriginLinks(
+  html: string,
+  baseUrl: string,
+  rootOrigin: string,
+): string[] {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  // Cheap regex pass — JSDOM is already involved in the extract
+  // step but here we only care about anchors and we don't want a
+  // second full DOM build per page.
+  const re = /<a\b[^>]*\bhref=["']([^"'#]+)["']/gi;
+  for (let m: RegExpExecArray | null; (m = re.exec(html)); ) {
+    const href = m[1];
+    if (!href) continue;
+    if (href.startsWith("javascript:") || href.startsWith("mailto:")) continue;
+    let next: URL;
+    try {
+      next = new URL(href, baseUrl);
+    } catch {
+      continue;
+    }
+    if (next.origin !== rootOrigin) continue;
+    // Drop the fragment — same page from a crawl perspective.
+    next.hash = "";
+    const norm = next.toString();
+    if (!seen.has(norm)) {
+      seen.add(norm);
+      out.push(norm);
+    }
+  }
+  return out;
+}
+
+interface QueueItem {
+  url: string;
+  depth: number;
+}
+
+router.post("/ingest/crawl", async (req: Request, res: Response): Promise<void> => {
+  const parsed = parseCrawlBody(req.body);
+  if ("error" in parsed) {
+    res.status(400).json({ error: parsed.error });
+    return;
+  }
+  const safeRoot = await resolveSafeUrl(parsed.root);
+  if (!safeRoot) {
+    res.status(400).json({ error: "Root URL must resolve to a public http(s) address" });
+    return;
+  }
+
+  const ip = req.ip ?? "unknown";
+  const usageBefore = getUsage(ip);
+  if (usageBefore.used >= DAILY_PAGE_CAP) {
+    res.status(429).json({
+      error: "Daily crawl page-count cap exceeded for this IP.",
+      cap: DAILY_PAGE_CAP,
+      used: usageBefore.used,
+      resetsInMs: usageBefore.resetsInMs,
+    });
+    return;
+  }
+
+  // From here on we stream NDJSON. Set headers BEFORE the first
+  // write so the client knows what to parse.
+  res.setHeader("content-type", "application/x-ndjson; charset=utf-8");
+  res.setHeader("cache-control", "no-store");
+  res.setHeader("x-accel-buffering", "no");
+  res.flushHeaders?.();
+
+  const rootUrl = safeRoot.url;
+  const rootOrigin = rootUrl.origin;
+  const { maxPages, maxDepth, delayMs } = parsed;
+
+  // Track per-IP cap remaining for THIS crawl. We pre-reserve the
+  // smaller of (maxPages, remaining-quota) up-front, then refund as
+  // we go if we skip pages for non-fetch reasons. This avoids a slow
+  // crawl being interrupted by a sibling request landing the cap.
+  const granted = reservePages(ip, Math.min(maxPages, DAILY_PAGE_CAP));
+  if (granted === 0) {
+    emit(res, { event: "error", message: "Daily page cap reached." });
+    res.end();
+    return;
+  }
+  const localCap = granted;
+
+  // Cancellation: if the client hangs up (browser AbortController),
+  // bail out of the crawl loop ASAP.
+  let aborted = false;
+  req.on("close", () => {
+    aborted = true;
+  });
+
+  // robots.txt — best-effort. If we can't fetch it (404, timeout,
+  // upstream 5xx) we treat it as fully permissive, which matches how
+  // most polite crawlers behave.
+  let robotsRules = parseRobotsTxt("");
+  try {
+    const robotsUrl = `${rootOrigin}/robots.txt`;
+    const safeRobots = await resolveSafeUrl(robotsUrl);
+    if (safeRobots) {
+      const { text } = await fetchText(safeRobots.url.toString(), {
+        headers: { accept: "text/plain,*/*;q=0.8" },
+      });
+      robotsRules = parseRobotsTxt(text);
+    }
+  } catch {
+    // Permissive on failure.
+  }
+
+  // Sitemap-first seeding: try `<root>/sitemap.xml`. If it resolves
+  // and parses, queue every same-origin URL it lists at depth 1
+  // (depth 0 is reserved for the root itself). Failure is silent —
+  // the crawl falls back to pure BFS.
+  const queue: QueueItem[] = [{ url: rootUrl.toString(), depth: 0 }];
+  try {
+    const sitemapUrl = `${rootOrigin}/sitemap.xml`;
+    const safeSitemap = await resolveSafeUrl(sitemapUrl);
+    if (safeSitemap) {
+      const { text } = await fetchText(safeSitemap.url.toString(), {
+        headers: { accept: "application/xml,text/xml,*/*;q=0.8" },
+      });
+      const xmlParser = new XMLParser({ ignoreAttributes: true, trimValues: true });
+      const doc = xmlParser.parse(text) as Record<string, unknown>;
+      const { pages } = collectUrls(doc);
+      for (const p of pages) {
+        try {
+          if (new URL(p).origin === rootOrigin) {
+            queue.push({ url: p, depth: 1 });
+          }
+        } catch {
+          // skip malformed
+        }
+      }
+    }
+  } catch {
+    // No sitemap — fall back to pure BFS.
+  }
+
+  const enqueued = new Set<string>(queue.map((q) => q.url));
+  const fetched = new Set<string>();
+  let pagesFetched = 0;
+  let pagesUsed = 0; // counts toward localCap; only successful fetches
+
+  // Tell the client the discovery phase has primed the queue.
+  emit(res, {
+    event: "queued",
+    discovered: queue.length,
+    fromSitemap: queue.length > 1,
+  });
+
+  for (let i = 0; i < queue.length; i++) {
+    if (aborted) break;
+    if (pagesUsed >= localCap) break;
+    if (pagesFetched >= maxPages) break;
+    const item = queue[i]!;
+    if (fetched.has(item.url)) continue;
+    fetched.add(item.url);
+
+    let pageUrl: URL;
+    try {
+      pageUrl = new URL(item.url);
+    } catch {
+      continue;
+    }
+
+    if (!isPathAllowed(robotsRules, pageUrl.pathname + pageUrl.search)) {
+      emit(res, {
+        event: "skipped",
+        url: item.url,
+        reason: "robots.txt disallows this path.",
+      });
+      continue;
+    }
+
+    // Re-validate every URL through the SSRF guard — sitemap entries
+    // and href targets are user-influenced.
+    const safe = await resolveSafeUrl(item.url);
+    if (!safe) {
+      emit(res, {
+        event: "error",
+        url: item.url,
+        message: "URL did not resolve to a safe public address.",
+      });
+      continue;
+    }
+
+    pagesUsed += 1;
+    emit(res, {
+      event: "discovered",
+      url: item.url,
+      depth: item.depth,
+      index: pagesFetched,
+    });
+
+    try {
+      const { text: html, finalUrl } = await fetchText(safe.url.toString());
+      const dom = new JSDOM(html, { url: finalUrl });
+      const reader = new Readability(dom.window.document);
+      const article = reader.parse();
+      const contentText =
+        article?.textContent?.replace(/\s+/g, " ").trim() ?? "";
+      const title = article?.title ?? null;
+      pagesFetched += 1;
+      emit(res, {
+        event: "fetched",
+        url: finalUrl,
+        title,
+        contentText,
+        length: contentText.length,
+        index: pagesFetched - 1,
+      });
+
+      // Discover more links — only if we still have budget AND we
+      // haven't hit max depth. Otherwise it's wasted work.
+      if (item.depth < maxDepth && pagesFetched < maxPages) {
+        const links = extractSameOriginLinks(html, finalUrl, rootOrigin);
+        let added = 0;
+        for (const link of links) {
+          if (queue.length - i >= maxPages * 4) break; // bound queue
+          if (!enqueued.has(link)) {
+            enqueued.add(link);
+            queue.push({ url: link, depth: item.depth + 1 });
+            added += 1;
+          }
+        }
+        if (added > 0) {
+          emit(res, { event: "queued", discovered: enqueued.size });
+        }
+      }
+    } catch (err) {
+      // Page failed — refund the budget slot so a 404-heavy site
+      // doesn't drain the per-IP daily cap on errors alone.
+      refundPage(ip);
+      pagesUsed -= 1;
+      emit(res, {
+        event: "error",
+        url: item.url,
+        message: err instanceof Error ? err.message : "Fetch failed",
+      });
+    }
+
+    if (delayMs > 0 && !aborted && i + 1 < queue.length) {
+      await new Promise((r) => setTimeout(r, delayMs));
+    }
+  }
+
+  // Refund any pre-reserved slots we didn't actually use.
+  const unused = localCap - pagesUsed;
+  for (let k = 0; k < unused; k++) refundPage(ip);
+
+  emit(res, {
+    event: "done",
+    pagesFetched,
+    discovered: enqueued.size,
+    aborted,
+    capUsed: getUsage(ip).used,
+    capLimit: DAILY_PAGE_CAP,
+  });
+  res.end();
 });
 
 export default router;
