@@ -738,11 +738,22 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
     setOpenClawConfigState((prev) => {
       const next: OpenClawConfig = { ...prev, ...patch };
       persistOpenClawConfig(next);
+      // Only the connection-relevant fields invalidate health. Toggling
+      // `enabled` on its own should NOT force a re-test — a user who
+      // just successfully tested and is now flipping the master switch
+      // expects the active state to engage immediately. (Note: the
+      // current React state may not reflect this `prev` snapshot, but
+      // the comparison against `next` vs `prev` is the right basis for
+      // the invalidation decision.)
+      const endpointChanged =
+        next.baseUrl !== prev.baseUrl ||
+        next.model !== prev.model ||
+        next.apiKey !== prev.apiKey;
+      if (endpointChanged) {
+        setOpenClawHealth({ state: "idle" });
+      }
       return next;
     });
-    // Any config change invalidates the prior health result — force
-    // a re-test before a stale "ok" is treated as authoritative.
-    setOpenClawHealth({ state: "idle" });
   }, []);
 
   const testOpenClawConnection = useCallback(async (
