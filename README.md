@@ -96,7 +96,7 @@ The Greater frontend is served at `/` (or the artifact's preview path). The Bloc
 | `/` | Greater landing — six persona cards |
 | `/about` | About Greater |
 | `/openclaw` | OpenClaw aspirational page |
-| `/personas/:slug` | Per-persona case study (one of: `startups`, `faith`, `schools`, `small-business`, `healthtech`, `fintech`) |
+| `/bots/:slug` | Per-persona case study (one of: `startups`, `faith`, `schools`, `small-business`, `healthtech`, `fintech`) |
 | `/demo/:slug` | "Coming online" holding screen for non-FinTech personas |
 | `/demo/blockstream` | Live Blockstream support demo (FinTech persona showcase) |
 
