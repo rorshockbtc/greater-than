@@ -233,7 +233,7 @@ interface LLMContextValue {
    * reachable and returns a sane shape. Updates `openClawHealth` and
    * also returns the result so callers can react synchronously.
    */
-  testOpenClawConnection: () => Promise<OpenClawHealth>;
+  testOpenClawConnection: (override?: Partial<OpenClawConfig>) => Promise<OpenClawHealth>;
   clearCacheAndReload: () => Promise<void>;
 }
 
@@ -745,8 +745,14 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
     setOpenClawHealth({ state: "idle" });
   }, []);
 
-  const testOpenClawConnection = useCallback(async (): Promise<OpenClawHealth> => {
-    const cfg = openClawConfigRef.current;
+  const testOpenClawConnection = useCallback(async (
+    override?: Partial<OpenClawConfig>,
+  ): Promise<OpenClawHealth> => {
+    // Merge any caller-supplied overrides on top of the persisted
+    // config so the panel can test "what the user just typed" without
+    // racing the React effect that syncs the ref. This was the source
+    // of a real bug where dirty edits were tested against stale values.
+    const cfg: OpenClawConfig = { ...openClawConfigRef.current, ...override };
     setOpenClawHealth({ state: "testing" });
     const baseUrl = normalizeBaseUrl(cfg.baseUrl);
     if (!baseUrl) {

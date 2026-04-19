@@ -69,8 +69,12 @@ export function OpenClawPanel({
   const handleTest = async () => {
     // Persist any in-flight edits before pinging — the user's intent
     // is "test what I just typed", not "test the previous values".
+    // Pass the draft values into testOpenClawConnection directly too,
+    // because setOpenClawConfig only updates the underlying ref via a
+    // React effect on the *next* render — so a synchronous test would
+    // otherwise hit stale values.
     if (dirty) llm.setOpenClawConfig({ baseUrl, model, apiKey });
-    await llm.testOpenClawConnection();
+    await llm.testOpenClawConnection({ baseUrl, model, apiKey });
   };
 
   const handleToggle = (enabled: boolean) => {
