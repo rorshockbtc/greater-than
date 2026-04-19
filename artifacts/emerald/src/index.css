@@ -287,3 +287,44 @@
   font-feature-settings: "ss01", "ss02";
   letter-spacing: -0.022em;
 }
+
+/**
+ * Accessibility — WCAG 2.2 AA pass.
+ *
+ * 1. Visible focus ring on every interactive element. Browser default
+ *    focus rings vary; we paint a consistent pink ring with a 2px
+ *    offset against the page background so it survives both light
+ *    and dark surfaces without requiring per-component overrides.
+ * 2. Respect `prefers-reduced-motion`. Framer Motion already honors
+ *    the OS preference for its motion components, but we also
+ *    neutralize raw CSS transitions and any `animate-*` utilities
+ *    that ship with Tailwind so the entire site goes still.
+ */
+:where(a, button, [role="button"], input, textarea, select, summary, [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/**
+ * `prose-styles` — light typographic defaults for the Compliance and
+ * case-study bodies. Intentionally minimal; we don't load `@tailwind/
+ * typography` for one page.
+ */
+.prose-styles p {
+  margin-block: 0;
+}
+.prose-styles strong {
+  color: hsl(var(--foreground));
+}

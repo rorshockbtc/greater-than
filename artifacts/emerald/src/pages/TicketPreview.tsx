@@ -19,6 +19,7 @@ import {
   type TicketSummary,
 } from "@/lib/buildTicket";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { SkipToContent } from "@/components/SkipToContent";
 
 /**
  * Support-ticket preview screen. Lives at `/demo/:slug/ticket` and
@@ -232,7 +233,8 @@ function TicketPreviewInner({ stored }: { stored: StoredTranscript }) {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-slate-50 text-slate-900">
+      <SkipToContent />
       <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
           <button

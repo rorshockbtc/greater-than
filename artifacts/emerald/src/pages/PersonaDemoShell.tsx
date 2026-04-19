@@ -3,6 +3,7 @@ import { useRoute, Link } from "wouter";
 import { ChevronRight } from "lucide-react";
 import { ChatWidget } from "@/components/ChatWidget";
 import { ContactCTASection } from "@/components/ContactCTASection";
+import { SkipToContent } from "@/components/SkipToContent";
 import { ScenarioModal } from "@/components/ScenarioModal";
 import { PipeProvider } from "@/pipes/PipeContext";
 import { useLLM } from "@/llm/LLMProvider";
@@ -51,10 +52,11 @@ function PersonaDemoShellInner({ persona }: { persona: Persona }) {
   return (
     <PipeProvider persona={persona.slug as PipePersona}>
       <div className="min-h-screen bg-white text-foreground flex flex-col">
+        <SkipToContent />
         <MockNav persona={persona} />
         <MockBreadcrumb persona={persona} />
 
-        <main className="flex-1">
+        <main id="main-content" tabIndex={-1} className="flex-1">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <article>
               <h1 className="text-3xl sm:text-4xl font-bold text-foreground leading-tight mb-5">

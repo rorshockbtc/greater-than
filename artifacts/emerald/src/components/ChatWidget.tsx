@@ -9,6 +9,7 @@ import { KnowledgePanel } from './KnowledgePanel';
 import { OpenClawPanel } from './OpenClawPanel';
 import { PipeStatusPanel } from './PipeStatusPanel';
 import { BiasToggle } from './BiasToggle';
+import { DisclaimerBanner } from './DisclaimerBanner';
 import { ModelInfoPopover } from '@/llm/ModelInfoPopover';
 import {
   DropdownMenu,
@@ -714,8 +715,23 @@ export function ChatWidget({
               </div>
             )}
 
-            <div className="flex-1 overflow-y-auto p-4">
+            <div
+              className="flex-1 overflow-y-auto p-4"
+              role="log"
+              aria-live="polite"
+              aria-label="Conversation transcript"
+            >
               <div className={cn(isFullScreen ? 'max-w-3xl mx-auto' : '')}>
+                {/*
+                  Per-persona compliance disclaimer banner. Rendered as
+                  the first transcript entry so it lives where the
+                  visitor's eye already is, dismissible per session,
+                  announced as `role="status"`. Honesty rules + per-
+                  persona copy live in `data/disclaimers.ts`.
+                */}
+                {personaSlug && (
+                  <DisclaimerBanner personaSlug={personaSlug} />
+                )}
                 {messages.map((msg) => (
                   <ChatMessage key={msg.id} {...msg} compact={!isFullScreen} />
                 ))}
@@ -779,7 +795,7 @@ export function ChatWidget({
                 </button>
               </div>
               <div className="text-center mt-1 text-[9px] text-[hsl(var(--widget-muted))] opacity-60">
-                {llm.status === 'ready' ? 'Local inference · WebGPU · no telemetry' : 'Powered by Greater'}
+                {llm.status === 'ready' ? 'Local inference · WebGPU · message content stays in-browser' : 'Powered by Greater'}
               </div>
             </div>
           </motion.div>

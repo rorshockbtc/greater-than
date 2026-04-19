@@ -3,6 +3,7 @@ import type { LucideIcon } from 'lucide-react';
 import { ShieldAlert, Lock, KeyRound, Smartphone, AlertTriangle, ChevronRight, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { ChatWidget } from '@/components/ChatWidget';
 import { ContactCTASection } from '@/components/ContactCTASection';
+import { SkipToContent } from '@/components/SkipToContent';
 import { ScenarioModal } from '@/components/ScenarioModal';
 import { PipeProvider } from '@/pipes/PipeContext';
 import { useLLM } from '@/llm/LLMProvider';
@@ -51,6 +52,7 @@ export default function Home() {
     // pipe=null and the chat widget runs in Generic mode visibly.
     <PipeProvider persona="fintech">
     <div className="min-h-screen bg-white text-foreground flex flex-col">
+      <SkipToContent />
       <nav className="bg-[#111316] text-white sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -76,7 +78,7 @@ export default function Home() {
         </div>
       </nav>
 
-      <div className="border-b border-gray-200 bg-gray-50/50">
+      <div id="main-content" tabIndex={-1} className="border-b border-gray-200 bg-gray-50/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <a href="https://help.blockstream.com" className="text-emerald-600 hover:text-emerald-700 transition-colors">Blockstream Help Center</a>

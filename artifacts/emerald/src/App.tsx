@@ -12,6 +12,10 @@ import DemoHolding from "@/pages/DemoHolding";
 import BlockstreamDemo from "@/pages/BlockstreamDemo";
 import PersonaDemoShell from "@/pages/PersonaDemoShell";
 import TicketPreview from "@/pages/TicketPreview";
+import HowItWorks from "@/pages/HowItWorks";
+import Changelog from "@/pages/Changelog";
+import Proof from "@/pages/Proof";
+import Compliance from "@/pages/Compliance";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -52,6 +56,10 @@ function Router() {
           <Switch>
             <Route path="/" component={Home} />
             <Route path="/about" component={About} />
+            <Route path="/how-it-works" component={HowItWorks} />
+            <Route path="/proof" component={Proof} />
+            <Route path="/changelog" component={Changelog} />
+            <Route path="/compliance" component={Compliance} />
             <Route path="/openclaw" component={OpenClaw} />
             <Route path="/bots/:slug" component={PersonaPage} />
             <Route path="/demo/:slug" component={DemoHolding} />

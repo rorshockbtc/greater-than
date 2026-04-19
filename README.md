@@ -1,316 +1,231 @@
 # Greater
 
-Sovereign-by-default support bots. FOSS shell, persona-tuned demos, browser-local inference.
+> Sovereign-by-default support bots. FOSS shell, persona-tuned demos,
+> browser-local inference. **No per-message API tax. No vendor between
+> you and your customers.**
 
-Greater is a free, open-source shell for industry-specific support chatbots that run entirely in the visitor's browser. There is no per-message API cost, no third-party data egress in the default flow, and no vendor mediating between you and your customers.
+[![License: MIT](https://img.shields.io/badge/License-MIT-FE299E.svg)](#license)
+[![Live demo](https://img.shields.io/badge/live%20demo-FinTech-FE299E)](https://hire.colonhyphenbracket.pink/demo/blockstream)
+[![Read the source](https://img.shields.io/badge/source-github-555.svg)](https://github.com/rorshockbtc/greater-than)
+[![Compliance](https://img.shields.io/badge/compliance-WCAG%202.2%20AA-2563eb.svg)](./COMPLIANCE.md)
+[![Built by](https://img.shields.io/badge/built%20by-colonhyphenbracket-FE299E.svg)](https://colonhyphenbracket.pink)
 
-The shell ships with six persona templates — **Startups**, **Faith-Based Organizations**, **Private Schools & Families**, **Small Businesses**, **HealthTech**, and **FinTech** — each with a distinct declared perspective, a curated corpus pipeline, and its own escalation flow. The live demo on `/demo/blockstream` is the FinTech persona, ported from the original Emerald support bot prototype.
+Greater is a free, open-source shell for industry-specific support
+chatbots that — by default — answer in the visitor's browser using
+WebGPU. There is no per-message API cost, message content stays
+in-browser on the default flow, and there is no vendor mediating
+between you and your customers. (Caveats: the marketing site loads
+Google webfonts, and there is a labelled, client-capped cloud
+fallback for browsers without WebGPU. See
+[`COMPLIANCE.md`](./COMPLIANCE.md) for the full posture.)
 
-Greater is built and maintained by [colonhyphenbracket](https://hire.colonhyphenbracket.pink). The shell is free; the corpus curation, integration, and architectural work for production deployments is for hire.
+The shell is MIT. The model is open-weight (Llama-3.2-1B-Instruct,
+q4f16). The corpus is yours. The runtime cost is the visitor's device.
 
-## Project status
+The work that gets hired — and the work that actually closes
+deals — is the corpus curation, the persona tuning, the
+domain-specific Pipes that wrap proprietary knowledge bundles, and
+the integration into your stack. That's `colonhyphenbracket`.
 
-This repository was originally `emerald-support-bot` — a Blockstream-specific demo — and now lives at [`github.com/rorshockbtc/greater-than`](https://github.com/rorshockbtc/greater-than) after being pivoted into Greater, the platform. The Blockstream demo is preserved at `/demo/blockstream` as the live FinTech showcase.
+---
 
-| Area | Status |
-|------|--------|
-| Greater shell (landing, six personas, case studies, contact form) | ✅ Live |
-| Blockstream / FinTech live demo | ✅ Live (ported from Emerald) |
-| Browser-local LLM (WebGPU + Transformers.js) | ✅ Wired (Llama-3.2-1B-Instruct q4f16 + bge-small-en-v1.5, IndexedDB vector store, thought-trace UI, cloud fallback) |
-| Generic web-scraping ingestion | ✅ Live (server-side Readability extraction + sitemap walker; in-browser chunking, embedding, and IndexedDB persistence; no LLM during ingestion) |
-| Bitcoin knowledge ingestion (Core/Knots/OpTech/BitcoinTalk) with bias tagging | ✅ Builder script live (bias toggle UI lands in Phase 5); built bundle is gitignored |
-| Pipes (curated knowledge bundles) + bias toggle UI | ✅ Loader, registry, status panel, Core/Knots/Neutral toggle live (manifests gitignored under `data/pipes/`); pipes.pink remote client is a local stub |
-| OpenClaw signed-corpus catalog | 🪐 Aspirational — see `/openclaw` |
+## Try it now
 
-## Architecture
+The launch demo is wired live: a FinTech bot grounded in the
+Blockstream support corpus.
 
-```
-greater/
-├── artifacts/
-│   ├── api-server/          Express API — Blockstream demo intent matcher + LLM
-│   └── emerald/             Greater frontend (React + Vite, wouter routing)
-│       ├── src/
-│       │   ├── pages/
-│       │   │   ├── Home.tsx              Greater landing — six persona cards
-│       │   │   ├── PersonaPage.tsx       Per-persona case study
-│       │   │   ├── DemoHolding.tsx       "Coming online" holding screen
-│       │   │   ├── BlockstreamDemo.tsx   Live FinTech demo (Blockstream branded)
-│       │   │   ├── About.tsx             About Greater
-│       │   │   └── OpenClaw.tsx          Aspirational OpenClaw page
-│       │   ├── components/
-│       │   │   ├── Layout.tsx            Greater nav + footer + contact CTA
-│       │   │   ├── ContactFormModal.tsx  Web3Forms direct-POST contact form
-│       │   │   ├── ChatWidget.tsx        Blockstream demo chat widget
-│       │   │   └── ...
-│       │   ├── llm/                      Browser-local LLM stack
-│       │   │   ├── llmWorker.ts          Web Worker — Transformers.js (WebGPU)
-│       │   │   ├── LLMProvider.tsx       Mounted above router; persists across nav
-│       │   │   ├── vectorStore.ts        IndexedDB-backed cosine-sim retriever
-│       │   │   ├── seedCorpus.ts         Hand-curated Bitcoin/Blockstream chunks
-│       │   │   └── ModelInfoPopover.tsx  (i) popover + cache-clear control
-│       │   ├── data/
-│       │   │   └── personas.ts           Single source of truth for the 6 bots
-│       │   └── index.css                 CHB design system tokens
-│       └── public/images/personas/       Persona hero images
-├── lib/
-│   ├── api-spec/            OpenAPI 3.1 spec + Orval config
-│   ├── api-client-react/    Generated React Query hooks
-│   ├── api-zod/             Generated Zod schemas
-│   └── db/                  Drizzle ORM + PostgreSQL schema
-└── data/                    Gitignored: pipes/, weights/ (production-only)
-```
+→ **[hire.colonhyphenbracket.pink/demo/blockstream](https://hire.colonhyphenbracket.pink/demo/blockstream)**
 
-## Design system
+The other five personas (HealthTech, Startups, Faith, Schools,
+Small Business) ship as persona-tuned holding pages — the seed
+corpora are still being curated.
 
-Greater follows the [colonhyphenbracket](https://hire.colonhyphenbracket.pink) design system:
+---
 
-- **Pink** `#FE299E` — primary, accent, ring
-- **Blue** `#01a9f4` — secondary callouts and iconography
-- **Inter** — body & headings
-- **JetBrains Mono** — labels, eyebrows, microtype
-- **Major Mono Display** — wordmark only (the `>` in `>greater`)
-- No box-shadows; elevation is implemented via overlay utilities (`.hover-elevate`, `.active-elevate`)
-- Pill buttons; thin borders; lots of negative space
+## What you get out of the box
 
-The Blockstream demo route deliberately retains the Blockstream brand styling (dark nav, emerald accents, light article body) to remain an authentic representation of the original prototype.
+- **Six industry personas** — fintech, healthtech, startups, faith,
+  schools, small-business. Each ships with a written-out failure
+  mode, a pivot story, a tuned welcome message, and a Pipe slot for
+  the proprietary knowledge bundle.
+- **Browser-local LLM** — Llama-3.2-1B-Instruct (q4f16) and
+  bge-small-en-v1.5 running in a Web Worker on WebGPU.
+- **IndexedDB vector store** — RAG retrieval lives on the visitor's
+  device. The corpus you ship is cached after first load.
+- **Cited answers** — every retrieved chunk is shown to the visitor
+  via the "Thought trace" disclosure on every reply.
+- **Honest cloud fallback** — when WebGPU isn't ready, the widget
+  can call a server endpoint for the first three turns, badged
+  "Cloud" so provenance is visible. After the cap, the badge changes
+  to "Local-only · cloud rate-limited".
+- **Generic web-scraping ingestion** — paste a URL or sitemap into
+  the chat widget's settings menu; the server fetches it (Mozilla
+  Readability), the browser chunks and embeds it, IndexedDB persists
+  it. No LLM in the ingestion path.
+- **Pipes** — a Pipe is a curated, opinionated knowledge bundle
+  authored by a domain expert. Drop manifests into `data/pipes/`
+  (gitignored) and the Vite plugin inlines them as
+  `virtual:greater-pipes`.
+- **Bias-aware retrieval** — the Bitcoin Pipe ships with Core,
+  Knots, and Neutral perspectives; the chat shows a bias toggle when
+  multiple perspectives are mounted, and the transcript drops an
+  inline note when the visitor switches.
+- **Compliance posture** — written-down, deep-linkable, honest. See
+  [`COMPLIANCE.md`](./COMPLIANCE.md) and the `/compliance` page.
+- **Anti-AI design pass** — hand-drawn SVGs, build-stamp footer,
+  margin notes, asymmetric layout cues, real first-person copy.
+  This is a real product built by a real person.
+- **WCAG 2.2 AA** — focus rings, skip-to-content, reduced-motion,
+  `aria-live` on streaming chat, role/status disclaimers.
 
-## Running locally
+---
 
-### Prerequisites
+## FOSS vs. proprietary — what's in this repo, what isn't
 
-- Node.js 24+
-- pnpm
-- PostgreSQL 14+ (`DATABASE_URL` env var)
-- A [Web3Forms](https://web3forms.com) access key for the contact form (`VITE_WEB3FORMS_ACCESS_KEY`)
-- A [Together.AI](https://together.ai) API key for the Blockstream demo's server-side fallback (`TOGETHER_API_KEY`)
+**FOSS, in this repo (MIT-licensed):**
 
-### Setup
+- The full Greater shell (`artifacts/emerald`).
+- The chat widget, model loader, vector store, ingestion
+  orchestrator, KnowledgePanel, BiasToggle.
+- Six persona scaffolds with case-study copy.
+- The Bitcoin seed builder (`scripts/src/build-bitcoin-seed.ts`) —
+  pulls OpTech, the last 12 months of `bitcoin/bitcoin` and
+  `bitcoinknots/bitcoin` commits, and a checked-in list of
+  BitcoinTalk threads.
+- The compliance document and the `/compliance` page.
+- The persona case studies and the marketing site.
+
+**Proprietary, gitignored, not in this repo:**
+
+- `data/pipes/` — Pipe manifests. The Bitcoin Pipe (Core/Knots
+  bias-aware) is the reference Pipe that ships behind the
+  `/demo/blockstream` route. Authoring more Pipes is the work
+  `colonhyphenbracket` does for hire.
+- `data/seeds/bitcoin.json` — the output of the Bitcoin seed
+  builder. Anyone can regenerate it from this repo (the script is
+  open) but the cached artifact is not committed.
+- `artifacts/emerald/public/seeds/` — the public-static copy that
+  the LLMProvider fetches on first run for the FinTech demo.
+
+If you want to run the FinTech demo locally with the proprietary
+Bitcoin bundle pre-loaded, run the seed builder yourself (see
+[Quickstart](#quickstart) below). Otherwise the demo will fall back
+to ingesting the Blockstream support corpus on first visit.
+
+---
+
+## Quickstart
+
+### Run the marketing site + chat shell locally
 
 ```bash
 pnpm install
-pnpm --filter @workspace/db run push
-pnpm --filter @workspace/scripts run seed-articles
-pnpm run dev
+pnpm --filter @workspace/emerald run dev
+# → http://localhost:5173
 ```
 
-The Greater frontend is served at `/` (or the artifact's preview path). The Blockstream live demo is at `/demo/blockstream`. The API server runs on its own port.
+### Run the API server (for ingestion + escalation)
 
-## Routes
+```bash
+pnpm --filter @workspace/api-server run dev
+```
 
-| Route | Page |
-|-------|------|
-| `/` | Greater landing — six persona cards |
-| `/about` | About Greater |
-| `/openclaw` | OpenClaw aspirational page |
-| `/bots/:slug` | Per-persona case study (one of: `startups`, `faith`, `schools`, `small-business`, `healthtech`, `fintech`) |
-| `/demo/:slug` | "Coming online" holding screen for non-FinTech personas |
-| `/demo/blockstream` | Live Blockstream support demo (FinTech persona showcase) |
+### Build the Bitcoin seed bundle (optional, ~10–25 min cold)
 
-## Knowledge ingestion
+```bash
+# Anonymous; sleeps through GitHub rate-limit windows.
+pnpm exec tsx scripts/src/build-bitcoin-seed.ts
 
-Greater's RAG corpus has two layers:
+# Faster + higher rate limit (recommended for dev):
+GITHUB_TOKEN=ghp_xxx pnpm exec tsx scripts/src/build-bitcoin-seed.ts
+```
 
-1. **The generic, in-product scraper.** Open the chat widget, click the
-   ⚙ settings icon, and choose **Manage knowledge base**. Paste a URL or
-   sitemap and it will be fetched server-side (`POST /api/ingest/extract`
-   and `POST /api/ingest/sitemap`), cleaned with Mozilla Readability,
-   chunked deterministically in the browser, embedded with the local
-   sentence-transformer, and persisted to IndexedDB. **No LLM is invoked
-   during ingestion** — extraction and embedding are deterministic.
+The script writes `data/seeds/bitcoin.json` (gitignored). It also
+syncs a public-fetchable copy to `artifacts/emerald/public/seeds/`
+so the LLMProvider can pull it on first run. Both directories are
+gitignored; the script is fully resumable and caches every fetched
+page to disk.
 
-2. **The Bitcoin knowledge bundle.** The builder script at
-   `scripts/src/build-bitcoin-seed.ts` aggregates the full Bitcoin
-   OpTech newsletter archive, the last 12 months of merged commits from
-   `bitcoin/bitcoin` (tagged `bias: "core"`) and `bitcoinknots/bitcoin`
-   (tagged `bias: "knots"`), plus a curated list of high-signal
-   BitcoinTalk threads from
-   `scripts/src/bitcoin-seed/bitcointalk-threads.json`.
+### Author a new persona Pipe
 
-   The script and its source list are FOSS; the resulting bundle at
-   `data/seeds/bitcoin.json` is gitignored. The script is
-   **anonymous-first, throttled, and resumable** — it requires no
-   credentials, transparently sleeps through GitHub's anonymous
-   rate-limit windows (and tells you so), caches every successful page
-   to `data/seeds/.cache/`, and resumes cleanly from the last cached
-   page on rerun. Without a token, expect ~2–3 hours wall time. With
-   `GITHUB_TOKEN` set to a fine-grained read-only token (5,000 req/hr
-   instead of 60), the build finishes in ~2 minutes.
+Pipes live under `data/pipes/<slug>/manifest.json`. The Vite plugin
+in `artifacts/emerald/scripts/pipes-vite-plugin.ts` discovers them at
+build time. See `data/pipes/bitcoin/` (in your local clone, post
+seed-build) for the reference structure.
 
-   ```
-   pnpm --filter @workspace/scripts run build-bitcoin-seed
-   cp data/seeds/bitcoin.json artifacts/emerald/public/seeds/bitcoin.json
-   ```
+---
 
-   The Blockstream demo loads the bundle from `/seeds/bitcoin.json` on
-   first run and shows a one-time progress indicator while it's
-   embedded into IndexedDB. Subsequent loads see a meta flag and skip
-   the work. If the bundle is absent (the FOSS shell case), the demo
-   silently runs without it.
+## How it works (one paragraph)
 
-### Ingestion conventions
+A visitor opens the chat. Their question is handed to a Web Worker
+running Llama-3.2-1B on WebGPU. Before the model runs, the question
+is embedded with bge-small-en-v1.5 (also browser-local) and matched
+against the IndexedDB-backed vector store. The top 4–8 chunks are
+inlined into a system prompt with citation instructions. The model
+streams tokens back; the widget renders them with the citation
+markers turned into clickable links to the source pages. Every
+retrieved chunk is visible behind a "Thought trace" disclosure.
+Nothing leaves the device on the default flow.
 
-Any new ingestion or scraping job that lands in this repo should follow
-the same three rules the Bitcoin builder follows:
+For the long version with the actual flow diagram, see
+[`/how-it-works`](https://hire.colonhyphenbracket.pink/how-it-works).
 
-- **Anonymous-first.** Tokens are an optimization, never a requirement.
-  The script must complete a useful build with no credentials.
-- **Throttled by the server, not by guesswork.** When the upstream
-  exposes a rate-limit budget (e.g. GitHub's `X-RateLimit-Remaining`
-  / `X-RateLimit-Reset` headers), read it and sleep until reset; never
-  burst. For shared community hosts that don't publish a budget, hold
-  to a small fixed delay between requests so that we never become a
-  reason their traffic graph spikes.
-- **Resumable.** Per-page output is cached to disk; reruns skip cached
-  pages. A killed run loses no completed pages.
+---
 
-Surface progress and any sleeps to the operator. A 90-minute build is
-fine; a silent 90-minute build is not.
+## Announcement (HN / X / Nostr — copy/paste-ready)
 
-## Building a knowledge base
+> **Greater — sovereign-by-default support bots, FOSS by default.**
+>
+> Open-source shell for industry-specific support chatbots that run
+> entirely in the visitor's browser (WebGPU + Llama-3.2-1B + IndexedDB
+> RAG). Six personas, one wired live: a Bitcoin support bot grounded
+> in the Blockstream corpus, with a Core/Knots bias toggle.
+>
+> No per-message API tax. No vendor between you and your customers.
+> The shell is MIT. The corpus is yours.
+>
+> Live demo: https://hire.colonhyphenbracket.pink/demo/blockstream
+> Source: https://github.com/rorshockbtc/greater-than
+> Compliance posture (HIPAA / WCAG / GDPR / PCI / SOC 2): /compliance
+>
+> Built by one fractional architect, in public, in pink.
+> :-]
 
-Greater is a RAG-style support bot, which means the quality of the
-answers is bounded by the quality of the knowledge base behind it. The
-shell ships everything you need to build a basic, *functional* KB
-yourself; turning that into a sharp, persona-tuned Pipe is the part
-that's for hire.
+---
 
-**What the shell gives you out of the box.** The ingestion endpoints
-documented above (`/api/ingest/extract`, `/api/ingest/sitemap`,
-`/api/ingest/rss`) are everything the in-product knowledge panel
-needs. Point them at a public site, sitemap, or feed; the server
-fetches and Readability-extracts the text, the browser chunks it
-paragraph-aware (~400–600 tokens per chunk, ~50-token overlap),
-embeds each chunk with the in-browser sentence-transformer, and
-persists it to IndexedDB. There is no LLM in the loop during
-ingestion — extraction and embedding are deterministic, so an
-ingest run produces the same chunks twice and your costs are zero
-on the per-page level. The Bitcoin builder script
-(`scripts/src/build-bitcoin-seed.ts`) is the pattern to copy for
-larger curated bundles: anonymous-first, throttled, resumable, and
-biased per-source.
+## Project structure (pnpm monorepo)
 
-**A shape that "just works".** For most operators, the basic recipe
-that works is roughly:
+```
+artifacts/
+  emerald/        # Greater marketing site + chat shell (the FOSS bit)
+  api-server/     # Express server for ingestion + escalation
+  mockup-sandbox/ # Component-preview server for design iteration
+data/
+  pipes/          # Proprietary Pipe manifests       (gitignored)
+  seeds/          # Generated seed bundles            (gitignored)
+scripts/
+  src/            # Seed builders, ingest helpers
+COMPLIANCE.md     # Engineering-grade compliance posture
+README.md         # You are here.
+```
 
-- Pick a small, opinionated source list rather than crawling
-  everything in sight. 50 well-chosen pages beat 5,000 noisy ones.
-- Run the source list through the ingest endpoints (or a builder
-  script if you want to ship the bundle to forks). Inspect the
-  resulting chunk count; if a single chunk dominates retrieval for
-  many queries, your chunk size is probably wrong.
-- Tag chunks with `bias` if you have a reason to (`'core'`,
-  `'knots'`, `'neutral'`, or whatever the persona uses); leave it
-  off if you don't. The retrieval path filters by bias when a Pipe
-  is active and the user has selected a perspective.
-- Test against a list of real questions. Open the chat widget's
-  "thought trace" on each answer and check that the cited chunks
-  actually support the claim. If they don't, your corpus is wrong
-  before your prompts are.
+For the monorepo conventions and the per-artifact contracts, see
+[`replit.md`](./replit.md).
 
-That's enough to deploy a competent FOSS support bot for almost any
-domain. It is *not* enough to deploy a bot that wins comparisons.
-
-**The work that turns a basic KB into a Greater-mode Pipe.** The
-shell deliberately stops short of the parts that take real domain
-work to do well:
-
-- **Corpus curation.** Picking the *right* 50 sources, in the right
-  proportions, for a specific industry's questions. Killing
-  duplicates without losing complementary phrasings. Pruning content
-  that contradicts itself across versions.
-- **Bias balancing.** When a domain has multiple legitimate
-  perspectives (Core/Knots, Reformed/Catholic, charter/private,
-  pediatric/adult), authoring per-bias system prompts that make the
-  bot honestly representative of each rather than mush.
-- **Persona tuning.** Voice, refusal rules, when to suggest
-  escalation, how to talk about money/medicine/safety, what counts as
-  a "good" answer for this audience — none of this falls out of the
-  corpus on its own.
-- **Evaluation.** A per-persona regression test set of real
-  questions with judged answers, run on every corpus or prompt
-  change so you know when you've made things worse.
-- **Pipe authoring.** Packaging the corpus + biases + prompts +
-  signatures into a Pipe manifest (`lib/pipes/PipeManifestSchema`)
-  that mounts cleanly into any Greater fork.
-
-That's the work that turns a fork into a production deployment, and
-it's the work that I do for a living. If you've got a domain in mind
-and want help building the Pipe for it, [get in
-touch](https://hire.colonhyphenbracket.pink) — there's a contact
-form on every page of the live site.
-
-## Cloud usage limits
-
-The Blockstream live demo on `hire.colonhyphenbracket.pink/demo/blockstream`
-exposes a cloud-fallback chat endpoint so visitors whose browsers
-don't yet support WebGPU (or who land mid-download of the local
-model) still get an answer to their first few questions. That
-endpoint hits a paid third-party LLM, so the chat widget enforces a
-**3-call-per-session cap** on cloud fallbacks. Once the cap is hit:
-
-- The chat surfaces a one-line notice: "Cloud help is rate-limited
-  — Greater is local-only from here. The in-browser model is still
-  answering your questions."
-- Subsequent answers are served by the in-browser model and carry a
-  "Local-only · cloud rate-limited" badge instead of the usual
-  "Local · Private" one — the provenance stays honest.
-- The counter resets when the browser tab closes (it lives in
-  `sessionStorage`, not `localStorage`).
-
-For self-hosted forks the cap lives in
-`artifacts/emerald/src/llm/LLMProvider.tsx` as `CLOUD_CALL_BUDGET`
-— set it to whatever your wallet can stand, or to `Infinity` if
-you've wired your own LLM provider through `TOGETHER_API_KEY` and
-don't care.
-
-## Pipes
-
-A "Pipe" is a curated, opinionated knowledge bundle authored by a
-domain expert. The Greater shell is fully functional with no Pipes;
-loading one transforms the demo for that persona into "Greater mode" —
-visible badge in the chat header, a bias toggle for multi-perspective
-Pipes, and the Pipe's bias-specific system prompts.
-
-- **Schema** lives in `lib/pipes/` (`PipeManifestSchema`,
-  `manifest.schema.json`). Manifests are validated at build time.
-- **Manifests** live under `data/pipes/*.manifest.json` and are
-  **gitignored**. A starter Bitcoin manifest
-  (`data/pipes/bitcoin-greater-v1.manifest.json`) is generated by the
-  initial setup; production deployments mount their own.
-- **Build-time loader** is the Vite plugin at
-  `artifacts/emerald/vite-plugins/pipes-loader.ts`. It reads any
-  manifests present, validates them through the Zod schema, and
-  inlines them as the `virtual:greater-pipes` module. A clean fork
-  with no manifests sees an empty array and the chat widget shows
-  "Generic mode" honestly.
-- **Runtime registry** is `artifacts/emerald/src/pipes/registry.ts`.
-  The chat widget binds to one Pipe per demo persona via
-  `<PipeProvider persona="…">`.
-- **Bias toggle** appears in the chat input row whenever the active
-  Pipe declares more than one `bias_options`. Switching biases drops
-  an inline note in the transcript and gives the next answer a
-  bias-specific system prompt + a bias-filtered retrieval set.
-- **Pipe status panel** is reachable from the chat widget's settings
-  dropdown; shows pipe id, version, signature status (always
-  "Unsigned · local" today), bias options with descriptions, and a
-  "Disconnect Pipe" button that drops the session into Generic mode.
-- **pipes.pink client** is a stub at
-  `artifacts/emerald/src/lib/pipes-client.ts`. The function shapes
-  match the eventual websocket-backed implementation; today it
-  resolves locally against the registry. Look for `TODO(websocket)`
-  for what the real client will do.
-
-## Contributing
-
-The shell is MIT-licensed. PRs and forks are welcome and encouraged. A clean fork should build, install, and run the Blockstream demo end-to-end on its own — the only thing missing will be the curated Bitcoin knowledge bundle (which the included builder script can regenerate from public sources in 2 minutes with a token, or 2–3 hours without). The proprietary persona-tuned weights and `pipes.pink` adapters that production deployments use live in `data/pipes/`, `data/weights/`, and `data/seeds/`, all of which are gitignored — that's the part that's for hire.
+---
 
 ## Credits
 
-- Original Emerald prototype: built as a Blockstream interview portfolio piece
-- Greater pivot: turning the prototype into a platform that scales to six industries
-- Design system: colonhyphenbracket
-- Live demo content: derived from public Blockstream help center material; not an official Blockstream product
+Built by [colonhyphenbracket](https://colonhyphenbracket.pink).
+
+The proprietary Pipes, the persona-tuned weights, and the integration
+work into your stack are
+[available for hire](https://hire.colonhyphenbracket.pink).
 
 ## License
 
-MIT — see `LICENSE`.
+MIT. See [`LICENSE`](./LICENSE).
+
+```
+Greater — built by colonhyphenbracket. :-]
+```

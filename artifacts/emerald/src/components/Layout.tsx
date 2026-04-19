@@ -8,9 +8,30 @@ import { cn } from "@/lib/utils";
 
 const NAV_ITEMS: { href: string; label: string }[] = [
   { href: "/", label: "Home" },
+  { href: "/how-it-works", label: "How it works" },
   { href: "/about", label: "About" },
   { href: "/openclaw", label: "OpenClaw" },
 ];
+
+/**
+ * Format the build timestamp injected by `vite.config.ts` `define`.
+ * Surfaced in the footer so a curious visitor can see when the bundle
+ * they're running was actually compiled — a small "real human pushed
+ * this" cue in real markup.
+ */
+function formatBuildStamp(): { date: string; iso: string } {
+  const iso =
+    typeof __BUILD_TIMESTAMP__ === "string"
+      ? __BUILD_TIMESTAMP__
+      : new Date().toISOString();
+  const d = new Date(iso);
+  const date = d.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+  return { date, iso };
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
@@ -18,9 +39,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
+      {/* Skip-to-content link — visually hidden until focused. WCAG 2.4.1. */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-2 focus:rounded-md focus:bg-primary focus:text-primary-foreground focus:text-sm"
+      >
+        Skip to content
+      </a>
+
       <Header location={location} onContact={openContact} />
 
-      <main className="flex-1 pb-20 md:pb-0">
+      <main id="main-content" className="flex-1 pb-20 md:pb-0" tabIndex={-1}>
         <AnimatePresence mode="wait">
           <motion.div
             key={location}
@@ -59,6 +88,32 @@ function XIcon({ className, ...rest }: React.SVGProps<SVGSVGElement>) {
   );
 }
 
+function ChbWordmark({ className }: { className?: string }) {
+  return (
+    <a
+      href="https://colonhyphenbracket.pink"
+      target="_blank"
+      rel="noreferrer noopener"
+      className={cn(
+        "inline-flex items-baseline gap-1 select-none hover:opacity-80 transition-opacity",
+        className,
+      )}
+      data-testid="link-footer-chb-mark"
+    >
+      <span
+        className="chb-display text-base leading-none"
+        style={{ color: "#FE299E" }}
+        aria-hidden="true"
+      >
+        :-]
+      </span>
+      <span className="chb-mono-label text-foreground/80">
+        colonhyphenbracket
+      </span>
+    </a>
+  );
+}
+
 function Wordmark({ className }: { className?: string }) {
   return (
     <Link
@@ -91,7 +146,7 @@ function Header({
         <div className="flex items-center justify-between h-14">
           <Wordmark />
 
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-7" aria-label="Primary">
             {NAV_ITEMS.map((item) => {
               const active =
                 item.href === "/" ? location === "/" : location.startsWith(item.href);
@@ -100,10 +155,10 @@ function Header({
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "chb-mono-label transition-colors hover:text-foreground",
+                    "chb-mono-label transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm",
                     active ? "text-foreground" : "text-muted-foreground",
                   )}
-                  data-testid={`link-nav-${item.label.toLowerCase()}`}
+                  data-testid={`link-nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
                 >
                   {item.label}
                 </Link>
@@ -183,6 +238,8 @@ function BottomNav({
 }
 
 function Footer({ onContact }: { onContact: () => void }) {
+  const { date, iso } = formatBuildStamp();
+
   return (
     <footer className="border-t border-border mt-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -192,6 +249,9 @@ function Footer({ onContact }: { onContact: () => void }) {
             <p className="text-sm text-muted-foreground mt-3 max-w-xs leading-relaxed">
               Sovereign-by-default support bots. FOSS shell, persona-tuned demos,
               fractional architecture for hire.
+            </p>
+            <p className="mt-4 text-xs text-muted-foreground">
+              Built by <ChbWordmark />.
             </p>
           </div>
 
@@ -204,6 +264,42 @@ function Footer({ onContact }: { onContact: () => void }) {
                   className="text-muted-foreground hover:text-foreground"
                 >
                   About Greater
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/how-it-works"
+                  className="text-muted-foreground hover:text-foreground"
+                  data-testid="link-footer-how-it-works"
+                >
+                  How it works
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/proof"
+                  className="text-muted-foreground hover:text-foreground"
+                  data-testid="link-footer-proof"
+                >
+                  Proof &mdash; real chats
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/changelog"
+                  className="text-muted-foreground hover:text-foreground"
+                  data-testid="link-footer-changelog"
+                >
+                  Changelog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/compliance"
+                  className="text-muted-foreground hover:text-foreground"
+                  data-testid="link-footer-compliance"
+                >
+                  Compliance
                 </Link>
               </li>
               <li>
@@ -267,18 +363,6 @@ function Footer({ onContact }: { onContact: () => void }) {
                 </a>
               </li>
               <li>
-                <a
-                  href="https://github.com/rorshockbtc/greater-than"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground"
-                  data-testid="link-footer-github"
-                >
-                  <Github className="w-3.5 h-3.5" aria-hidden="true" />
-                  github.com/rorshockbtc/greater-than
-                </a>
-              </li>
-              <li>
                 <button
                   type="button"
                   onClick={onContact}
@@ -294,8 +378,12 @@ function Footer({ onContact }: { onContact: () => void }) {
 
         <div className="mt-12 pt-6 border-t border-border flex flex-col sm:flex-row justify-between gap-3 text-xs text-muted-foreground">
           <p>&copy; 2026 colonhyphenbracket. FOSS &mdash; released under MIT.</p>
-          <p className="font-mono">
-            Browser-local LLM. No telemetry. No vendor lock-in.
+          <p
+            className="font-mono"
+            data-testid="text-build-stamp"
+            title={iso}
+          >
+            v0.1 &middot; built {date} &middot; browser-local LLM &middot; no first-party analytics
           </p>
         </div>
       </div>
