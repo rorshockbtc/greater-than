@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, Send, Bot, Loader2, ChevronDown, Maximize2, Minimize2, ShieldCheck, PhoneCall, AlertOctagon, CircleDashed, Settings, Database, Cable, Info } from 'lucide-react';
+import { useLocation } from 'wouter';
+import { MessageSquare, Send, Bot, Loader2, ChevronDown, Maximize2, Minimize2, ShieldCheck, PhoneCall, AlertOctagon, CircleDashed, Settings, Database, Cable, Info, Ticket } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSendMessage, useEscalateTicket } from '@workspace/api-client-react';
 import { ChatMessage, type MessageProps } from './ChatMessage';
@@ -19,6 +20,7 @@ import { usePipe } from '@/pipes/PipeContext';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import type { AskOptions, Bias, ChatTurn, CloudReason, ModelStatus } from '@/llm/types';
+import { saveTranscript } from '@/lib/ticketTranscript';
 
 function uuidv4() {
   return crypto.randomUUID();
@@ -47,6 +49,25 @@ export interface ChatWidgetProps {
    * the callback via `useScenarioModal().reopen`.
    */
   onReopenScenario?: () => void;
+  /**
+   * URL slug of the demo route (e.g. "blockstream", "startups").
+   * Used as the sessionStorage key for the transcript and as the
+   * navigation target for the support-ticket preview screen
+   * (`/demo/<routeSlug>/ticket`). Required to enable the
+   * "Show what would have been escalated" menu item.
+   */
+  routeSlug?: string;
+  /**
+   * Persona slug from `data/personas` (e.g. "fintech"). Stored on
+   * the transcript so the ticket preview can label the payload with
+   * the right persona regardless of the URL slug.
+   */
+  personaSlug?: string;
+  /**
+   * Brand the visitor saw in the chat header (e.g. "Blockstream",
+   * "Vellum"). Used in the ticket preview's back-link and tags.
+   */
+  personaBrand?: string;
 }
 
 export function ChatWidget({
@@ -54,7 +75,11 @@ export function ChatWidget({
   placeholder,
   bundleLabel,
   onReopenScenario,
+  routeSlug,
+  personaSlug,
+  personaBrand,
 }: ChatWidgetProps = {}) {
+  const [, navigate] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [sessionId] = useState(() => uuidv4());
@@ -123,6 +148,63 @@ export function ChatWidget({
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, chatMutation.isPending, isLocalGenerating]);
+
+  /**
+   * Persist the current transcript to sessionStorage on every change
+   * so the support-ticket preview screen at `/demo/<slug>/ticket`
+   * has something to read. We store only user/bot turns (mode notes
+   * and the welcome are excluded — they aren't helpful in a ticket).
+   * Skipped entirely when the host page didn't supply `routeSlug`,
+   * which keeps the storage key honest about what produced it.
+   */
+  useEffect(() => {
+    if (!routeSlug || !personaSlug || !personaBrand) return;
+    const turns = messages
+      .filter((m) => (m.role === 'user' || m.role === 'bot') && !m.isModeNote)
+      // Drop the boilerplate welcome — the agent doesn't need it.
+      .slice(welcomeMessage ? 1 : 0)
+      .map((m) => ({
+        role: m.role as 'user' | 'bot',
+        content: m.content,
+        timestamp: m.timestamp.toISOString(),
+      }));
+    if (!turns.length) return;
+    saveTranscript({
+      updatedAt: new Date().toISOString(),
+      sessionId,
+      routeSlug,
+      personaSlug,
+      personaBrand,
+      biasId: pipe.pipe ? pipe.activeBiasId : undefined,
+      biasLabel: activeBiasOption?.label,
+      turns,
+    });
+  }, [
+    messages,
+    routeSlug,
+    personaSlug,
+    personaBrand,
+    sessionId,
+    welcomeMessage,
+    pipe.pipe,
+    pipe.activeBiasId,
+    activeBiasOption?.label,
+  ]);
+
+  /**
+   * The "Show what would have been escalated" item is only useful
+   * after the visitor has had at least one back-and-forth (≥1 user
+   * message AND ≥1 non-welcome bot reply). Anything earlier and the
+   * preview is just the welcome line, which doesn't sell the pitch.
+   */
+  const realTurns = messages.filter(
+    (m) => !m.isModeNote && (m.role === 'user' || m.role === 'bot'),
+  );
+  const userTurnCount = realTurns.filter((m) => m.role === 'user').length;
+  const nonWelcomeBotCount =
+    realTurns.filter((m) => m.role === 'bot').length - (welcomeMessage ? 1 : 0);
+  const ticketPreviewEnabled =
+    !!routeSlug && userTurnCount >= 1 && nonWelcomeBotCount >= 1;
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -467,6 +549,17 @@ export function ChatWidget({
                     <DropdownMenuItem onSelect={() => setShowPipePanel(true)}>
                       <Cable className="w-3.5 h-3.5 mr-2" />
                       Pipe status
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      disabled={!ticketPreviewEnabled}
+                      onSelect={() => {
+                        if (!ticketPreviewEnabled || !routeSlug) return;
+                        navigate(`/demo/${routeSlug}/ticket`);
+                      }}
+                      data-testid="menuitem-ticket-preview"
+                    >
+                      <Ticket className="w-3.5 h-3.5 mr-2" />
+                      Show what would have been escalated
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

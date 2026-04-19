@@ -264,6 +264,9 @@ export default function Home() {
 
       <ChatWidget
         onReopenScenario={scenario ? scenarioModal.reopen : undefined}
+        routeSlug="blockstream"
+        personaSlug="fintech"
+        personaBrand="Blockstream"
       />
     </div>
     </PipeProvider>

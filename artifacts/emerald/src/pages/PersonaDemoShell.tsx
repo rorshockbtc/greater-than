@@ -119,6 +119,9 @@ function PersonaDemoShellInner({ persona }: { persona: Persona }) {
           placeholder={scenario.placeholder}
           bundleLabel={`${scenario.shell.brand} demo corpus`}
           onReopenScenario={scenarioModal.reopen}
+          routeSlug={persona.slug}
+          personaSlug={persona.slug}
+          personaBrand={scenario.shell.brand}
         />
       </div>
     </PipeProvider>

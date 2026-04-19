@@ -11,6 +11,7 @@ import PersonaPage from "@/pages/PersonaPage";
 import DemoHolding from "@/pages/DemoHolding";
 import BlockstreamDemo from "@/pages/BlockstreamDemo";
 import PersonaDemoShell from "@/pages/PersonaDemoShell";
+import TicketPreview from "@/pages/TicketPreview";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -18,6 +19,13 @@ const queryClient = new QueryClient();
 function Router() {
   return (
     <Switch>
+      {/* Support-ticket preview screen. Reachable from the chat
+          widget's settings menu on every persona demo. Renders
+          outside the Greater Layout so it reads as a standalone
+          helpdesk-shaped artifact. Registered before the more
+          general /demo/:slug route so wouter resolves it correctly. */}
+      <Route path="/demo/:slug/ticket" component={TicketPreview} />
+
       {/* Live Blockstream (FinTech) demo — bespoke chrome preserved
           as the original Emerald portfolio piece. Renders without the
           Greater Layout chrome to keep the Blockstream-branded support
