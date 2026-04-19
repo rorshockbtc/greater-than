@@ -55,7 +55,13 @@ artifacts/emerald/data/pipes/
 artifacts/emerald/data/knowledge-base/
 artifacts/emerald/data/weights/
 artifacts/emerald/public/weights/
-artifacts/emerald/public/seeds/
+# public/seeds/ holds curated knowledge bundles. The 5 non-FinTech
+# persona seeds (faith, healthtech, schools, small-business, startups)
+# are hand-written, neutral-bias, FOSS-safe and SHIP with the repo so
+# forks can run those demos. Only `bitcoin.json` (built by
+# scripts/build-bitcoin-seed.ts from public sources, with bias tags)
+# is proprietary to the hosted deployment and is excluded.
+artifacts/emerald/public/seeds/bitcoin.json
 *.private.md
 *.interview.md
 *.gguf

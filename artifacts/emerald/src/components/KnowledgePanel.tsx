@@ -52,6 +52,7 @@ const JOB_KIND_META: Record<
   rss: { label: "Feed", Icon: Rss },
   seed: { label: "Seed corpus", Icon: Database },
   "bitcoin-bundle": { label: "Bitcoin bundle", Icon: FileText },
+  "seed-bundle": { label: "Seed bundle", Icon: FileText },
 };
 
 function formatRelative(ts?: number): string {
