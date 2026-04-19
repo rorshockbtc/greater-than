@@ -44,10 +44,6 @@ Thumbs.db
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
 
-# Replit
-.cache/
-.local/
-
 # Greater — proprietary persona weights, pipes data, and private notes are
 # gitignored. The FOSS shell ships without them; production deployments
 # mount them locally.

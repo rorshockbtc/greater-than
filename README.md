@@ -80,7 +80,7 @@ The Blockstream demo route deliberately retains the Blockstream brand styling (d
 
 - Node.js 24+
 - pnpm
-- PostgreSQL (Replit provides via `DATABASE_URL`)
+- PostgreSQL 14+ (`DATABASE_URL` env var)
 - A [Web3Forms](https://web3forms.com) access key for the contact form (`VITE_WEB3FORMS_ACCESS_KEY`)
 - A [Together.AI](https://together.ai) API key for the Blockstream demo's server-side fallback (`TOGETHER_API_KEY`)
 
@@ -118,31 +118,57 @@ Greater's RAG corpus has two layers:
    sentence-transformer, and persisted to IndexedDB. **No LLM is invoked
    during ingestion** — extraction and embedding are deterministic.
 
-2. **The Bitcoin knowledge bundle (proprietary).** The builder script
-   under `scripts/src/build-bitcoin-seed.ts` aggregates Bitcoin OpTech
-   newsletters, the last 12 months of merged commits from
-   `bitcoin/bitcoin` (tagged `bias: 'core'`) and `bitcoinknots/bitcoin`
-   (tagged `bias: 'knots'`), plus a curated list of high-signal
+2. **The Bitcoin knowledge bundle.** The builder script at
+   `scripts/src/build-bitcoin-seed.ts` aggregates the full Bitcoin
+   OpTech newsletter archive, the last 12 months of merged commits from
+   `bitcoin/bitcoin` (tagged `bias: "core"`) and `bitcoinknots/bitcoin`
+   (tagged `bias: "knots"`), plus a curated list of high-signal
    BitcoinTalk threads from
-   `scripts/src/bitcoin-seed/bitcointalk-threads.json`. The script is
-   **FOSS**; the resulting `data/seeds/bitcoin.json` bundle is
-   **gitignored** — that's the curation work that makes Greater
-   valuable. To regenerate it yourself, set a fine-grained read-only
-   `GITHUB_TOKEN` (anonymous requests rate-limit at 60/hr) and run:
+   `scripts/src/bitcoin-seed/bitcointalk-threads.json`.
+
+   The script and its source list are FOSS; the resulting bundle at
+   `data/seeds/bitcoin.json` is gitignored. The script is
+   **anonymous-first, throttled, and resumable** — it requires no
+   credentials, transparently sleeps through GitHub's anonymous
+   rate-limit windows (and tells you so), caches every successful page
+   to `data/seeds/.cache/`, and resumes cleanly from the last cached
+   page on rerun. Without a token, expect ~2–3 hours wall time. With
+   `GITHUB_TOKEN` set to a fine-grained read-only token (5,000 req/hr
+   instead of 60), the build finishes in ~2 minutes.
 
    ```
-   GITHUB_TOKEN=ghp_xxx pnpm --filter @workspace/scripts run build-bitcoin-seed
+   pnpm --filter @workspace/scripts run build-bitcoin-seed
    cp data/seeds/bitcoin.json artifacts/emerald/public/seeds/bitcoin.json
    ```
 
    The Blockstream demo loads the bundle from `/seeds/bitcoin.json` on
-   first run and shows a one-time progress indicator while it's being
+   first run and shows a one-time progress indicator while it's
    embedded into IndexedDB. Subsequent loads see a meta flag and skip
-   the work.
+   the work. If the bundle is absent (the FOSS shell case), the demo
+   silently runs without it.
+
+### Ingestion conventions
+
+Any new ingestion or scraping job that lands in this repo should follow
+the same three rules the Bitcoin builder follows:
+
+- **Anonymous-first.** Tokens are an optimization, never a requirement.
+  The script must complete a useful build with no credentials.
+- **Throttled by the server, not by guesswork.** When the upstream
+  exposes a rate-limit budget (e.g. GitHub's `X-RateLimit-Remaining`
+  / `X-RateLimit-Reset` headers), read it and sleep until reset; never
+  burst. For shared community hosts that don't publish a budget, hold
+  to a small fixed delay between requests so that we never become a
+  reason their traffic graph spikes.
+- **Resumable.** Per-page output is cached to disk; reruns skip cached
+  pages. A killed run loses no completed pages.
+
+Surface progress and any sleeps to the operator. A 90-minute build is
+fine; a silent 90-minute build is not.
 
 ## Contributing
 
-The shell is MIT-licensed. PRs and forks are welcome and encouraged. The proprietary persona-tuned weights, pipes data, and curator-specific corpora that make production deployments work live in `data/pipes/`, `data/weights/`, and `data/seeds/`, all of which are gitignored — that is the part that's for hire.
+The shell is MIT-licensed. PRs and forks are welcome and encouraged. A clean fork should build, install, and run the Blockstream demo end-to-end on its own — the only thing missing will be the curated Bitcoin knowledge bundle (which the included builder script can regenerate from public sources in 2 minutes with a token, or 2–3 hours without). The proprietary persona-tuned weights and `pipes.pink` adapters that production deployments use live in `data/pipes/`, `data/weights/`, and `data/seeds/`, all of which are gitignored — that's the part that's for hire.
 
 ## Credits
 
