@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'wouter';
-import { MessageSquare, Send, Bot, Loader2, ChevronDown, Maximize2, Minimize2, ShieldCheck, PhoneCall, AlertOctagon, CircleDashed, Settings, Database, Cable, Info, Ticket } from 'lucide-react';
+import { MessageSquare, Send, Bot, Loader2, ChevronDown, Maximize2, Minimize2, ShieldCheck, PhoneCall, AlertOctagon, CircleDashed, Settings, Database, Cable, Info, Ticket, Cpu } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSendMessage, useEscalateTicket } from '@workspace/api-client-react';
 import { ChatMessage, type MessageProps } from './ChatMessage';
 import { SecurityPanel } from './SecurityPanel';
 import { KnowledgePanel } from './KnowledgePanel';
+import { OpenClawPanel } from './OpenClawPanel';
 import { PipeStatusPanel } from './PipeStatusPanel';
 import { BiasToggle } from './BiasToggle';
 import { ModelInfoPopover } from '@/llm/ModelInfoPopover';
@@ -88,6 +89,7 @@ export function ChatWidget({
   const [showSecurityPanel, setShowSecurityPanel] = useState(false);
   const [showKnowledgePanel, setShowKnowledgePanel] = useState(false);
   const [showPipePanel, setShowPipePanel] = useState(false);
+  const [showOpenClawPanel, setShowOpenClawPanel] = useState(false);
   const [hasSecurityAlertSession, setHasSecurityAlertSession] = useState(false);
   const [isLocalGenerating, setIsLocalGenerating] = useState(false);
   /**
@@ -240,6 +242,15 @@ export function ChatWidget({
     };
     setMessages((prev) => [...prev, userMsg]);
 
+    // OpenClaw mode (BYO local LLM) takes precedence over both the
+    // in-browser model and the cloud fallback. The visitor is paying
+    // their own compute, so we should never hit the cloud endpoint
+    // while OpenClaw is active.
+    if (llm.openClawActive) {
+      await runLocal(userText);
+      return;
+    }
+
     // Local-first when ready; cloud fallback otherwise. The label on
     // the response always says which path served it.
     if (llm.status === 'ready') {
@@ -295,14 +306,17 @@ export function ChatWidget({
           }
         : undefined;
       const answer = await llm.ask(history, userText, askOptions);
+      const isOpenClaw = answer.source === 'openclaw';
       const botMsg: MessageProps = {
         id: uuidv4(),
         role: 'bot',
         content: answer.text,
         timestamp: new Date(),
         trustScore: 0.96,
-        ciBreakdown: 'Local inference · WebGPU · grounded in retrieved chunks.',
-        responseSource: 'local',
+        ciBreakdown: isOpenClaw
+          ? 'OpenClaw · BYO model · grounded in retrieved chunks where available.'
+          : 'Local inference · WebGPU · grounded in retrieved chunks.',
+        responseSource: isOpenClaw ? 'openclaw' : 'local',
         thoughtTrace: answer.thoughtTrace,
         biasLabel: activeBiasOption?.label,
         biasId: pipe.pipe ? pipe.activeBiasId : undefined,
@@ -310,10 +324,29 @@ export function ChatWidget({
       };
       setMessages((prev) => [...prev, botMsg]);
     } catch (err) {
-      // Local failed mid-conversation. If the cloud cap still has
-      // room, fall back to cloud honestly; otherwise surface the
-      // failure inline (we can't quietly hammer the paid endpoint
-      // forever just because local crashed).
+      // OpenClaw failures should NOT fall back to the cloud — the
+      // visitor explicitly opted into BYO inference. Surface the
+      // error inline so they can fix the endpoint and try again.
+      if (llm.openClawActive) {
+        console.error('OpenClaw inference failed:', err);
+        const detail =
+          (err as Error)?.message ?? 'Unknown error reaching your endpoint.';
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: uuidv4(),
+            role: 'bot',
+            content: `OpenClaw call failed: ${detail}\n\nOpen the OpenClaw settings to re-test the connection.`,
+            timestamp: new Date(),
+            responseSource: 'openclaw',
+          },
+        ]);
+        return;
+      }
+      // In-browser model failed mid-conversation. If the cloud cap
+      // still has room, fall back to cloud honestly; otherwise
+      // surface the failure inline (we can't quietly hammer the paid
+      // endpoint forever just because local crashed).
       console.error('Local inference failed, falling back to cloud:', err);
       await tryCloudOrLocal(userText, 'local-error');
     } finally {
@@ -525,7 +558,11 @@ export function ChatWidget({
                 <div className="flex flex-col min-w-0">
                   <span className="text-sm font-semibold text-[hsl(var(--widget-fg))] truncate flex items-center gap-1.5">
                     Started {formattedStartTime}
-                    <ModeBadge connected={pipe.connected} pipeName={pipe.pipe?.name} />
+                    <ModeBadge
+                      connected={pipe.connected}
+                      pipeName={pipe.pipe?.name}
+                      openClawActive={llm.openClawActive}
+                    />
                   </span>
                   <ReadinessPill status={llm.status} progress={llm.progress} stageLabel={llm.loadStageLabel} />
                 </div>
@@ -561,6 +598,13 @@ export function ChatWidget({
                     <DropdownMenuItem onSelect={() => setShowPipePanel(true)}>
                       <Cable className="w-3.5 h-3.5 mr-2" />
                       Pipe status
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onSelect={() => setShowOpenClawPanel(true)}
+                      data-testid="menuitem-openclaw"
+                    >
+                      <Cpu className="w-3.5 h-3.5 mr-2" />
+                      OpenClaw mode (BYO LLM)
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       disabled={!ticketPreviewEnabled}
@@ -791,6 +835,11 @@ export function ChatWidget({
         isOpen={showPipePanel}
         onClose={() => setShowPipePanel(false)}
       />
+
+      <OpenClawPanel
+        isOpen={showOpenClawPanel}
+        onClose={() => setShowOpenClawPanel(false)}
+      />
     </>
   );
 }
@@ -800,7 +849,27 @@ export function ChatWidget({
  * at a glance whether they're talking to the FOSS shell on its own
  * (Generic) or the shell amplified by a curated Pipe (Greater).
  */
-function ModeBadge({ connected, pipeName }: { connected: boolean; pipeName?: string }) {
+function ModeBadge({
+  connected,
+  pipeName,
+  openClawActive,
+}: {
+  connected: boolean;
+  pipeName?: string;
+  openClawActive: boolean;
+}) {
+  if (openClawActive) {
+    return (
+      <span
+        className="inline-flex items-center gap-1 text-[9px] font-mono uppercase tracking-wider px-1.5 py-px rounded border border-violet-500/40 bg-violet-500/10 text-violet-200"
+        title="OpenClaw mode — chat is being served by your own OpenAI-compatible endpoint. Greater is not making any cloud calls."
+        data-testid="badge-mode"
+      >
+        <span className="text-violet-400 font-bold">&gt;</span>
+        OpenClaw mode
+      </span>
+    );
+  }
   if (connected) {
     return (
       <span

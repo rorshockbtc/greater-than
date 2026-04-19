@@ -134,7 +134,41 @@ export interface RetrievedChunk extends KbChunk {
   score: number;
 }
 
-export type ResponseSource = "local" | "cloud";
+export type ResponseSource = "local" | "cloud" | "openclaw";
+
+/**
+ * Bring-Your-Own-LLM config for OpenClaw mode. Any OpenAI-compatible
+ * HTTP server (Ollama, llama.cpp, LM Studio, vLLM, …) becomes
+ * Greater's inference backend when the visitor enables this. The
+ * config persists to `localStorage` so a returning visitor doesn't
+ * have to re-enter their endpoint each session.
+ */
+export interface OpenClawConfig {
+  /** Master switch. When false, all other fields are ignored. */
+  enabled: boolean;
+  /**
+   * Base URL of the OpenAI-compatible endpoint, *without* trailing
+   * slash and *without* the `/chat/completions` suffix. Examples:
+   *   - `http://localhost:11434/v1`   (Ollama)
+   *   - `http://localhost:1234/v1`    (LM Studio)
+   *   - `http://localhost:8080/v1`    (llama.cpp server)
+   */
+  baseUrl: string;
+  /** Model identifier passed to the OpenAI Chat Completions API. */
+  model: string;
+  /** Optional bearer token; only sent when non-empty. */
+  apiKey: string;
+}
+
+export interface OpenClawHealth {
+  state: "idle" | "testing" | "ok" | "error";
+  /** Human-readable error message when state === 'error'. */
+  message?: string;
+  /** Models reported by the endpoint's `/models` listing, if any. */
+  models?: string[];
+  /** Unix ms of the last test attempt (success OR failure). */
+  testedAt?: number;
+}
 
 /**
  * Why a given message was served from the cloud rather than locally.

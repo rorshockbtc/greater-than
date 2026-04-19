@@ -324,6 +324,18 @@ function SourceBadge({
   cloudReason?: CloudReason;
   localOnly?: boolean;
 }) {
+  if (source === "openclaw") {
+    return (
+      <div
+        className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-medium text-violet-300 bg-violet-500/10 border border-violet-500/30 px-2 py-0.5 rounded-md mb-1"
+        title="Answered by your own OpenAI-compatible LLM endpoint (OpenClaw mode). No cloud call made by Greater."
+        data-testid="badge-openclaw"
+      >
+        <ShieldCheck className="w-3 h-3" />
+        OpenClaw &middot; BYO model
+      </div>
+    );
+  }
   if (source === "local") {
     if (localOnly) {
       return (

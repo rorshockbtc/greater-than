@@ -16,6 +16,8 @@ import type {
   LocalAnswer,
   ModelInfo,
   ModelStatus,
+  OpenClawConfig,
+  OpenClawHealth,
   RetrievedChunk,
   ThoughtTrace,
   WorkerOutbound,
@@ -214,7 +216,84 @@ interface LLMContextValue {
    * paid answer. No-op if the counter is already at zero.
    */
   refundCloudCall: () => void;
+  /**
+   * BYO local LLM ("OpenClaw mode"). When `enabled` is true and the
+   * health check has passed, every `ask()` call is routed to the
+   * configured OpenAI-compatible endpoint instead of the in-browser
+   * model or the cloud fallback. Persisted to `localStorage`.
+   */
+  openClawConfig: OpenClawConfig;
+  openClawHealth: OpenClawHealth;
+  /** True iff the BYO endpoint is currently the active inference path. */
+  openClawActive: boolean;
+  /** Merge a partial config and persist; resets health to idle. */
+  setOpenClawConfig: (patch: Partial<OpenClawConfig>) => void;
+  /**
+   * Ping the configured `${baseUrl}/models` to verify the endpoint is
+   * reachable and returns a sane shape. Updates `openClawHealth` and
+   * also returns the result so callers can react synchronously.
+   */
+  testOpenClawConnection: () => Promise<OpenClawHealth>;
   clearCacheAndReload: () => Promise<void>;
+}
+
+const OPENCLAW_STORAGE_KEY = "greater:openclaw-config";
+
+const DEFAULT_OPENCLAW_CONFIG: OpenClawConfig = {
+  enabled: false,
+  baseUrl: "http://localhost:11434/v1",
+  model: "llama3.2:1b",
+  apiKey: "",
+};
+
+function loadOpenClawConfig(): OpenClawConfig {
+  if (typeof window === "undefined") return DEFAULT_OPENCLAW_CONFIG;
+  try {
+    const raw = window.localStorage.getItem(OPENCLAW_STORAGE_KEY);
+    if (!raw) return DEFAULT_OPENCLAW_CONFIG;
+    const parsed = JSON.parse(raw) as Partial<OpenClawConfig>;
+    return {
+      ...DEFAULT_OPENCLAW_CONFIG,
+      ...parsed,
+      // Coerce booleans/strings so a tampered storage value can't
+      // crash the provider during render.
+      enabled: Boolean(parsed.enabled),
+      baseUrl: typeof parsed.baseUrl === "string" ? parsed.baseUrl : DEFAULT_OPENCLAW_CONFIG.baseUrl,
+      model: typeof parsed.model === "string" ? parsed.model : DEFAULT_OPENCLAW_CONFIG.model,
+      apiKey: typeof parsed.apiKey === "string" ? parsed.apiKey : "",
+    };
+  } catch {
+    return DEFAULT_OPENCLAW_CONFIG;
+  }
+}
+
+function persistOpenClawConfig(cfg: OpenClawConfig): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(OPENCLAW_STORAGE_KEY, JSON.stringify(cfg));
+  } catch {
+    // localStorage can throw in private mode / quota-exceeded; the
+    // config is best-effort persistence, not load-bearing.
+  }
+}
+
+/**
+ * Normalize the BYO base URL:
+ *  - trim whitespace and trailing slashes
+ *  - strip a trailing `/chat/completions` if the user pasted the full
+ *    endpoint (a common mistake when copying from API docs)
+ *
+ * We deliberately do NOT auto-append `/v1`: some servers (notably
+ * Ollama via its native API on `:11434/api`) expose the OpenAI-compat
+ * surface at a non-`/v1` prefix, and silently appending would break
+ * those configurations. The UI hint and quickstart already steer
+ * users to the `/v1` form for the common cases.
+ */
+function normalizeBaseUrl(url: string): string {
+  return url
+    .trim()
+    .replace(/\/+$/, "")
+    .replace(/\/chat\/completions$/, "");
 }
 
 /**
@@ -633,8 +712,243 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
     };
   }, [startWorker]);
 
+  /* -------------------------------------------------------------- */
+  /*  OpenClaw mode (BYO OpenAI-compatible endpoint)                */
+  /* -------------------------------------------------------------- */
+
+  const [openClawConfig, setOpenClawConfigState] = useState<OpenClawConfig>(
+    () => loadOpenClawConfig(),
+  );
+  const [openClawHealth, setOpenClawHealth] = useState<OpenClawHealth>({
+    state: "idle",
+  });
+
+  // Keep a ref so `ask()` can read the latest config without being
+  // re-created on every keystroke in the settings panel.
+  const openClawConfigRef = useRef<OpenClawConfig>(openClawConfig);
+  const openClawHealthRef = useRef<OpenClawHealth>(openClawHealth);
+  useEffect(() => {
+    openClawConfigRef.current = openClawConfig;
+  }, [openClawConfig]);
+  useEffect(() => {
+    openClawHealthRef.current = openClawHealth;
+  }, [openClawHealth]);
+
+  const setOpenClawConfig = useCallback((patch: Partial<OpenClawConfig>) => {
+    setOpenClawConfigState((prev) => {
+      const next: OpenClawConfig = { ...prev, ...patch };
+      persistOpenClawConfig(next);
+      return next;
+    });
+    // Any config change invalidates the prior health result — force
+    // a re-test before a stale "ok" is treated as authoritative.
+    setOpenClawHealth({ state: "idle" });
+  }, []);
+
+  const testOpenClawConnection = useCallback(async (): Promise<OpenClawHealth> => {
+    const cfg = openClawConfigRef.current;
+    setOpenClawHealth({ state: "testing" });
+    const baseUrl = normalizeBaseUrl(cfg.baseUrl);
+    if (!baseUrl) {
+      const result: OpenClawHealth = {
+        state: "error",
+        message: "Base URL is empty.",
+        testedAt: Date.now(),
+      };
+      setOpenClawHealth(result);
+      return result;
+    }
+    try {
+      const headers: Record<string, string> = { accept: "application/json" };
+      if (cfg.apiKey.trim()) {
+        headers.authorization = `Bearer ${cfg.apiKey.trim()}`;
+      }
+      const res = await fetch(`${baseUrl}/models`, { headers });
+      if (!res.ok) {
+        const body = await res.text().catch(() => "");
+        const result: OpenClawHealth = {
+          state: "error",
+          message: `${baseUrl}/models returned HTTP ${res.status}${body ? `: ${body.slice(0, 200)}` : ""}`,
+          testedAt: Date.now(),
+        };
+        setOpenClawHealth(result);
+        return result;
+      }
+      const data = (await res.json().catch(() => null)) as
+        | { data?: Array<{ id?: string }> }
+        | null;
+      const models = Array.isArray(data?.data)
+        ? data!.data
+            .map((m) => (typeof m.id === "string" ? m.id : null))
+            .filter((id): id is string => !!id)
+        : [];
+      const result: OpenClawHealth = {
+        state: "ok",
+        models,
+        testedAt: Date.now(),
+      };
+      setOpenClawHealth(result);
+      return result;
+    } catch (err) {
+      const result: OpenClawHealth = {
+        state: "error",
+        message:
+          (err as Error)?.message ||
+          "Network error. Is your local server running and CORS-enabled?",
+        testedAt: Date.now(),
+      };
+      setOpenClawHealth(result);
+      return result;
+    }
+  }, []);
+
+  const openClawActive =
+    openClawConfig.enabled && openClawHealth.state === "ok";
+
+  /**
+   * Forward an ask() turn to the BYO OpenAI-compatible endpoint. RAG
+   * retrieval still runs when the embedder is ready, so the BYO model
+   * gets the same grounding context as the in-browser model. When the
+   * embedder isn't ready yet (e.g. the visitor enabled OpenClaw before
+   * the page finished warming up), we just forward the messages plain.
+   */
+  const askViaOpenClaw = useCallback(
+    async (
+      history: ChatTurn[],
+      userMessage: string,
+      options: AskOptions | undefined,
+    ): Promise<LocalAnswer> => {
+      const cfg = openClawConfigRef.current;
+      const baseUrl = normalizeBaseUrl(cfg.baseUrl);
+      if (!baseUrl || !cfg.model.trim()) {
+        throw new Error(
+          "OpenClaw is enabled but the base URL or model name is missing.",
+        );
+      }
+
+      // Only run retrieval when the embedder is up. status === 'ready'
+      // means both stages done; 'loading-llm' means embedder ready and
+      // LLM still downloading — in either case retrieval is available.
+      let retrieved: RetrievedChunk[] = [];
+      if (status === "ready" || status === "loading-llm") {
+        try {
+          const queryVec = await callWorker<number[]>("embed", {
+            text: userMessage,
+          });
+          retrieved = await topK(queryVec, 5, {
+            biasFilter: options?.biasFilter,
+          });
+        } catch {
+          // Retrieval failure should NOT block the OpenClaw call —
+          // the BYO model is still useful without grounding.
+          retrieved = [];
+        }
+      }
+
+      const baseSystemPrompt =
+        options?.systemPrompt ??
+        [
+          "You are Greater, a support assistant for Blockstream products and",
+          "Bitcoin self-custody. Answer ONLY from the provided knowledge",
+          "snippets when they are present; otherwise answer from your",
+          "general knowledge but say so. Never ask for the user's seed",
+          "phrase, PIN, or password — refuse if requested.",
+        ].join("\n");
+
+      const systemPrompt =
+        retrieved.length > 0
+          ? [
+              baseSystemPrompt,
+              "",
+              "Citation rules:",
+              "- After every factual claim, cite the supporting snippet inline as",
+              "  [N] where N is the snippet number you used.",
+              "- Do not invent snippet numbers; only cite snippets shown below.",
+              "",
+              "Knowledge snippets:",
+              formatRetrievedForPrompt(retrieved),
+            ].join("\n")
+          : baseSystemPrompt;
+
+      const messages: ChatTurn[] = [
+        { role: "system", content: systemPrompt },
+        ...history.slice(-6),
+        { role: "user", content: userMessage },
+      ];
+
+      const headers: Record<string, string> = {
+        "content-type": "application/json",
+        accept: "application/json",
+      };
+      if (cfg.apiKey.trim()) {
+        headers.authorization = `Bearer ${cfg.apiKey.trim()}`;
+      }
+
+      let res: Response;
+      try {
+        res = await fetch(`${baseUrl}/chat/completions`, {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            model: cfg.model.trim(),
+            messages: messages.map((m) => ({ role: m.role, content: m.content })),
+            // Keep parity with the in-browser model's generation cap.
+            // Some BYO servers (Ollama) accept this; OpenAI-compat
+            // servers ignore unknown fields rather than 400.
+            max_tokens: 384,
+            temperature: 0.4,
+            stream: false,
+          }),
+        });
+      } catch (err) {
+        throw new Error(
+          `OpenClaw fetch failed: ${(err as Error).message}. ` +
+            `Verify that your local server is reachable from the browser ` +
+            `(CORS may need to be enabled).`,
+        );
+      }
+
+      if (!res.ok) {
+        const body = await res.text().catch(() => "");
+        throw new Error(
+          `OpenClaw endpoint returned HTTP ${res.status}${body ? `: ${body.slice(0, 200)}` : ""}`,
+        );
+      }
+      const data = (await res.json().catch(() => null)) as {
+        choices?: Array<{ message?: { content?: string } }>;
+      } | null;
+      const text =
+        data?.choices?.[0]?.message?.content?.trim() ?? "";
+      if (!text) {
+        throw new Error(
+          "OpenClaw endpoint returned an empty response. " +
+            "Check that the configured model name matches one your server has loaded.",
+        );
+      }
+
+      const trace: ThoughtTrace = {
+        chunks: retrieved,
+        reasoning:
+          retrieved.length > 0
+            ? summarizeRetrieval(retrieved)
+            : "OpenClaw mode: BYO model answered without retrieved chunks (embedder not ready or no matches).",
+      };
+      return { text, source: "openclaw", thoughtTrace: trace };
+    },
+    [status, callWorker],
+  );
+
   const ask = useCallback<LLMContextValue["ask"]>(
     async (history, userMessage, options) => {
+      // OpenClaw takes precedence over both the in-browser model and
+      // the cloud fallback when the user has opted in and the health
+      // check passed. This is the whole point of "Bring Your Own LLM".
+      if (
+        openClawConfigRef.current.enabled &&
+        openClawHealthRef.current.state === "ok"
+      ) {
+        return askViaOpenClaw(history, userMessage, options);
+      }
       if (status !== "ready") {
         throw new Error("Local model not ready");
       }
@@ -690,7 +1004,7 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
       };
       return { text, source: "local", thoughtTrace: trace };
     },
-    [status, callWorker],
+    [status, callWorker, askViaOpenClaw],
   );
 
   const clearCacheAndReload = useCallback(async () => {
@@ -783,6 +1097,11 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
     },
     consumeCloudCall,
     refundCloudCall,
+    openClawConfig,
+    openClawHealth,
+    openClawActive,
+    setOpenClawConfig,
+    testOpenClawConnection,
     clearCacheAndReload,
   };
 
