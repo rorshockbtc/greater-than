@@ -10,7 +10,7 @@ Greater is built and maintained by [colonhyphenbracket](https://hire.colonhyphen
 
 ## Project status
 
-This repository was originally `emerald-support-bot` — a Blockstream-specific demo. It has been pivoted into Greater, the platform. The Blockstream demo is preserved at `/demo/blockstream` as the live FinTech showcase.
+This repository was originally `emerald-support-bot` — a Blockstream-specific demo — and now lives at [`github.com/rorshockbtc/greater-than`](https://github.com/rorshockbtc/greater-than) after being pivoted into Greater, the platform. The Blockstream demo is preserved at `/demo/blockstream` as the live FinTech showcase.
 
 | Area | Status |
 |------|--------|

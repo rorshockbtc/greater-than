@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "wouter";
-import { Home as HomeIcon, Layers, Info, MessageSquare } from "lucide-react";
+import { Home as HomeIcon, Layers, Info, MessageSquare, Github } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useContact } from "@/components/ContactContext";
@@ -38,6 +38,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
       <BottomNav location={location} onContact={openContact} />
     </div>
+  );
+}
+
+/**
+ * Inline X (formerly Twitter) glyph. Lucide does not ship one; the
+ * brand asset is a simple two-stroke wordmark we can render as a
+ * lightweight inline SVG to keep the bundle small.
+ */
+function XIcon({ className, ...rest }: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      {...rest}
+    >
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z" />
+    </svg>
   );
 }
 
@@ -198,12 +216,14 @@ function Footer({ onContact }: { onContact: () => void }) {
               </li>
               <li>
                 <a
-                  href="https://github.com/rorshockbtc/emerald-support-bot"
+                  href="https://github.com/rorshockbtc/greater-than"
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground"
+                  data-testid="link-footer-github-project"
                 >
-                  GitHub
+                  <Github className="w-3.5 h-3.5" aria-hidden="true" />
+                  github.com/rorshockbtc/greater-than
                 </a>
               </li>
             </ul>
@@ -213,6 +233,52 @@ function Footer({ onContact }: { onContact: () => void }) {
             <h4 className="chb-mono-label text-foreground mb-4">Get in touch</h4>
             <ul className="space-y-2 text-sm">
               <li>
+                <a
+                  href="https://colonhyphenbracket.pink"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="text-muted-foreground hover:text-foreground"
+                  data-testid="link-footer-author-site"
+                >
+                  colonhyphenbracket.pink
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://hire.colonhyphenbracket.pink"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="text-muted-foreground hover:text-foreground"
+                  data-testid="link-footer-hire"
+                >
+                  hire.colonhyphenbracket.pink
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://x.com/RoRshockBTC"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground"
+                  data-testid="link-footer-x"
+                >
+                  <XIcon className="w-3 h-3" aria-hidden="true" />
+                  @RoRshockBTC
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/rorshockbtc/greater-than"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground"
+                  data-testid="link-footer-github"
+                >
+                  <Github className="w-3.5 h-3.5" aria-hidden="true" />
+                  github.com/rorshockbtc/greater-than
+                </a>
+              </li>
+              <li>
                 <button
                   type="button"
                   onClick={onContact}
@@ -221,16 +287,6 @@ function Footer({ onContact }: { onContact: () => void }) {
                 >
                   Contact form
                 </button>
-              </li>
-              <li>
-                <a
-                  href="https://hire.colonhyphenbracket.pink"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  hire.colonhyphenbracket.pink
-                </a>
               </li>
             </ul>
           </div>
