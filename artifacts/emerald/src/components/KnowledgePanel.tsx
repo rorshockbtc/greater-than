@@ -2,9 +2,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Database,
   FileText,
+  FolderOpen,
   Globe,
   Loader2,
   Network,
+  Radio,
   Rss,
   Trash2,
   Workflow,
@@ -14,6 +16,15 @@ import { useLLM } from "@/llm/LLMProvider";
 import { deleteByJob, listSources } from "@/llm/vectorStore";
 import type { IndexedSource, IngestProgress, JobKind } from "@/llm/types";
 import type { IngestMode } from "@/llm/ingest";
+import {
+  syncNostr,
+  hasNip07,
+  type NostrSyncOptions,
+} from "@/llm/nostrSync";
+import {
+  syncLocalFiles,
+  hasFileSystemAccess,
+} from "@/llm/fileSystemSync";
 import {
   Dialog,
   DialogContent,
@@ -55,6 +66,8 @@ const JOB_KIND_META: Record<
   seed: { label: "Seed corpus", Icon: Database },
   "bitcoin-bundle": { label: "Bitcoin bundle", Icon: FileText },
   "seed-bundle": { label: "Seed bundle", Icon: FileText },
+  nostr: { label: "NOSTR relay", Icon: Radio },
+  "local-files": { label: "Local files", Icon: FolderOpen },
 };
 
 function formatRelative(ts?: number): string {
@@ -69,9 +82,10 @@ function formatRelative(ts?: number): string {
 /**
  * Top-level tab. "Index URL" covers the existing single-page,
  * sitemap, and RSS flows. "Crawl site" runs the streaming BFS
- * crawler against a root URL.
+ * crawler against a root URL. "NOSTR" syncs from a relay.
+ * "Local files" reads directly from the user's file system.
  */
-type Tab = "index" | "crawl";
+type Tab = "index" | "crawl" | "nostr" | "local-files";
 
 export function KnowledgePanel({
   isOpen,
@@ -114,10 +128,12 @@ export function KnowledgePanel({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex border-b border-[hsl(var(--widget-border))] -mx-1 px-1">
+        <div className="flex flex-wrap border-b border-[hsl(var(--widget-border))] -mx-1 px-1">
           {([
             { id: "index" as const, label: "Index URL" },
-            { id: "crawl" as const, label: "Crawl whole site" },
+            { id: "crawl" as const, label: "Crawl site" },
+            { id: "nostr" as const, label: "NOSTR relay" },
+            { id: "local-files" as const, label: "Local files" },
           ]).map((t) => (
             <button
               key={t.id}
@@ -136,11 +152,10 @@ export function KnowledgePanel({
           ))}
         </div>
 
-        {tab === "index" ? (
-          <IndexTab onIndexed={refreshSources} />
-        ) : (
-          <CrawlTab onIndexed={refreshSources} />
-        )}
+        {tab === "index" && <IndexTab onIndexed={refreshSources} />}
+        {tab === "crawl" && <CrawlTab onIndexed={refreshSources} />}
+        {tab === "nostr" && <NostrTab onIndexed={refreshSources} />}
+        {tab === "local-files" && <LocalFilesTab onIndexed={refreshSources} />}
 
         <div className="border-t border-[hsl(var(--widget-border))] pt-3">
           <div className="flex items-baseline justify-between mb-2">
@@ -587,6 +602,288 @@ function SourcesList({
         );
       })}
     </ul>
+  );
+}
+
+function newJobId(): string {
+  return `job-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function NostrTab({ onIndexed }: { onIndexed: () => Promise<void> }) {
+  const llm = useLLM();
+  const { toast } = useToast();
+  const [relay, setRelay] = useState("wss://relay.damus.io");
+  const [pubkey, setPubkey] = useState("");
+  const [decrypt, setDecrypt] = useState(false);
+  const [nsec, setNsec] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [statusMsg, setStatusMsg] = useState("");
+  const [done, setDone] = useState(0);
+  const [total, setTotal] = useState(0);
+  const nip07 = hasNip07();
+
+  const handleSync = async () => {
+    const relayTrimmed = relay.trim();
+    if (!relayTrimmed) return;
+    if (llm.status !== "ready") {
+      toast({
+        title: "Local AI not ready",
+        description: "Wait for the in-browser model to finish loading.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setBusy(true);
+    setStatusMsg("Connecting…");
+    setDone(0);
+    setTotal(0);
+    try {
+      const opts: NostrSyncOptions = {
+        relayUrls: [relayTrimmed],
+        targetPubkey: pubkey.trim() || undefined,
+        decryptPrivate: decrypt,
+        nsecHex: nsec.trim() || undefined,
+        embed: llm.embed,
+        onProgress: (msg, d, t) => {
+          setStatusMsg(msg);
+          setDone(d);
+          setTotal(t);
+        },
+      };
+      const result = await syncNostr(newJobId(), opts);
+      toast({
+        title: "NOSTR sync complete",
+        description: `${result.events_fetched} events → ${result.chunks_indexed} chunks indexed${result.skipped ? ` (${result.skipped} skipped)` : ""}.`,
+      });
+      setNsec("");
+      await onIndexed();
+    } catch (err) {
+      toast({
+        title: "NOSTR sync failed",
+        description: (err as Error).message,
+        variant: "destructive",
+      });
+    } finally {
+      setBusy(false);
+      setStatusMsg("");
+    }
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="text-[11px] text-[hsl(var(--widget-muted))] space-y-1 bg-white/[0.03] border border-[hsl(var(--widget-border))] rounded-md p-3">
+        <p>
+          <span className="font-medium text-[hsl(var(--widget-fg))]">Sovereign sync.</span>{" "}
+          Connect to any NOSTR relay, subscribe to a pubkey's events, and
+          embed them locally. Nothing leaves your browser.
+        </p>
+        {nip07 && (
+          <p className="text-emerald-400">
+            NIP-07 extension detected. Decryption runs in your extension —
+            your private key never enters Greater.
+          </p>
+        )}
+        {!nip07 && (
+          <p className="text-amber-300">
+            No NIP-07 extension found. Install{" "}
+            <a
+              href="https://getalby.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              Alby
+            </a>{" "}
+            for keyless decryption, or paste an nsec below (held in
+            memory only, never stored).
+          </p>
+        )}
+      </div>
+
+      <label className="flex flex-col gap-1 text-[11px] text-[hsl(var(--widget-muted))]">
+        Relay URL
+        <Input
+          value={relay}
+          onChange={(e) => setRelay(e.target.value)}
+          placeholder="wss://relay.damus.io"
+          className="bg-transparent border-[hsl(var(--widget-border))] text-sm"
+          disabled={busy}
+        />
+      </label>
+
+      <label className="flex flex-col gap-1 text-[11px] text-[hsl(var(--widget-muted))]">
+        Target pubkey (npub or hex) — leave blank to use your NIP-07 key
+        <Input
+          value={pubkey}
+          onChange={(e) => setPubkey(e.target.value)}
+          placeholder="npub1…"
+          className="bg-transparent border-[hsl(var(--widget-border))] text-sm font-mono"
+          disabled={busy}
+        />
+      </label>
+
+      <div className="flex items-center gap-2">
+        <input
+          id="nostr-decrypt"
+          type="checkbox"
+          checked={decrypt}
+          onChange={(e) => setDecrypt(e.target.checked)}
+          disabled={busy}
+          className="accent-emerald-500"
+        />
+        <label htmlFor="nostr-decrypt" className="text-[11px] text-[hsl(var(--widget-muted))] select-none cursor-pointer">
+          Decrypt private events (kind 4 / encrypted)
+        </label>
+      </div>
+
+      {decrypt && !nip07 && (
+        <label className="flex flex-col gap-1 text-[11px] text-[hsl(var(--widget-muted))]">
+          nsec (in-memory only — never stored or transmitted)
+          <Input
+            value={nsec}
+            onChange={(e) => setNsec(e.target.value)}
+            placeholder="nsec1… or hex private key"
+            type="password"
+            className="bg-transparent border-[hsl(var(--widget-border))] text-sm font-mono"
+            disabled={busy}
+          />
+        </label>
+      )}
+
+      <div className="flex items-center gap-2">
+        <Button
+          onClick={() => void handleSync()}
+          disabled={busy || !relay.trim() || llm.status !== "ready"}
+          className="bg-emerald-600 hover:bg-emerald-500 text-white"
+        >
+          {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sync relay"}
+        </Button>
+        {llm.status !== "ready" && (
+          <p className="text-[11px] text-amber-300">Local AI is still loading.</p>
+        )}
+      </div>
+
+      {busy && statusMsg && (
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between text-[11px] text-[hsl(var(--widget-muted))]">
+            <span className="truncate pr-2">{statusMsg}</span>
+            {total > 0 && <span>{done}/{total}</span>}
+          </div>
+          <div className="h-1 bg-white/5 rounded overflow-hidden">
+            <div
+              className="h-full bg-emerald-500 transition-all"
+              style={{ width: total > 0 ? `${Math.round((done / total) * 100)}%` : "0%" }}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function LocalFilesTab({ onIndexed }: { onIndexed: () => Promise<void> }) {
+  const llm = useLLM();
+  const { toast } = useToast();
+  const [busy, setBusy] = useState(false);
+  const [statusMsg, setStatusMsg] = useState("");
+  const [done, setDone] = useState(0);
+  const [total, setTotal] = useState(0);
+  const supported = hasFileSystemAccess();
+
+  const handlePick = async () => {
+    if (llm.status !== "ready") {
+      toast({
+        title: "Local AI not ready",
+        description: "Wait for the in-browser model to finish loading.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setBusy(true);
+    setStatusMsg("Waiting for folder selection…");
+    setDone(0);
+    setTotal(0);
+    try {
+      const result = await syncLocalFiles(newJobId(), {
+        embed: llm.embed,
+        onProgress: (fileName, d, t) => {
+          setStatusMsg(fileName);
+          setDone(d);
+          setTotal(t);
+        },
+      });
+      toast({
+        title: "Local files indexed",
+        description: `"${result.directory_name}" — ${result.files_read} files → ${result.chunks_indexed} chunks${result.files_skipped ? ` (${result.files_skipped} skipped)` : ""}.`,
+      });
+      await onIndexed();
+    } catch (err) {
+      const msg = (err as Error).message;
+      if (msg.toLowerCase().includes("aborted") || msg.toLowerCase().includes("cancel")) {
+        return;
+      }
+      toast({
+        title: "File sync failed",
+        description: msg,
+        variant: "destructive",
+      });
+    } finally {
+      setBusy(false);
+      setStatusMsg("");
+    }
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="text-[11px] text-[hsl(var(--widget-muted))] space-y-1 bg-white/[0.03] border border-[hsl(var(--widget-border))] rounded-md p-3">
+        <p>
+          <span className="font-medium text-[hsl(var(--widget-fg))]">True data sovereignty.</span>{" "}
+          Point Greater at a local folder — notes, docs, research — and it
+          will chunk and embed everything directly in your browser. Files
+          are never uploaded. Only embeddings land in IndexedDB.
+        </p>
+        <p>
+          Supports .txt, .md, .json, .csv, .html, and most code files.
+          Files over 5 MB are skipped. Subdirectories are walked
+          automatically (up to 6 levels deep).
+        </p>
+        {!supported && (
+          <p className="text-red-400">
+            Your browser doesn't support the File System Access API. Use
+            Chrome or Edge 86+.
+          </p>
+        )}
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Button
+          onClick={() => void handlePick()}
+          disabled={busy || !supported || llm.status !== "ready"}
+          className="bg-emerald-600 hover:bg-emerald-500 text-white inline-flex items-center gap-2"
+        >
+          <FolderOpen className="w-4 h-4" />
+          {busy ? "Indexing…" : "Choose folder"}
+        </Button>
+        {llm.status !== "ready" && (
+          <p className="text-[11px] text-amber-300">Local AI is still loading.</p>
+        )}
+      </div>
+
+      {busy && (
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between text-[11px] text-[hsl(var(--widget-muted))]">
+            <span className="truncate pr-2 font-mono">{statusMsg || "Scanning…"}</span>
+            {total > 0 && <span>{done}/{total} files</span>}
+          </div>
+          <div className="h-1 bg-white/5 rounded overflow-hidden">
+            <div
+              className="h-full bg-emerald-500 transition-all"
+              style={{ width: total > 0 ? `${Math.round((done / total) * 100)}%` : "5%" }}
+            />
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

@@ -10,6 +10,7 @@ const NAV_ITEMS: { href: string; label: string }[] = [
   { href: "/", label: "Home" },
   { href: "/how-it-works", label: "How it works" },
   { href: "/about", label: "About" },
+  { href: "/nostr", label: "NOSTR" },
   { href: "/openclaw", label: "OpenClaw" },
 ];
 
@@ -300,6 +301,14 @@ function Footer({ onContact }: { onContact: () => void }) {
                   data-testid="link-footer-compliance"
                 >
                   Compliance
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/nostr"
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  NOSTR
                 </Link>
               </li>
               <li>

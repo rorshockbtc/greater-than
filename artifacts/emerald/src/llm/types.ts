@@ -39,7 +39,9 @@ export type JobKind =
   | "crawl"
   | "seed"
   | "bitcoin-bundle"
-  | "seed-bundle";
+  | "seed-bundle"
+  | "nostr"
+  | "local-files";
 
 export interface KbChunk {
   id: string;

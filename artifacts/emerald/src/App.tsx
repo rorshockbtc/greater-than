@@ -16,6 +16,7 @@ import HowItWorks from "@/pages/HowItWorks";
 import Changelog from "@/pages/Changelog";
 import Proof from "@/pages/Proof";
 import Compliance from "@/pages/Compliance";
+import Nostr from "@/pages/Nostr";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -60,6 +61,7 @@ function Router() {
             <Route path="/proof" component={Proof} />
             <Route path="/changelog" component={Changelog} />
             <Route path="/compliance" component={Compliance} />
+            <Route path="/nostr" component={Nostr} />
             <Route path="/openclaw" component={OpenClaw} />
             <Route path="/bots/:slug" component={PersonaPage} />
             <Route path="/demo/:slug" component={DemoHolding} />
