@@ -46,11 +46,8 @@ import {
 } from "./vectorStore";
 
 const SEED_CORPUS_VERSION = "v2-seed-blockstream";
-const BITCOIN_BUNDLE_FLAG = "bitcoin-bundle";
-const BITCOIN_BUNDLE_VERSION = "v1";
-const BITCOIN_BUNDLE_URL = `${import.meta.env.BASE_URL}seeds/bitcoin.json`;
 
-interface BitcoinBundleDoc {
+interface SeedBundleDoc {
   /** Per-page URL inside the bundle. */
   source_url: string;
   /** Per-page title inside the bundle. */
@@ -59,20 +56,81 @@ interface BitcoinBundleDoc {
   chunks: { text: string; chunk_index: number }[];
 }
 
-interface BitcoinBundle {
+interface SeedBundle {
   version?: string;
   generated_at?: string;
-  documents: BitcoinBundleDoc[];
+  documents: SeedBundleDoc[];
 }
 
-/** Job-id constants used for the two built-in corpora. */
+/** Job-id constant used for the hand-curated startup seed (Blockstream). */
 const SEED_JOB_ID = "seed-blockstream";
 const SEED_JOB_ROOT_URL = "https://help.blockstream.com/";
 const SEED_JOB_LABEL = "Blockstream support seed corpus";
 
-const BITCOIN_JOB_ID = "bitcoin-bundle";
-const BITCOIN_JOB_ROOT_URL = "internal://bitcoin-knowledge-bundle";
-const BITCOIN_JOB_LABEL = "Bitcoin knowledge bundle";
+/**
+ * Registry of optional, on-demand seed bundles. Each demo route
+ * requests its own bundle via `requestSeedBundle(slug)`; the loader
+ * fetches `<base>/seeds/<slug>.json` once and persists the chunks
+ * into IndexedDB. A 404 marks the bundle as `absent` so the FOSS
+ * fork (which ships no bundles) doesn't keep re-checking. Adding a
+ * new persona only requires dropping a new file in `public/seeds/`
+ * and adding an entry here.
+ */
+interface SeedBundleConfig {
+  /** Slug used as the meta flag key, the URL filename, and the job id. */
+  slug: string;
+  /** Bumped to force a re-index after corpus changes. */
+  version: string;
+  /** Used for the Knowledge panel's job grouping. */
+  jobLabel: string;
+}
+
+const SEED_BUNDLES: Record<string, SeedBundleConfig> = {
+  bitcoin: {
+    slug: "bitcoin",
+    version: "v1",
+    jobLabel: "Bitcoin knowledge bundle",
+  },
+  startups: {
+    slug: "startups",
+    version: "v1",
+    jobLabel: "Startups demo seed (Vellum)",
+  },
+  faith: {
+    slug: "faith",
+    version: "v1",
+    jobLabel: "Faith demo seed (Cornerstone)",
+  },
+  schools: {
+    slug: "schools",
+    version: "v1",
+    jobLabel: "Schools demo seed (Heritage Classical)",
+  },
+  "small-business": {
+    slug: "small-business",
+    version: "v1",
+    jobLabel: "Small Business demo seed (Pinecrest Realty)",
+  },
+  healthtech: {
+    slug: "healthtech",
+    version: "v1",
+    jobLabel: "HealthTech demo seed (MutualHealth)",
+  },
+};
+
+function bundleFlagKey(slug: string) {
+  return `seed-bundle:${slug}`;
+}
+
+function bundleJobId(slug: string) {
+  // Preserve historical job_id for the bitcoin bundle so existing
+  // IndexedDB rows don't get orphaned across the rename.
+  return slug === "bitcoin" ? "bitcoin-bundle" : `seed-bundle:${slug}`;
+}
+
+function bundleRootUrl(slug: string) {
+  return `internal://seed-bundle/${slug}`;
+}
 
 export interface BundleLoadProgress {
   total_chunks: number;

@@ -37,7 +37,8 @@ export type JobKind =
   | "sitemap"
   | "rss"
   | "seed"
-  | "bitcoin-bundle";
+  | "bitcoin-bundle"
+  | "seed-bundle";
 
 export interface KbChunk {
   id: string;
