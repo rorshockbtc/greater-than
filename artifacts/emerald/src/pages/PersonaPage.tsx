@@ -39,7 +39,7 @@ export default function PersonaPage() {
           <p className="chb-mono-eyebrow text-muted-foreground mt-6 mb-2">
             {persona.name}
           </p>
-          <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight leading-[1.1] max-w-2xl">
+          <h1 className="chb-serif-headline text-3xl sm:text-5xl leading-[1.1] max-w-2xl">
             {persona.tagline}
           </h1>
           <p className="text-base sm:text-lg text-muted-foreground mt-4 max-w-2xl leading-relaxed">

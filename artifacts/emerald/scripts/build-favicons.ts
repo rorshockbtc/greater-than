@@ -1,4 +1,5 @@
 import sharp from "sharp";
+import pngToIco from "png-to-ico";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -34,6 +35,14 @@ async function buildFavicons() {
     "utf8",
   );
   console.log("wrote", join(PUBLIC, "favicon.svg"));
+
+  // Multi-size .ico for legacy browsers and bookmark folders.
+  const ico = await pngToIco([
+    join(PUBLIC, "favicon-16.png"),
+    join(PUBLIC, "favicon-32.png"),
+  ]);
+  writeFileSync(join(PUBLIC, "favicon.ico"), ico);
+  console.log("wrote", join(PUBLIC, "favicon.ico"));
 }
 
 async function buildOg() {

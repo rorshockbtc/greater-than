@@ -274,3 +274,16 @@
 .chb-display {
   font-family: var(--font-display);
 }
+
+/**
+ * Serif headline utility — Fraunces with optical-size + tighter
+ * tracking. Applied selectively to hero H1s to break up the
+ * uniform Inter look that reads as AI-generated. Editorial
+ * typography without committing the whole site to a serif.
+ */
+.chb-serif-headline {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-feature-settings: "ss01", "ss02";
+  letter-spacing: -0.022em;
+}

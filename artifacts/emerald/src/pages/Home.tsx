@@ -35,7 +35,7 @@ function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
-          className="text-4xl sm:text-6xl font-semibold tracking-tight leading-[1.05] max-w-4xl"
+          className="chb-serif-headline text-4xl sm:text-6xl leading-[1.05] max-w-4xl"
         >
           Your customers deserve a chatbot that{" "}
           <span style={{ color: "#FE299E" }}>actually knows your business</span>.

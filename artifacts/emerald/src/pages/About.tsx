@@ -12,7 +12,7 @@ export default function About() {
         <p className="chb-mono-eyebrow text-muted-foreground mb-4">
           About Greater
         </p>
-        <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.1]">
+        <h1 className="chb-serif-headline text-4xl sm:text-5xl leading-[1.1]">
           Sovereign by default. Opinionated on purpose.
         </h1>
 
