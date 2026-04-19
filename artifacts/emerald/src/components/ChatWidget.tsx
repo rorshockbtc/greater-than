@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, Send, Bot, Loader2, ChevronDown, Maximize2, Minimize2, ShieldCheck, PhoneCall, AlertOctagon, CircleDashed, Settings, Database } from 'lucide-react';
+import { MessageSquare, Send, Bot, Loader2, ChevronDown, Maximize2, Minimize2, ShieldCheck, PhoneCall, AlertOctagon, CircleDashed, Settings, Database, Cable } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSendMessage, useEscalateTicket } from '@workspace/api-client-react';
 import { ChatMessage, type MessageProps } from './ChatMessage';
 import { SecurityPanel } from './SecurityPanel';
 import { KnowledgePanel } from './KnowledgePanel';
+import { PipeStatusPanel } from './PipeStatusPanel';
+import { BiasToggle } from './BiasToggle';
 import { ModelInfoPopover } from '@/llm/ModelInfoPopover';
 import {
   DropdownMenu,
@@ -13,9 +15,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useLLM } from '@/llm/LLMProvider';
+import { usePipe } from '@/pipes/PipeContext';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import type { ChatTurn, CloudReason, ModelStatus } from '@/llm/types';
+import type { AskOptions, Bias, ChatTurn, CloudReason, ModelStatus } from '@/llm/types';
 
 function uuidv4() {
   return crypto.randomUUID();
@@ -29,6 +32,7 @@ export function ChatWidget() {
   const [input, setInput] = useState('');
   const [showSecurityPanel, setShowSecurityPanel] = useState(false);
   const [showKnowledgePanel, setShowKnowledgePanel] = useState(false);
+  const [showPipePanel, setShowPipePanel] = useState(false);
   const [hasSecurityAlertSession, setHasSecurityAlertSession] = useState(false);
   const [isLocalGenerating, setIsLocalGenerating] = useState(false);
   const [messages, setMessages] = useState<MessageProps[]>([
@@ -49,6 +53,34 @@ export function ChatWidget() {
   const chatMutation = useSendMessage();
   const escalateMutation = useEscalateTicket();
   const llm = useLLM();
+  const pipe = usePipe();
+  const activeBiasOption = pipe.pipe?.bias_options.find(
+    (b) => b.id === pipe.activeBiasId,
+  );
+
+  // When the user switches bias mid-conversation, drop a small inline
+  // note so the *visible transcript* explains why the next answer may
+  // contradict an earlier one. The note is also added to the model's
+  // history (as a system message) so the model knows its perspective
+  // changed and is allowed to disagree with prior turns.
+  const handleBiasChange = (nextBiasId: string) => {
+    if (!pipe.pipe) return;
+    if (nextBiasId === pipe.activeBiasId) return;
+    const next = pipe.pipe.bias_options.find((b) => b.id === nextBiasId);
+    const prev = activeBiasOption;
+    if (!next) return;
+    pipe.setActiveBias(nextBiasId);
+    setMessages((prevMsgs) => [
+      ...prevMsgs,
+      {
+        id: uuidv4(),
+        role: 'bot',
+        content: `Switched perspective: ${prev?.label ?? 'Neutral'} → ${next.label}. Subsequent answers may differ from earlier ones — that's expected when the bias changes.`,
+        timestamp: new Date(),
+        isModeNote: true,
+      },
+    ]);
+  };
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -82,12 +114,27 @@ export function ChatWidget() {
       setIsLocalGenerating(true);
       try {
         const history: ChatTurn[] = messages
-          .filter((m) => m.role === 'user' || m.role === 'bot')
+          .filter((m) => (m.role === 'user' || m.role === 'bot') && !m.isModeNote)
           .map((m) => ({
             role: m.role === 'bot' ? 'assistant' : 'user',
             content: m.content,
           }));
-        const answer = await llm.ask(history, userText);
+        const askOptions: AskOptions | undefined = pipe.pipe
+          ? {
+              systemPrompt:
+                pipe.pipe.system_prompts[pipe.activeBiasId] ?? undefined,
+              // Always include 'neutral' so common-ground material remains
+              // eligible regardless of fork. The active bias adds the
+              // perspective-specific material on top.
+              biasFilter: Array.from(
+                new Set<Bias>([
+                  'neutral',
+                  pipe.activeBiasId as Bias,
+                ]),
+              ),
+            }
+          : undefined;
+        const answer = await llm.ask(history, userText, askOptions);
         const botMsg: MessageProps = {
           id: uuidv4(),
           role: 'bot',
@@ -97,6 +144,8 @@ export function ChatWidget() {
           ciBreakdown: 'Local inference · WebGPU · grounded in retrieved chunks.',
           responseSource: 'local',
           thoughtTrace: answer.thoughtTrace,
+          biasLabel: activeBiasOption?.label,
+          biasId: pipe.pipe ? pipe.activeBiasId : undefined,
         };
         setMessages((prev) => [...prev, botMsg]);
       } catch (err) {
@@ -235,8 +284,9 @@ export function ChatWidget() {
                   <Bot className="w-4 h-4 text-white" />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-sm font-semibold text-[hsl(var(--widget-fg))] truncate">
+                  <span className="text-sm font-semibold text-[hsl(var(--widget-fg))] truncate flex items-center gap-1.5">
                     Started {formattedStartTime}
+                    <ModeBadge connected={pipe.connected} pipeName={pipe.pipe?.name} />
                   </span>
                   <ReadinessPill status={llm.status} progress={llm.progress} stageLabel={llm.loadStageLabel} />
                 </div>
@@ -257,6 +307,10 @@ export function ChatWidget() {
                     <DropdownMenuItem onSelect={() => setShowKnowledgePanel(true)}>
                       <Database className="w-3.5 h-3.5 mr-2" />
                       Manage knowledge base
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => setShowPipePanel(true)}>
+                      <Cable className="w-3.5 h-3.5 mr-2" />
+                      Pipe status
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -382,6 +436,19 @@ export function ChatWidget() {
             </div>
 
             <div className="px-4 py-3 border-t border-[hsl(var(--widget-border))] bg-[hsl(220,13%,8%)]">
+              {pipe.pipe && pipe.pipe.bias_options.length > 1 && (
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className="text-[10px] uppercase tracking-wider text-[hsl(var(--widget-muted))]">
+                    Perspective
+                  </span>
+                  <BiasToggle
+                    options={pipe.pipe.bias_options}
+                    activeId={pipe.activeBiasId}
+                    onChange={handleBiasChange}
+                    disabled={isPending}
+                  />
+                </div>
+              )}
               <div className="flex items-center gap-2">
                 <div className="p-2 text-[hsl(var(--widget-muted))]">
                   <ShieldCheck className="w-4 h-4" />
@@ -458,7 +525,40 @@ export function ChatWidget() {
         isOpen={showKnowledgePanel}
         onClose={() => setShowKnowledgePanel(false)}
       />
+
+      <PipeStatusPanel
+        isOpen={showPipePanel}
+        onClose={() => setShowPipePanel(false)}
+      />
     </>
+  );
+}
+
+/**
+ * Mode indicator next to the session-start timestamp. Tells the user
+ * at a glance whether they're talking to the FOSS shell on its own
+ * (Generic) or the shell amplified by a curated Pipe (Greater).
+ */
+function ModeBadge({ connected, pipeName }: { connected: boolean; pipeName?: string }) {
+  if (connected) {
+    return (
+      <span
+        className="inline-flex items-center gap-1 text-[9px] font-mono uppercase tracking-wider px-1.5 py-px rounded border border-pink-500/40 bg-pink-500/10 text-pink-200"
+        title={pipeName ? `Greater mode · ${pipeName}` : 'Greater mode'}
+        data-testid="badge-mode"
+      >
+        Greater
+      </span>
+    );
+  }
+  return (
+    <span
+      className="inline-flex items-center gap-1 text-[9px] font-mono uppercase tracking-wider px-1.5 py-px rounded border border-[hsl(var(--widget-border))] bg-white/5 text-[hsl(var(--widget-muted))]"
+      title="Generic mode — no Pipe loaded"
+      data-testid="badge-mode"
+    >
+      Generic
+    </span>
   );
 }
 

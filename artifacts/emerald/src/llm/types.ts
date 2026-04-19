@@ -222,3 +222,19 @@ export interface LocalAnswer {
   source: ResponseSource;
   thoughtTrace?: ThoughtTrace;
 }
+
+/**
+ * Per-turn knobs supplied by the chat widget. Both fields are
+ * Pipe-driven (see `@workspace/pipes`):
+ *
+ *  - `systemPrompt` overrides the default Greater system prompt with
+ *    the active Pipe's bias-specific prompt, allowing the bot to
+ *    adopt a Core / Knots / Neutral posture mid-conversation.
+ *  - `biasFilter` restricts retrieval to chunks tagged with one of
+ *    the listed biases. Callers should always include `'neutral'`
+ *    so common-ground material remains eligible regardless of fork.
+ */
+export interface AskOptions {
+  systemPrompt?: string;
+  biasFilter?: Bias[];
+}

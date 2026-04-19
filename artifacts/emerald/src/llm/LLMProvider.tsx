@@ -8,6 +8,7 @@ import React, {
   useState,
 } from "react";
 import type {
+  AskOptions,
   ChatTurn,
   EmbedResult,
   GenerateResult,
@@ -100,7 +101,11 @@ interface LLMContextValue {
    * Throws if the local model is not ready — callers should check
    * `status === "ready"` first and fall back to cloud otherwise.
    */
-  ask: (history: ChatTurn[], userMessage: string) => Promise<LocalAnswer>;
+  ask: (
+    history: ChatTurn[],
+    userMessage: string,
+    options?: AskOptions,
+  ) => Promise<LocalAnswer>;
   /** Embed a single text chunk via the in-browser sentence-transformer. */
   embed: (text: string) => Promise<number[]>;
   /** Run a full ingestion (single page or sitemap) and store chunks locally. */
@@ -377,22 +382,34 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
   }, [startWorker]);
 
   const ask = useCallback<LLMContextValue["ask"]>(
-    async (history, userMessage) => {
+    async (history, userMessage, options) => {
       if (status !== "ready") {
         throw new Error("Local model not ready");
       }
       const queryVec = await callWorker<number[]>("embed", {
         text: userMessage,
       });
-      const retrieved = await topK(queryVec, 5);
+      // Pipe-aware retrieval: when the caller supplies a bias filter,
+      // restrict scoring to chunks tagged with one of those biases.
+      // Untagged ('neutral') chunks are always eligible — they are the
+      // common ground that holds across forks.
+      const retrieved = await topK(queryVec, 5, {
+        biasFilter: options?.biasFilter,
+      });
       const context = formatRetrievedForPrompt(retrieved);
 
+      const baseSystemPrompt =
+        options?.systemPrompt ??
+        [
+          "You are Greater, a support assistant for Blockstream products and",
+          "Bitcoin self-custody. Answer ONLY from the provided knowledge",
+          "snippets. If the snippets do not contain the answer, say so",
+          "plainly and suggest opening a support ticket. Never ask for the",
+          "user's seed phrase, PIN, or password — refuse if requested.",
+        ].join("\n");
+
       const systemPrompt = [
-        "You are Greater, a support assistant for Blockstream products and",
-        "Bitcoin self-custody. Answer ONLY from the provided knowledge",
-        "snippets. If the snippets do not contain the answer, say so",
-        "plainly and suggest opening a support ticket. Never ask for the",
-        "user's seed phrase, PIN, or password — refuse if requested.",
+        baseSystemPrompt,
         "",
         "Citation rules:",
         "- After every factual claim, cite the supporting snippet inline as",

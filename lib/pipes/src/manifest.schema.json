@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://greater.colonhyphenbracket.pink/schemas/pipe-manifest.json",
+  "title": "Greater Pipe Manifest",
+  "description": "Curated, opinionated knowledge bundle (a 'Pipe') consumable by the Greater shell. The FOSS shell is fully functional without any Pipe; loading a Pipe transforms it into 'Greater mode' for a particular persona.",
+  "type": "object",
+  "required": [
+    "pipe_id",
+    "name",
+    "version",
+    "persona",
+    "bias_options",
+    "corpus_bundles",
+    "system_prompts",
+    "signature",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "pipe_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Stable kebab-case identifier (e.g. 'bitcoin-greater-v1')."
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable display name shown in the chat header and Pipe status panel."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[a-z0-9.-]+)?$",
+      "description": "SemVer string. The Greater shell does not interpret it; it is shown verbatim in the status panel."
+    },
+    "persona": {
+      "type": "string",
+      "enum": [
+        "fintech",
+        "startups",
+        "faith",
+        "schools",
+        "small-business",
+        "healthtech"
+      ],
+      "description": "Which Greater demo persona this Pipe applies to. The runtime registry matches Pipes to demo routes by persona."
+    },
+    "bias_options": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "description"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]*$",
+            "description": "Bias tag matching the chunk-level `bias` field (e.g. 'neutral', 'core', 'knots')."
+          },
+          "label": {
+            "type": "string",
+            "description": "Short label rendered in the segmented control."
+          },
+          "description": {
+            "type": "string",
+            "description": "One-sentence explanation of this bias's perspective, shown in the Pipe status panel."
+          }
+        }
+      }
+    },
+    "corpus_bundles": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "required": ["path", "chunk_count", "bias_distribution"],
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Path to the bundle file, relative to the Pipe manifest's directory. The Greater shell resolves it via the same loader that ships the Bitcoin bundle in Task #4."
+          },
+          "chunk_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Total chunks in this bundle. Shown in the status panel; the runtime does not enforce it."
+          },
+          "bias_distribution": {
+            "type": "object",
+            "description": "Map of bias id → chunk count. Sum should equal chunk_count.",
+            "additionalProperties": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "system_prompts": {
+      "type": "object",
+      "description": "Map of bias id → system prompt text. Every entry in `bias_options` should have a corresponding prompt; missing entries fall back to a generic prompt at runtime.",
+      "additionalProperties": { "type": "string" }
+    },
+    "signature": {
+      "type": "object",
+      "description": "PGP signature metadata. Schema only — runtime treats every Pipe as 'Unsigned — local development build' for now.",
+      "required": ["status"],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["unsigned", "signed", "invalid"],
+          "description": "Signature verification result."
+        },
+        "signed_by": {
+          "type": ["string", "null"],
+          "description": "PGP key fingerprint of the signer, or null when unsigned."
+        },
+        "signed_at": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp at manifest authoring time."
+    },
+    "author_notes": {
+      "type": "string",
+      "description": "Free-form author notes shown in the Pipe status panel."
+    }
+  }
+}

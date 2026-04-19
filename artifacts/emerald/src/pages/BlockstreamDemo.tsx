@@ -3,6 +3,7 @@ import type { LucideIcon } from 'lucide-react';
 import { ShieldAlert, Lock, KeyRound, Smartphone, AlertTriangle, ChevronRight, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { ChatWidget } from '@/components/ChatWidget';
 import { ContactCTASection } from '@/components/ContactCTASection';
+import { PipeProvider } from '@/pipes/PipeContext';
 
 const sidebarLinks = [
   { label: "Unauthorized login activity", active: true },
@@ -15,6 +16,11 @@ const sidebarLinks = [
 
 export default function Home() {
   return (
+    // PipeProvider scopes the active Pipe + bias to this demo route.
+    // The Bitcoin Greater Pipe is keyed to persona='fintech'; if no
+    // manifest is mounted under data/pipes/, the provider yields
+    // pipe=null and the chat widget runs in Generic mode visibly.
+    <PipeProvider persona="fintech">
     <div className="min-h-screen bg-white text-foreground flex flex-col">
       <nav className="bg-[#111316] text-white sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -221,6 +227,7 @@ export default function Home() {
 
       <ChatWidget />
     </div>
+    </PipeProvider>
   );
 }
 

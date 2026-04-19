@@ -25,6 +25,20 @@ export interface MessageProps {
   cloudReason?: CloudReason;
   /** Real chunks fed into the prompt (local responses only). */
   thoughtTrace?: ThoughtTrace;
+  /**
+   * Human-readable label of the active bias when this reply was
+   * generated (e.g. "Core", "Knots"). Rendered as a small chip next
+   * to the source badge so the user can see *why* the answer leans
+   * the way it does.
+   */
+  biasLabel?: string;
+  biasId?: string;
+  /**
+   * True for in-conversation system notes (e.g. "Switched perspective:
+   * Core → Knots"). Rendered as a centered, low-emphasis line and
+   * excluded from the model's history on the next turn.
+   */
+  isModeNote?: boolean;
 }
 
 export function ChatMessage({
@@ -41,10 +55,26 @@ export function ChatMessage({
   responseSource,
   cloudReason,
   thoughtTrace,
+  biasLabel,
+  isModeNote,
 }: MessageProps) {
   const isBot = role === 'bot';
   const { toast } = useToast();
   const [traceOpen, setTraceOpen] = useState(false);
+
+  if (isModeNote) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex justify-center my-3"
+      >
+        <div className="text-[10px] uppercase tracking-wider font-medium text-[hsl(var(--muted-foreground))] bg-pink-500/10 border border-pink-500/30 text-pink-300 px-2.5 py-1 rounded-full">
+          {content}
+        </div>
+      </motion.div>
+    );
+  }
 
   const handleRequestUpdate = () => {
     toast({
@@ -79,8 +109,21 @@ export function ChatMessage({
           </div>
         )}
 
-        {isBot && responseSource && (
-          <SourceBadge source={responseSource} cloudReason={cloudReason} />
+        {isBot && (responseSource || biasLabel) && (
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {responseSource && (
+              <SourceBadge source={responseSource} cloudReason={cloudReason} />
+            )}
+            {biasLabel && (
+              <div
+                className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-medium text-pink-300 bg-pink-500/10 border border-pink-500/30 px-2 py-0.5 rounded-md mb-1"
+                title="Bias perspective active when this answer was generated"
+                data-testid="badge-bias-label"
+              >
+                {biasLabel}
+              </div>
+            )}
+          </div>
         )}
 
         <div

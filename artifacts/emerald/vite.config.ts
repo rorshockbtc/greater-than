@@ -2,13 +2,17 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "node:path";
+import { pipesLoader } from "./vite-plugins/pipes-loader";
 
 const port = Number(process.env.PORT) || 5173;
 const basePath = process.env.BASE_PATH || "/";
 
+// Greater Pipes are gitignored and live at the repo root.
+const pipesDir = path.resolve(import.meta.dirname, "../../data/pipes");
+
 export default defineConfig({
   base: basePath,
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), pipesLoader({ pipesDir })],
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "src"),
