@@ -252,6 +252,26 @@ export function ChatWidget({
         },
       ]);
     }
+    // Critical: do NOT re-enter runLocal when we got here *because*
+    // local just failed. That path would recurse indefinitely
+    // (local throws → tryCloudOrLocal → cap denied → runLocal → throws…).
+    // In that case there's no safe way forward this turn — surface a
+    // terminal inline error and stop.
+    if (cloudReason === 'local-error') {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: uuidv4(),
+          role: 'bot',
+          content:
+            'In-browser inference failed and the cloud fallback is rate-limited for this session. Please try again in a new session, or refresh to reload the local model.',
+          timestamp: new Date(),
+          responseSource: 'local',
+          localOnly: true,
+        },
+      ]);
+      return;
+    }
     if (llm.status === 'ready') {
       await runLocal(userText, true);
       return;
@@ -305,12 +325,14 @@ export function ChatWidget({
         relatedArticles: response.relatedArticles,
         responseSource: 'cloud',
         cloudReason,
-        // Cloud responses don't see the bias filter today (the cloud
-        // backend is bias-unaware), but the per-message bias label
-        // still reflects which perspective the user was viewing when
-        // the reply landed — keeps provenance honest.
-        biasLabel: activeBiasOption?.label,
-        biasId: pipe.pipe ? pipe.activeBiasId : undefined,
+        // Prefer the bias the *server* actually honored (echoed back
+        // on the response) over the current UI state. If the user
+        // toggles bias mid-flight, the chip on this message should
+        // reflect what produced the answer, not what's selected now.
+        biasLabel:
+          response.biasLabel ?? activeBiasOption?.label,
+        biasId:
+          response.biasId ?? (pipe.pipe ? pipe.activeBiasId : undefined),
       };
 
       setMessages((prev) => [...prev, botMsg]);
