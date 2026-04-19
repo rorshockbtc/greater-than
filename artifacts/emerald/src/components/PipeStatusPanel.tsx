@@ -248,7 +248,7 @@ function SignatureBadge({
       title="Signed Pipes with session persistence are on the roadmap. Click to ask us about it."
     >
       <Clock className="w-3 h-3" />
-      Signing — coming soon
+      Signing — coming soon · ask about session persistence
     </button>
   );
 }

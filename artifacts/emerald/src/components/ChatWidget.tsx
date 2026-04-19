@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, Send, Bot, Loader2, ChevronDown, Maximize2, Minimize2, ShieldCheck, PhoneCall, AlertOctagon, CircleDashed, Settings, Database, Cable } from 'lucide-react';
+import { MessageSquare, Send, Bot, Loader2, ChevronDown, Maximize2, Minimize2, ShieldCheck, PhoneCall, AlertOctagon, CircleDashed, Settings, Database, Cable, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSendMessage, useEscalateTicket } from '@workspace/api-client-react';
 import { ChatMessage, type MessageProps } from './ChatMessage';
@@ -41,12 +41,19 @@ export interface ChatWidgetProps {
    * for backward compatibility with the original Blockstream demo.
    */
   bundleLabel?: string;
+  /**
+   * If provided, renders a small "What's this demo?" header button
+   * that re-opens the persona's ScenarioModal. Demo shells supply
+   * the callback via `useScenarioModal().reopen`.
+   */
+  onReopenScenario?: () => void;
 }
 
 export function ChatWidget({
   welcomeMessage,
   placeholder,
   bundleLabel,
+  onReopenScenario,
 }: ChatWidgetProps = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -323,6 +330,17 @@ export function ChatWidget({
                 </div>
               </div>
               <div className="flex items-center gap-1">
+                {onReopenScenario && (
+                  <button
+                    onClick={onReopenScenario}
+                    className="p-1.5 text-[hsl(var(--widget-muted))] hover:text-[hsl(var(--widget-fg))] transition-colors"
+                    title="What's this demo?"
+                    aria-label="What's this demo?"
+                    data-testid="button-reopen-scenario"
+                  >
+                    <Info className="w-4 h-4" />
+                  </button>
+                )}
                 <ModelInfoPopover />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

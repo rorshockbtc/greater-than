@@ -482,6 +482,39 @@ Healthtech founders and product leads who are watching the AI wave from outside 
     heroImage: 'images/personas/fintech.png',
     demoStatus: 'live',
     demoLabel: 'Try the live demo — Blockstream support bot',
+    scenario: {
+      seedSlug: 'bitcoin',
+      welcome:
+        "Hello! I'm Greater's Blockstream support bot. Ask me about Jade, Green, hardware-wallet recovery, fees, or self-custody.",
+      placeholder: 'Ask about your wallet, fees, or recovery…',
+      promptSuggestion:
+        "I just got an email saying someone logged into my Blockstream Green wallet from a new device. What should I do, in order, right now?",
+      failureMode: {
+        headline:
+          'A panicked user gets a vendor "security alert" email and the bot answers with marketing copy.',
+        body:
+          "A Blockstream Green user wakes up to an email claiming there was an unauthorized login on their wallet. They open the support chat, terrified, and ask what to do. The off-the-shelf bot — pattern-matching on the word 'login' — replies with a generic five-bullet 'wallet security best practices' page that does not address the specific email, does not tell them whether the email is even legitimate, and silently sends the entire panicked transcript (including any seed words the user pastes by mistake) to a third-party LLM provider with the company's session metadata attached.",
+        namedExample:
+          'Composite of every fintech support widget that bolts a vendor LLM onto a shared session log.',
+      },
+      pivot:
+        "Greater runs the model in your browser — the panicked transcript never leaves the device unless you explicitly escalate. The bot is grounded in Blockstream's own help articles plus a curated Bitcoin Core / Knots / OpTech corpus, and the answer for this exact scenario is a numbered triage list from the company's documented incident playbook, with the specific URL and signature the legitimate alert email should contain. Disagreements about Bitcoin (Core vs. Knots) are surfaced explicitly via the bias toggle, not papered over.",
+      shell: {
+        // The Blockstream demo keeps its own bespoke chrome (see
+        // BlockstreamDemo.tsx); the shell config below is unused for
+        // FinTech but kept structurally so consumers of `Persona`
+        // don't need a special case. None of these fields render.
+        brand: 'Blockstream',
+        accentBg: 'bg-emerald-500',
+        accentText: 'text-emerald-400',
+        navLinks: [],
+        breadcrumb: [],
+        articleTitle: '',
+        articleLede: '',
+        articleSections: [],
+        footerNote: '',
+      },
+    },
     caseStudy: `## The "where does my message go" problem
 
 The Bitcoin community in particular, and the fintech community more broadly, has been burned enough times to be properly suspicious of any chat surface that sends user queries to a third-party LLM provider. A user typing "I think my wallet has been compromised, here is what I see" into a chat widget that posts to OpenAI is a category of risk that the user, the company, and the regulator should all care about, in roughly that order. Most production chat AI is exactly this architecture, with a privacy policy that promises it will be fine.

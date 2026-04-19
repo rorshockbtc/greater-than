@@ -3,8 +3,12 @@ import type { LucideIcon } from 'lucide-react';
 import { ShieldAlert, Lock, KeyRound, Smartphone, AlertTriangle, ChevronRight, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { ChatWidget } from '@/components/ChatWidget';
 import { ContactCTASection } from '@/components/ContactCTASection';
+import { ScenarioModal } from '@/components/ScenarioModal';
 import { PipeProvider } from '@/pipes/PipeContext';
 import { useLLM } from '@/llm/LLMProvider';
+import { useScenarioModal } from '@/hooks/useScenarioModal';
+import { prefillChat } from '@/hooks/prefillChat';
+import { getPersona } from '@/data/personas';
 
 const sidebarLinks = [
   { label: "Unauthorized login activity", active: true },
@@ -25,6 +29,14 @@ export default function Home() {
   useEffect(() => {
     llm.requestSeedBundle('bitcoin');
   }, [llm]);
+
+  // Scenario pre-roll modal — same affordance as the five PersonaDemoShell
+  // demos. Shown once per session (sessionStorage key per slug); the
+  // chat widget header gets a re-open button so the visitor can revisit
+  // the framing later in the conversation.
+  const scenarioModal = useScenarioModal('fintech');
+  const fintech = getPersona('fintech');
+  const scenario = fintech?.scenario;
 
   return (
     // PipeProvider scopes the active Pipe + bias to this demo route.
@@ -236,7 +248,23 @@ export default function Home() {
           chrome and uses Greater's CHB design tokens. */}
       <ContactCTASection />
 
-      <ChatWidget />
+      {scenario && (
+        <ScenarioModal
+          open={scenarioModal.open}
+          onClose={scenarioModal.dismiss}
+          onTryPrompt={() => {
+            scenarioModal.dismiss();
+            setTimeout(() => prefillChat(scenario.promptSuggestion), 250);
+          }}
+          scenario={scenario}
+          brand="Blockstream"
+          personaName="FinTech & Bitcoin"
+        />
+      )}
+
+      <ChatWidget
+        onReopenScenario={scenario ? scenarioModal.reopen : undefined}
+      />
     </div>
     </PipeProvider>
   );

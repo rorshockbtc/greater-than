@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useRoute, Link } from "wouter";
 import { ChevronRight } from "lucide-react";
 import { ChatWidget } from "@/components/ChatWidget";
@@ -6,6 +6,8 @@ import { ContactCTASection } from "@/components/ContactCTASection";
 import { ScenarioModal } from "@/components/ScenarioModal";
 import { PipeProvider } from "@/pipes/PipeContext";
 import { useLLM } from "@/llm/LLMProvider";
+import { useScenarioModal } from "@/hooks/useScenarioModal";
+import { prefillChat } from "@/hooks/prefillChat";
 import { getPersona, type Persona } from "@/data/personas";
 import NotFound from "@/pages/not-found";
 import type { PipePersona } from "@workspace/pipes";
@@ -35,7 +37,7 @@ export default function PersonaDemoShell() {
 function PersonaDemoShellInner({ persona }: { persona: Persona }) {
   const scenario = persona.scenario!;
   const llm = useLLM();
-  const [showScenario, setShowScenario] = useState(true);
+  const scenarioModal = useScenarioModal(persona.slug);
 
   // Each persona's seed bundle is loaded on demand. The FOSS fork
   // (which ships no /seeds/*.json) gets a 404 silently; the bundle
@@ -98,10 +100,10 @@ function PersonaDemoShellInner({ persona }: { persona: Persona }) {
         <ContactCTASection />
 
         <ScenarioModal
-          open={showScenario}
-          onClose={() => setShowScenario(false)}
+          open={scenarioModal.open}
+          onClose={scenarioModal.dismiss}
           onTryPrompt={() => {
-            setShowScenario(false);
+            scenarioModal.dismiss();
             // Defer slightly so the chat widget has time to mount its
             // open animation. The persona-specific welcome appears
             // before the user's prefilled question lands.
@@ -116,38 +118,11 @@ function PersonaDemoShellInner({ persona }: { persona: Persona }) {
           welcomeMessage={scenario.welcome}
           placeholder={scenario.placeholder}
           bundleLabel={`${scenario.shell.brand} demo corpus`}
+          onReopenScenario={scenarioModal.reopen}
         />
       </div>
     </PipeProvider>
   );
-}
-
-/**
- * Open the chat widget and drop the suggested prompt into the input
- * box without sending. Done DOM-side because ChatWidget owns its own
- * input state and we don't want to invasively lift it; the data-testid
- * hooks already in the widget make this targeted and safe.
- */
-function prefillChat(prompt: string) {
-  // Click the closed-state floating button to open the widget.
-  const openBtn = document.querySelector<HTMLButtonElement>(
-    'button[aria-label="Open chat"]',
-  );
-  openBtn?.click();
-  // Wait one frame for the textarea to mount.
-  requestAnimationFrame(() => {
-    const ta = document.querySelector<HTMLTextAreaElement>(
-      '.chat-widget textarea',
-    );
-    if (!ta) return;
-    const setter = Object.getOwnPropertyDescriptor(
-      window.HTMLTextAreaElement.prototype,
-      'value',
-    )?.set;
-    setter?.call(ta, prompt);
-    ta.dispatchEvent(new Event('input', { bubbles: true }));
-    ta.focus();
-  });
 }
 
 function MockNav({ persona }: { persona: Persona }) {
