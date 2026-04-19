@@ -24,7 +24,30 @@ function uuidv4() {
   return crypto.randomUUID();
 }
 
-export function ChatWidget() {
+/**
+ * Per-persona chrome for the chat widget. Every demo route passes its
+ * own copy so the bot greets the visitor in-character (Cornerstone,
+ * Vellum, Heritage, Pinecrest, MutualHealth) instead of always opening
+ * with the Blockstream welcome.
+ */
+export interface ChatWidgetProps {
+  /** Initial bot greeting. Defaults to the Blockstream copy. */
+  welcomeMessage?: string;
+  /** Placeholder text for the input. Defaults to "Type a message". */
+  placeholder?: string;
+  /**
+   * Friendly label shown in the bundle-loading banner (e.g. "MutualHealth
+   * member-portal corpus"). Defaults to "Bitcoin knowledge bundle"
+   * for backward compatibility with the original Blockstream demo.
+   */
+  bundleLabel?: string;
+}
+
+export function ChatWidget({
+  welcomeMessage,
+  placeholder,
+  bundleLabel,
+}: ChatWidgetProps = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [sessionId] = useState(() => uuidv4());
@@ -39,7 +62,9 @@ export function ChatWidget() {
     {
       id: uuidv4(),
       role: 'bot',
-      content: "Hello! I'm Greater's Blockstream support bot. Ask me about Jade, Green, hardware-wallet recovery, fees, or self-custody.",
+      content:
+        welcomeMessage ??
+        "Hello! I'm Greater's Blockstream support bot. Ask me about Jade, Green, hardware-wallet recovery, fees, or self-custody.",
       timestamp: new Date(),
       trustScore: 0.99,
       ciBreakdown: "System initialization verified.",
@@ -372,7 +397,7 @@ export function ChatWidget() {
                 <div className="flex items-center justify-between gap-2 mb-1">
                   <span className="flex items-center gap-1.5">
                     <Loader2 className="w-3 h-3 animate-spin" />
-                    Loading Bitcoin knowledge bundle into your browser…
+                    Loading {bundleLabel ?? 'Bitcoin knowledge bundle'} into your browser…
                   </span>
                   <span className="tabular-nums text-emerald-200/80">
                     {llm.bundleProgress.done_chunks}/{llm.bundleProgress.total_chunks}
@@ -465,7 +490,7 @@ export function ChatWidget() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Type a message"
+                    placeholder={placeholder ?? 'Type a message'}
                     className="w-full bg-transparent border-none resize-none focus:outline-none focus:ring-0 text-[hsl(var(--widget-fg))] text-sm placeholder:text-[hsl(var(--widget-muted))] py-1 max-h-20"
                     rows={1}
                   />

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { ShieldAlert, Lock, KeyRound, Smartphone, AlertTriangle, ChevronRight, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { ChatWidget } from '@/components/ChatWidget';
 import { ContactCTASection } from '@/components/ContactCTASection';
 import { PipeProvider } from '@/pipes/PipeContext';
+import { useLLM } from '@/llm/LLMProvider';
 
 const sidebarLinks = [
   { label: "Unauthorized login activity", active: true },
@@ -15,6 +16,16 @@ const sidebarLinks = [
 ];
 
 export default function Home() {
+  // Load the proprietary Bitcoin knowledge bundle on mount. On a FOSS
+  // fork the file is absent, the loader marks it 'absent' silently,
+  // and this demo runs in Generic mode (visibly) with no Bitcoin
+  // corpus. Hosted at hire.colonhyphenbracket.pink the bundle is
+  // present and the chat widget shows the "Loading … bundle" banner.
+  const llm = useLLM();
+  useEffect(() => {
+    llm.requestSeedBundle('bitcoin');
+  }, [llm]);
+
   return (
     // PipeProvider scopes the active Pipe + bias to this demo route.
     // The Bitcoin Greater Pipe is keyed to persona='fintech'; if no

@@ -1,4 +1,5 @@
-import { Cable, ShieldQuestion, Unplug, X } from "lucide-react";
+import { Cable, Clock, Unplug, X } from "lucide-react";
+import { useContact } from "@/components/ContactContext";
 import {
   Dialog,
   DialogContent,
@@ -26,6 +27,7 @@ export function PipeStatusPanel({
   onClose: () => void;
 }) {
   const { pipe, activeBiasId, connected, disconnect, reconnect } = usePipe();
+  const contact = useContact();
   // Whether *any* Pipe is mounted on disk, regardless of whether the
   // user has disconnected it for this session. Used to decide if the
   // "Generic mode" panel should offer a reconnect button.
@@ -91,7 +93,13 @@ export function PipeStatusPanel({
                   {pipe.corpus_bundles.length === 1 ? "" : "s"}
                 </div>
               </div>
-              <SignatureBadge status={pipe.signature.status} />
+              <SignatureBadge
+                status={pipe.signature.status}
+                onAskAboutSigning={() => {
+                  onClose();
+                  contact.open();
+                }}
+              />
             </div>
 
             {pipe.author_notes && (
@@ -208,7 +216,13 @@ export function PipeStatusPanel({
   );
 }
 
-function SignatureBadge({ status }: { status: "unsigned" | "signed" | "invalid" }) {
+function SignatureBadge({
+  status,
+  onAskAboutSigning,
+}: {
+  status: "unsigned" | "signed" | "invalid";
+  onAskAboutSigning: () => void;
+}) {
   if (status === "signed") {
     return (
       <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-1.5 py-0.5 rounded">
@@ -223,14 +237,19 @@ function SignatureBadge({ status }: { status: "unsigned" | "signed" | "invalid" 
       </span>
     );
   }
+  // Unsigned: opt-in for the next phase. Signed Pipes (with session
+  // persistence and integrity verification) are on the roadmap; the
+  // badge invites the visitor to ask us about it via the contact form.
   return (
-    <span
-      className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-amber-300 bg-amber-500/10 border border-amber-500/30 px-1.5 py-0.5 rounded"
-      title="Unsigned — local development build"
+    <button
+      type="button"
+      onClick={onAskAboutSigning}
+      className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-amber-300 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 px-1.5 py-0.5 rounded transition-colors cursor-pointer"
+      title="Signed Pipes with session persistence are on the roadmap. Click to ask us about it."
     >
-      <ShieldQuestion className="w-3 h-3" />
-      Unsigned · local
-    </span>
+      <Clock className="w-3 h-3" />
+      Signing — coming soon
+    </button>
   );
 }
 

@@ -10,6 +10,7 @@ import OpenClaw from "@/pages/OpenClaw";
 import PersonaPage from "@/pages/PersonaPage";
 import DemoHolding from "@/pages/DemoHolding";
 import BlockstreamDemo from "@/pages/BlockstreamDemo";
+import PersonaDemoShell from "@/pages/PersonaDemoShell";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -17,11 +18,24 @@ const queryClient = new QueryClient();
 function Router() {
   return (
     <Switch>
-      {/* Live Blockstream demo — preserved as the original Emerald
-          experience. Renders without the Greater Layout chrome to keep
-          the Blockstream-branded support page authentic, but still has
-          access to the contact modal via the ContactProvider above. */}
+      {/* Live Blockstream (FinTech) demo — bespoke chrome preserved
+          as the original Emerald portfolio piece. Renders without the
+          Greater Layout chrome to keep the Blockstream-branded support
+          page authentic. Other personas use the generic shell below. */}
       <Route path="/demo/blockstream" component={BlockstreamDemo} />
+
+      {/* Live demos for the five non-FinTech personas. Each renders a
+          mock host page configured by the persona's `scenario.shell`,
+          a per-persona welcome + placeholder, and triggers loading of
+          its seed bundle. Renders outside the Greater Layout so the
+          mock host page reads as its own site. The DemoHolding screen
+          is now only used as a fallback when a persona has no
+          scenario configured (e.g. during local development). */}
+      <Route path="/demo/startups" component={PersonaDemoShell} />
+      <Route path="/demo/faith" component={PersonaDemoShell} />
+      <Route path="/demo/schools" component={PersonaDemoShell} />
+      <Route path="/demo/small-business" component={PersonaDemoShell} />
+      <Route path="/demo/healthtech" component={PersonaDemoShell} />
 
       {/* Greater shell routes — wrapped in Layout (nav + footer + bottom
           mobile nav + AnimatePresence page transitions). */}
