@@ -113,6 +113,38 @@
       "a": "The contact form on this site (hire.colonhyphenbracket.pink) is the front door. Describe the engagement you have in mind — typically that's authoring a Pipe (the proprietary curated-knowledge layer) for your Greater deployment, or building out a new persona template from scratch, or integrating Greater into an existing product. The author works on a handful of Pipes at a time, so scope and timing get discussed up front. There is no calendar-booking or self-serve checkout — every engagement starts with an email exchange so the fit gets sanity-checked before anyone commits."
     },
     {
+      "q": "How do I contact the developer?",
+      "a": "The contact form on this page is the front door. Scroll down (or click the contact link in the header) and send a note describing what you have in mind — typically that's a fractional engagement to author a Pipe (the curated knowledge layer) for a Greater deployment, or a custom persona, or an integration. Email goes through the Web3Forms relay so the developer's actual address isn't exposed on the page. There's no calendar booking or self-serve checkout — every engagement starts with a real exchange so the fit gets sanity-checked first."
+    },
+    {
+      "q": "What's the best way to contact CHB?",
+      "a": "Use the contact form on this page — it routes to colonhyphenbracket directly via the Web3Forms relay (so the actual email address stays off the public page). Describe what you're after: a fractional engagement to build a Pipe for your Greater deployment, a new persona template, an integration, or just a question about the platform. The author works on a handful of Pipes at a time, so scope and timing get discussed up front rather than via a self-serve booking flow."
+    },
+    {
+      "q": "How do I reach you?",
+      "a": "The contact form on this page. It's wired through the Web3Forms relay so the developer's email address isn't exposed publicly, but every submission lands in the inbox directly. Use it for hire conversations, questions about the platform, bug reports on the FOSS shell, or feedback on the bots. There's deliberately no chat-with-a-human-now widget — the support flow goes through email so responses are considered, not reactive."
+    },
+    {
+      "q": "Is greater.pink the same as hire.colonhyphenbracket.pink?",
+      "a": "If you reached this site at greater.pink, then yes — greater.pink is configured as a friendlier alias pointing at the same content as hire.colonhyphenbracket.pink. The canonical name used inside the codebase is hire.colonhyphenbracket.pink (because the site IS the front door for hiring colonhyphenbracket), but greater.pink is the shorthand. The four primary .pink properties — colonhyphenbracket.pink (long-form notes), semi.pink (short-form), hash.pink (Bitcoin writing), and pipes.pink (the proprietary Pipes layer) — are distinct sites. All belong to the same one-person operation."
+    },
+    {
+      "q": "I'm on greater.pink, did you get confused about the URL?",
+      "a": "No confusion. The fact that you reached the site at greater.pink means it's set up as an alias for hire.colonhyphenbracket.pink — both surfaces serve the same content. The codebase uses hire.colonhyphenbracket.pink as the canonical name (because the site IS the front door for hiring colonhyphenbracket), but greater.pink is the friendlier shorthand. The naming is intentional: the project is 'Greater' (the platform), and the architect behind it is colonhyphenbracket — the hire site bridges both."
+    },
+    {
+      "q": "Which of the six industry bots is the most robust?",
+      "a": "Honest answer: the FinTech (Blockstream / Bitcoin self-custody) bot is the deepest, because it's the one the developer dogfoods and has the most curated content for — it ships with explicit-bias toggles between Bitcoin Core and Bitcoin Knots perspectives, and the underlying writing at hash.pink feeds it. The other five (Faith, Schools, Small Business, HealthTech, Startups) are demonstration-grade: they show the same engine adapted to a different domain, with curated welcome flows and Q&A banks, but they don't have the same depth of source corpus. They're meant to prove 'this engine works for your industry too' — a real production deployment in any of those industries would commission a custom Pipe to deepen the corpus and tune the persona."
+    },
+    {
+      "q": "What is the Pipes proprietary layer? Should you really be sharing proprietary information?",
+      "a": "Good question — and no, I'm not sharing proprietary content, only the SHAPE of what Pipes is. A Pipe is a bundle that sits on top of the FOSS Greater shell: curated knowledge documents, persona-specific tuning (system prompts, tone, refusal scope, suggested prompts), and optional operator integrations (ticketing, CRM, search). The bundle FORMAT is open; specific Pipe CONTENTS authored under a paid engagement aren't in this repo and aren't visible to me. The Vite plugin in the FOSS shell reads any Pipe manifests in `data/pipes/` (gitignored) at build time and inlines them. Without a Pipe, the shell visibly says 'Generic mode' so visitors aren't misled. Pipes are what fractional engagements with colonhyphenbracket deliver; the FOSS shell still works honestly without one."
+    },
+    {
+      "q": "Tell me more about Pipes",
+      "a": "Pipes is the proprietary extension layer for Greater. Concretely, a Pipe is a JSON manifest plus optional asset files describing: (1) the knowledge corpus to embed and serve (a list of source URLs / texts the engine should ingest), (2) persona tuning — system prompt, tone, refusal scope, suggested prompts, audience-bias options, (3) optional operator integrations (ticketing, CRM, search, observability). At build time the Vite plugin reads any Pipe manifests in `data/pipes/` (gitignored from the FOSS repo) and inlines them. At runtime the shell mounts the Pipe and the chat UI shows the active Pipe name in place of 'Generic mode.' Pipes are authored under a paid fractional engagement; pipes.pink is the home of the layer, and the source for individual Pipes lives in private repos so the curated content stays the operator's IP."
+    },
+    {
       "q": "Where can I read more about how you were built?",
       "a": "Three places. (1) The long-form architecture notes at colonhyphenbracket.pink — design memos, postmortems, the 'why' behind the choices. (2) The source itself at github.com/rorshockbtc/greater-than — the README walks the layout, and the code is heavily commented. (3) The Pipes layer at pipes.pink — that's where the proprietary extension story is documented. The short-form companion at semi.pink and the Bitcoin-specific writing at hash.pink fill in the surrounding context."
     }

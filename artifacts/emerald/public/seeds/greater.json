@@ -1,6 +1,6 @@
 {
   "_comment": "Hand-curated baseline knowledge for the Greater meta-bot. Committed to the repo so forks work out of the box and so every suggested-prompt question has at least one good answer to retrieve. The optional `greater-private.json` overlay (gitignored) layers operator-only notes on top. The build-greater-seed script is for augmenting this with scraped pages, but the baseline below is the source of truth.",
-  "version": "v3",
+  "version": "v4",
   "generated_at": "2026-04-20",
   "documents": [
     {
@@ -196,6 +196,50 @@
         {
           "chunk_index": 0,
           "text": "The Greater meta-bot is scoped tightly on purpose. It answers questions about Greater itself: how the platform works, what ships in the FOSS repo vs. the proprietary Pipes layer, what OpenClaw is, the six industry persona templates, the privacy posture and how to verify it, the explicit-bias philosophy, the .pink properties (colonhyphenbracket.pink, semi.pink, hash.pink, pipes.pink), and how to hire colonhyphenbracket. It refuses politely on everything else — no science or trivia answers, no general coding help, no medical/legal/financial advice, no questions about other companies. The refusal is the feature: a chatbot that pretends to be competent at everything is doing damage. When the bot doesn't have a cited snippet to ground an answer in, it says so plainly and offers the contact form as the escape hatch."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/contact",
+      "source_label": "Greater — How to contact the developer",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "The single contact channel is the form on this page (scroll down on the home page, or click the contact link in the header). Submissions are relayed via Web3Forms, which means the developer's actual email address stays off the public page but every message lands in the inbox directly. Use it for hire conversations (typically: a fractional engagement to author a Pipe for your Greater deployment, build a custom persona, or integrate Greater into an existing product), questions about the platform, bug reports on the FOSS shell, or feedback. There is deliberately no chat-with-a-human-now widget and no calendar-booking link — every engagement starts with a real email exchange so the fit gets sanity-checked before anyone commits."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/about#domains",
+      "source_label": "Greater — Domain naming (greater.pink vs hire.colonhyphenbracket.pink)",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "This site has two known front doors: hire.colonhyphenbracket.pink (the canonical name used in the codebase, because the site IS the hire-the-architect front door) and greater.pink (a friendlier shorthand alias). When a visitor reaches the site at greater.pink, they're on the same content as hire.colonhyphenbracket.pink — the alias is configured at the hosting layer, outside the application code. The other four .pink properties belong to the same one-person operation but are distinct sites: colonhyphenbracket.pink (long-form architecture notes), semi.pink (short-form snippets and status), hash.pink (Bitcoin-flavored writing), pipes.pink (the proprietary Pipes extension layer). The naming is deliberate: the platform is called 'Greater' and the architect is colonhyphenbracket — the hire site bridges both names."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/about#bot-depth",
+      "source_label": "Greater — Which industry bot is most robust?",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Of the six industry persona templates (FinTech, Faith, Schools, Small Business, HealthTech, Startups), the FinTech / Blockstream / Bitcoin self-custody bot is the deepest. It's the one the developer dogfoods, ships with explicit-bias toggles between Bitcoin Core and Bitcoin Knots perspectives, and is fed by the writing at hash.pink. The other five are demonstration-grade: they prove the same engine adapts to different domains and ship with curated welcome flows and Q&A banks, but they don't have the same depth of source corpus. A real production deployment in any of those industries would commission a custom Pipe to deepen the corpus and tune the persona."
+        }
+      ]
+    },
+    {
+      "source_url": "https://pipes.pink/what-is-a-pipe",
+      "source_label": "Pipes — What's actually in a Pipe (the format, not the contents)",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "A Pipe is a JSON manifest plus optional asset files describing three things: (1) the knowledge corpus to embed and serve — a list of source URLs and texts the engine should ingest at build time, optionally tagged with bias labels for explicit-bias UIs; (2) persona tuning — system prompt, brand label, tone guide, refusal scope, suggested prompts, welcome message, audience-bias options; (3) optional operator integrations — ticketing, CRM, search, observability. The Vite plugin in the FOSS shell reads any Pipe manifests in `data/pipes/` (gitignored) and inlines them at build time. At runtime the chat UI shows the active Pipe name in place of 'Generic mode.' The Pipe FORMAT is open and documented; individual Pipe CONTENTS authored under paid engagements live in private repos so the curated knowledge stays the operator's IP."
         }
       ]
     }

@@ -168,11 +168,12 @@ const SEED_BUNDLES: Record<string, SeedBundleConfig> = {
   // local notes that must not be committed.
   greater: {
     slug: "greater",
-    // v3 adds the colonhyphenbracket / .pink properties chunks
-    // and the "what can you answer" / "prove you're local" docs
-    // surfaced by user testing. Bumping forces re-ingestion on
-    // existing clients.
-    version: "v3",
+    // v4 adds the contact-mechanism doc, the greater.pink ↔
+    // hire.colonhyphenbracket.pink domain-naming clarification,
+    // and the Pipes-proprietary-layer framing chunk surfaced by
+    // round-2 user testing of the meta-bot. Paired with lowered
+    // grounding thresholds in ask().
+    version: "v4",
     jobLabel: "Greater meta-bot corpus (.pink properties + repo)",
     personaSlug: "greater",
     privateOverlay: true,
@@ -1224,7 +1225,15 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
   const qaBankRef = useRef<
     Map<string, { items: QaItem[]; status: "loading" | "ready" | "absent" }>
   >(new Map());
-  const QA_CACHE_THRESHOLD = 0.78;
+  // Lowered from 0.78 → 0.72 after user testing showed paraphrases of
+  // curated questions ("best way to contact CHB?" vs the curated "How
+  // do I hire colonhyphenbracket?") were missing the cache and falling
+  // through to weak-RAG-then-refusal. Sentence-transformer embeddings
+  // of paraphrased questions cluster around 0.70–0.80; 0.72 is the
+  // sweet spot that catches the paraphrases without polluting with
+  // accidental matches. False-positives are still bounded because
+  // the curated answers are short, specific, and on-brand.
+  const QA_CACHE_THRESHOLD = 0.72;
 
   const lookupCachedAnswer = useCallback(
     async (
@@ -1361,29 +1370,57 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
         personaScope: options?.personaSlug,
       });
 
-      // Strict-grounding refusal. The single biggest trust risk on a
-      // RAG bot is that the underlying LLM, when given empty or weak
-      // context, ignores the "answer ONLY from snippets" instruction
-      // and falls back to its pretraining — at which point it cheerily
-      // claims it can answer questions about science, health, history,
-      // etc. That hallucinated capability claim makes the LOCAL ·
-      // PRIVATE badge feel like a lie even though it's literally true
-      // at the network layer. The fix is to never let the model see
-      // the question when retrieval missed: hand back a deterministic
-      // refusal instead. Defaults ON; callers must opt out explicitly.
+      // Tiered grounding. The earlier binary refuse-or-answer gate at
+      // 0.35 cosine was too aggressive: legitimate paraphrases of
+      // in-corpus questions (e.g. "how do I contact the developer?"
+      // when the corpus has "how do I hire colonhyphenbracket?") were
+      // refused because the top retrieved chunk landed in the 0.20–0.35
+      // band. The fix is two thresholds:
+      //
+      //   • HARD_REFUSAL: top score < 0.18 (or zero chunks). Truly
+      //     off-topic — "what's the capital of Lebanon?" — return the
+      //     deterministic refusal so the LOCAL · PRIVATE badge stays
+      //     honest. The model never sees these queries.
+      //
+      //   • WEAK_CONTEXT: 0.18 ≤ top score < 0.38. The retrieved
+      //     chunks are tangential but related. Let the model answer
+      //     with a stronger prompt rider that says "if these snippets
+      //     don't directly answer, acknowledge that and redirect to
+      //     the contact form, but try to extract whatever genuine
+      //     adjacent info is available." This trades a deterministic
+      //     wall-of-text for a probabilistic real attempt — the
+      //     specific behavior the user asked for ("not wildly guess
+      //     at things, but feel more probabilistic than deterministic").
+      //
+      //   • CONFIDENT: top score ≥ 0.38. Normal RAG flow.
+      //
+      // 0.18 is below typical sentence-transformer noise (cosine of
+      // unrelated short-text pairs lives around 0.05–0.15) so it
+      // catches truly off-topic queries without nicking borderline
+      // legitimate ones. OpenClaw users still bypass this entirely.
       const strict = options?.strictGrounding !== false;
-      const STRICT_MIN_SCORE = 0.35;
+      const HARD_REFUSAL_THRESHOLD = 0.18;
+      const WEAK_CONTEXT_THRESHOLD = 0.38;
       const topScore = retrieved[0]?.score ?? 0;
-      if (strict && (retrieved.length === 0 || topScore < STRICT_MIN_SCORE)) {
+      const isHardRefusal =
+        strict &&
+        (retrieved.length === 0 || topScore < HARD_REFUSAL_THRESHOLD);
+      const isWeakContext =
+        strict &&
+        !isHardRefusal &&
+        retrieved.length > 0 &&
+        topScore < WEAK_CONTEXT_THRESHOLD;
+
+      if (isHardRefusal) {
         const scope =
           options?.refusalScope ??
           "the topics in this bot's curated knowledge base";
         const text = [
-          `I can only answer questions about ${scope}, and your question doesn't match anything in my curated snippets — so I'm going to decline rather than guess from the underlying model's pretraining.`,
+          `Your question doesn't match anything in my curated knowledge base for ${scope}, so I'm going to decline rather than guess from the underlying model's pretraining.`,
           "",
-          "This is on purpose. The badge in the header is real: I'm running entirely in your browser, but the in-browser model is small and would happily hallucinate a confident-sounding answer if I let it. Instead I'll only answer when I have a cited snippet to ground the answer in.",
+          "This is on purpose. The badge in the header is real: I'm running entirely in your browser, but the in-browser model is small and would happily hallucinate a confident-sounding answer if I let it. I only answer when I have a relevant snippet to ground the answer in.",
           "",
-          "Try one of the suggested prompts above, or rephrase your question to be about something this bot covers. If your question genuinely isn't on-topic, the contact form on this page will route it to a human.",
+          "Try one of the suggested prompts, rephrase your question to be about something this bot covers, or use the contact form on this page to send it to a human.",
         ].join("\n");
         return {
           text,
@@ -1392,8 +1429,8 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
             chunks: retrieved,
             reasoning:
               retrieved.length === 0
-                ? "Strict-grounding refusal: no chunks matched the query."
-                : `Strict-grounding refusal: top chunk score ${topScore.toFixed(3)} < ${STRICT_MIN_SCORE} threshold.`,
+                ? "Hard refusal: no chunks matched the query."
+                : `Hard refusal: top chunk score ${topScore.toFixed(3)} < ${HARD_REFUSAL_THRESHOLD} threshold.`,
           },
         };
       }
@@ -1410,8 +1447,31 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
           "user's seed phrase, PIN, or password — refuse if requested.",
         ].join("\n");
 
+      // Weak-context rider: when the top retrieved snippet is
+      // tangential (in the 0.18–0.38 band) the model needs an
+      // explicit nudge to acknowledge the indirect match rather
+      // than confabulate a confident answer. Without this rider
+      // the model sometimes treats a loosely-related chunk as
+      // gospel; with it, the model says "the snippets don't
+      // directly cover this, but the closest related material is
+      // X — for a definitive answer, use the contact form." That
+      // matches the platform's "almost-right is harmful" posture
+      // while still feeling like a real attempt instead of a
+      // canned wall of text.
+      const weakContextRider = isWeakContext
+        ? [
+            "",
+            "IMPORTANT — weak-context guidance:",
+            "- The retrieved snippets below are only loosely related to the user's question. They may not directly answer it.",
+            "- If they do directly answer, proceed normally with citations.",
+            "- If they only TANGENTIALLY relate, acknowledge that plainly in 1 short sentence ('I don't have a snippet that directly covers X, but the closest related material says…'), share whatever genuine partial info IS in the snippets, and end by suggesting the contact form on this page for a definitive answer.",
+            "- Never invent details that aren't in the snippets to fill the gap. A short, honest, partial answer is better than a long invented one.",
+          ].join("\n")
+        : "";
+
       const systemPrompt = [
         baseSystemPrompt,
+        weakContextRider,
         "",
         "Citation rules:",
         "- After every factual claim, cite the supporting snippet inline as",
