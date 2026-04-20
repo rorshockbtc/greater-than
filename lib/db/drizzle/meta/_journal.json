@@ -8,6 +8,13 @@
       "when": 1776702332107,
       "tag": "0000_add_feedback_table",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1776707919240,
+      "tag": "0001_add_suggestion_kind",
+      "breakpoints": true
     }
   ]
 }

@@ -79,6 +79,7 @@ export function QaBankPanel({
   const [context, setContext] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const inflightRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -115,6 +116,7 @@ export function QaBankPanel({
       setContext("");
       setSubmitted(false);
       setSubmitting(false);
+      setSubmitError(null);
       setSearch("");
     }
   }, [isOpen]);
@@ -140,6 +142,7 @@ export function QaBankPanel({
   const handleSubmitSuggestion = async () => {
     if (!formValid || !personaSlug) return;
     setSubmitting(true);
+    setSubmitError(null);
     inflightRef.current?.abort();
     const ctrl = new AbortController();
     inflightRef.current = ctrl;
@@ -157,7 +160,14 @@ export function QaBankPanel({
       });
       if (!res.ok) {
         const body = (await res.json().catch(() => ({}))) as { error?: string };
-        throw new Error(body.error ?? `HTTP ${res.status}`);
+        // 429 from express-rate-limit comes through as a plain
+        // string body, not JSON — surface a sensible default.
+        const friendly =
+          body.error ??
+          (res.status === 429
+            ? "Too many suggestions; try again in a minute."
+            : `Couldn't send your suggestion (HTTP ${res.status}).`);
+        throw new Error(friendly);
       }
       setSubmitted(true);
       setQuestion("");
@@ -168,10 +178,16 @@ export function QaBankPanel({
       });
     } catch (err) {
       if ((err as Error).name === "AbortError") return;
+      const msg = (err as Error).message || "Try again in a moment.";
+      // Inline error stays under the form so the visitor sees it
+      // without having to chase a toast that may have already
+      // dismissed; the toast is kept as a redundant signal for
+      // visitors who scroll away from the form.
+      setSubmitError(msg);
       toast({
         variant: "destructive",
         title: "Couldn't send your suggestion",
-        description: (err as Error).message ?? "Try again in a moment.",
+        description: msg,
       });
     } finally {
       setSubmitting(false);
@@ -278,7 +294,10 @@ export function QaBankPanel({
           </p>
           <textarea
             value={question}
-            onChange={(e) => setQuestion(e.target.value)}
+            onChange={(e) => {
+              setQuestion(e.target.value);
+              if (submitError) setSubmitError(null);
+            }}
             placeholder="Your question (8–280 characters)"
             maxLength={280}
             rows={2}
@@ -288,7 +307,10 @@ export function QaBankPanel({
           />
           <textarea
             value={context}
-            onChange={(e) => setContext(e.target.value)}
+            onChange={(e) => {
+              setContext(e.target.value);
+              if (submitError) setSubmitError(null);
+            }}
             placeholder="Optional context (≤ 500 characters)"
             maxLength={500}
             rows={2}
@@ -296,6 +318,15 @@ export function QaBankPanel({
             data-testid="qa-suggest-context"
             disabled={submitting}
           />
+          {submitError && (
+            <p
+              className="mt-2 text-[11px] text-rose-300"
+              role="alert"
+              data-testid="qa-suggest-error"
+            >
+              {submitError}
+            </p>
+          )}
           <div className="flex items-center justify-between mt-2 text-[10px] text-[hsl(var(--widget-muted))]">
             <span
               className={cn(
