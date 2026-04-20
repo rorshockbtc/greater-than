@@ -409,11 +409,11 @@ function FeedbackButtons({
   responseSource: ResponseSource;
   biasLabel?: string;
 }) {
-  const [state, setState] = useState<"idle" | "submitting" | "thanked">("idle");
+  const [state, setState] = useState<"idle" | "submitting" | "thanked" | "error">("idle");
   const [given, setGiven] = useState<1 | -1 | null>(null);
 
   const submit = async (rating: 1 | -1) => {
-    if (state !== "idle") return;
+    if (state !== "idle" && state !== "error") return;
     setState("submitting");
     setGiven(rating);
     try {
@@ -421,7 +421,7 @@ function FeedbackButtons({
       // keeps us inside the artifact's path prefix on the proxied
       // preview and works in production builds.
       const base = (import.meta.env.BASE_URL ?? "/").replace(/\/?$/, "/");
-      await fetch(`${base}api/feedback`, {
+      const res = await fetch(`${base}api/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -434,9 +434,21 @@ function FeedbackButtons({
           biasLabel,
         }),
       });
+      // Don't fake success on a 4xx/5xx — admin telemetry would silently
+      // miss writes that the user thinks landed. Surface a small retry
+      // affordance instead. 404 is the FOSS-fork case (no backend at
+      // all), and we treat that as a soft-success no-op so visitors
+      // running the source-only build aren't punished.
+      if (res.ok) {
+        setState("thanked");
+      } else if (res.status === 404) {
+        setState("thanked");
+      } else {
+        setState("error");
+      }
     } catch {
-      // Swallow: FOSS fork or transient network. UI still says thanks.
-    } finally {
+      // Network failure (FOSS fork, transient offline). Treat as a
+      // soft success — there's nothing the user can do about it.
       setState("thanked");
     }
   };
@@ -449,6 +461,19 @@ function FeedbackButtons({
       >
         {given === 1 ? "Thanks for the upvote" : "Thanks — noted"}
       </span>
+    );
+  }
+
+  if (state === "error") {
+    return (
+      <button
+        type="button"
+        onClick={() => given && submit(given)}
+        className="text-[10px] uppercase tracking-wider text-rose-400 hover:text-rose-300"
+        data-testid="feedback-retry"
+      >
+        Couldn't save · retry
+      </button>
     );
   }
 

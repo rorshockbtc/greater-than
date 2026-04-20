@@ -79,6 +79,12 @@ router.get("/admin/feedback", async (req: Request, res: Response): Promise<void>
       .orderBy(feedbackTable.rating, desc(feedbackTable.createdAt))
       .limit(200);
 
+    // Apply the same persona/source filters to the summary so the
+    // header aggregates and the row table never disagree about
+    // what's on screen. The dashboard would otherwise read as
+    // "showing rows for X but the totals span everything", which
+    // is the kind of silent inconsistency that erodes trust in the
+    // numbers we're trying to ship.
     const summary = await db
       .select({
         personaSlug: feedbackTable.personaSlug,
@@ -86,7 +92,13 @@ router.get("/admin/feedback", async (req: Request, res: Response): Promise<void>
         n: sql<number>`count(*)::int`,
       })
       .from(feedbackTable)
-      .where(gte(feedbackTable.createdAt, since))
+      .where(
+        and(
+          gte(feedbackTable.createdAt, since),
+          persona ? eq(feedbackTable.personaSlug, persona) : undefined,
+          source ? eq(feedbackTable.responseSource, source) : undefined,
+        ),
+      )
       .groupBy(feedbackTable.personaSlug, feedbackTable.rating);
 
     res.json({ rows, summary, sinceDays });

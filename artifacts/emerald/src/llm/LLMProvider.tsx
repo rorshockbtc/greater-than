@@ -206,6 +206,14 @@ interface LLMContextValue {
    */
   requestQaBank: (slug: string) => void;
   /**
+   * Look up the curated Q&A bank for `slug` and return a hit if a
+   * cached question matches `text` above the cosine threshold.
+   * Independent of model readiness: callers should invoke this
+   * BEFORE deciding between local/cloud so the cache short-circuits
+   * even when the in-browser model is still loading.
+   */
+  tryQaCache: (text: string, slug: string) => Promise<{ answer: string; score: number } | null>;
+  /**
    * Per-session quota for cloud-fallback chat calls. When `remaining`
    * hits 0 the chat widget keeps the conversation going on the
    * in-browser model and surfaces a one-time inline notice. Persisted
@@ -1263,6 +1271,7 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
     bundleProgress,
     requestSeedBundle,
     requestQaBank,
+    tryQaCache: lookupCachedAnswer,
     cloudBudget: {
       used: cloudCallsUsed,
       remaining: Math.max(0, CLOUD_CALL_BUDGET - cloudCallsUsed),

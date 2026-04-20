@@ -308,6 +308,36 @@ export function ChatWidget({
     };
     setMessages((prev) => [...prev, userMsg]);
 
+    // Curated Q&A cache wins over EVERY other path — local, cloud,
+    // OpenClaw — when the bank has loaded for this persona AND the
+    // visitor's question matches above the cosine threshold. Doing
+    // this BEFORE the model-readiness branch means early-session
+    // questions during model warmup also benefit instead of burning
+    // a cloud call. Failures here are silent: the cache is best-effort.
+    if (personaSlug) {
+      try {
+        const hit = await llm.tryQaCache(userText, personaSlug);
+        if (hit) {
+          const botMsg: MessageProps = {
+            id: uuidv4(),
+            role: 'bot',
+            content: hit.answer,
+            timestamp: new Date(),
+            trustScore: 0.96,
+            ciBreakdown:
+              'Curated Q&A bank · semantic match above threshold · zero model tokens spent.',
+            responseSource: 'qa-cache',
+            biasLabel: activeBiasOption?.label,
+            biasId: activeBiasOption ? pipe.activeBiasId : undefined,
+          };
+          setMessages((prev) => [...prev, botMsg]);
+          return;
+        }
+      } catch {
+        // Best-effort cache; on failure fall through to normal path.
+      }
+    }
+
     // OpenClaw mode (BYO local LLM) takes precedence over both the
     // in-browser model and the cloud fallback. The visitor is paying
     // their own compute, so we should never hit the cloud endpoint
