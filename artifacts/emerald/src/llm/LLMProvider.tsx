@@ -168,10 +168,11 @@ const SEED_BUNDLES: Record<string, SeedBundleConfig> = {
   // local notes that must not be committed.
   greater: {
     slug: "greater",
-    // v2 = baseline curated bundle is now committed at
-    // public/seeds/greater.json; bumping forces clients that
-    // already stamped v1 (the empty-scrape result) to re-ingest.
-    version: "v2",
+    // v3 adds the colonhyphenbracket / .pink properties chunks
+    // and the "what can you answer" / "prove you're local" docs
+    // surfaced by user testing. Bumping forces re-ingestion on
+    // existing clients.
+    version: "v3",
     jobLabel: "Greater meta-bot corpus (.pink properties + repo)",
     personaSlug: "greater",
     privateOverlay: true,
@@ -1359,6 +1360,44 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
         biasFilter: options?.biasFilter,
         personaScope: options?.personaSlug,
       });
+
+      // Strict-grounding refusal. The single biggest trust risk on a
+      // RAG bot is that the underlying LLM, when given empty or weak
+      // context, ignores the "answer ONLY from snippets" instruction
+      // and falls back to its pretraining — at which point it cheerily
+      // claims it can answer questions about science, health, history,
+      // etc. That hallucinated capability claim makes the LOCAL ·
+      // PRIVATE badge feel like a lie even though it's literally true
+      // at the network layer. The fix is to never let the model see
+      // the question when retrieval missed: hand back a deterministic
+      // refusal instead. Defaults ON; callers must opt out explicitly.
+      const strict = options?.strictGrounding !== false;
+      const STRICT_MIN_SCORE = 0.35;
+      const topScore = retrieved[0]?.score ?? 0;
+      if (strict && (retrieved.length === 0 || topScore < STRICT_MIN_SCORE)) {
+        const scope =
+          options?.refusalScope ??
+          "the topics in this bot's curated knowledge base";
+        const text = [
+          `I can only answer questions about ${scope}, and your question doesn't match anything in my curated snippets — so I'm going to decline rather than guess from the underlying model's pretraining.`,
+          "",
+          "This is on purpose. The badge in the header is real: I'm running entirely in your browser, but the in-browser model is small and would happily hallucinate a confident-sounding answer if I let it. Instead I'll only answer when I have a cited snippet to ground the answer in.",
+          "",
+          "Try one of the suggested prompts above, or rephrase your question to be about something this bot covers. If your question genuinely isn't on-topic, the contact form on this page will route it to a human.",
+        ].join("\n");
+        return {
+          text,
+          source: "local",
+          thoughtTrace: {
+            chunks: retrieved,
+            reasoning:
+              retrieved.length === 0
+                ? "Strict-grounding refusal: no chunks matched the query."
+                : `Strict-grounding refusal: top chunk score ${topScore.toFixed(3)} < ${STRICT_MIN_SCORE} threshold.`,
+          },
+        };
+      }
+
       const context = formatRetrievedForPrompt(retrieved);
 
       const baseSystemPrompt =

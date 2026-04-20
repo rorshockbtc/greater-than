@@ -316,4 +316,24 @@ export interface AskOptions {
    * inference falls through to the regular RAG path.
    */
   personaSlug?: string;
+  /**
+   * When true (the default), the chat refuses to answer when retrieval
+   * returns nothing relevant — instead of letting the small in-browser
+   * model fall back to its pretraining and hallucinate a "helpful
+   * general assistant" response. This is the trust guarantee behind
+   * the LOCAL · PRIVATE badge: the bot never claims competence it
+   * can't ground in cited snippets. Set to `false` only for routes
+   * that explicitly want the unguarded model behavior. Threshold is
+   * a low cosine similarity (any reasonably-related chunk passes);
+   * the goal is to catch "what is the meaning of life" style off-
+   * corpus drift, not to nitpick borderline matches.
+   */
+  strictGrounding?: boolean;
+  /**
+   * Short noun phrase describing what this bot covers, used in the
+   * deterministic off-corpus refusal text. Example: "Greater itself
+   * (the FOSS shell, the six bots, OpenClaw, hiring colonhyphenbracket
+   * to build a Pipe)". When omitted, the refusal uses generic copy.
+   */
+  refusalScope?: string;
 }

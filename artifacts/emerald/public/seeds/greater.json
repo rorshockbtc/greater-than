@@ -1,6 +1,6 @@
 {
   "_comment": "Hand-curated baseline knowledge for the Greater meta-bot. Committed to the repo so forks work out of the box and so every suggested-prompt question has at least one good answer to retrieve. The optional `greater-private.json` overlay (gitignored) layers operator-only notes on top. The build-greater-seed script is for augmenting this with scraped pages, but the baseline below is the source of truth.",
-  "version": "v2",
+  "version": "v3",
   "generated_at": "2026-04-20",
   "documents": [
     {
@@ -130,6 +130,72 @@
         {
           "chunk_index": 0,
           "text": "Greater is a support-bot platform, not a regulated product. The HealthTech persona will not give medical advice — it answers member-services questions and refuses anything that crosses into clinical territory, with an explicit refusal message and a route to a human. The FinTech persona answers questions about Bitcoin protocol and software but does not give investment advice. The Faith persona is confessional, not pastoral. Operators forking Greater for regulated industries are responsible for the legal posture of their own deployment; the shell gives you the refusal scaffolding and the explicit-bias UI to make that posture honest."
+        }
+      ]
+    },
+    {
+      "source_url": "https://colonhyphenbracket.pink",
+      "source_label": "colonhyphenbracket.pink — long-form architecture notes",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "colonhyphenbracket.pink is the developer's long-form notes site. It's where architecture decisions, postmortems, build logs, and design memos live — the 'how I think about this problem' surface. The author is the same person who builds Greater: a solo fractional architect and engineer working in public, in pink. The handle 'colonhyphenbracket' is the typed-out form of the :-] emoticon, sometimes shortened to CHB. Reading the long-form notes is the deliberately-cheap way to evaluate the architect's posture before deciding whether to hire — the engagements live at hire.colonhyphenbracket.pink."
+        }
+      ]
+    },
+    {
+      "source_url": "https://semi.pink",
+      "source_label": "semi.pink — short-form companion",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "semi.pink is the short-form companion to colonhyphenbracket.pink. Where colonhyphenbracket.pink hosts long-form architecture notes and design memos, semi.pink hosts snippets, status updates, micro-essays, and work-in-progress notes. The split is intentional: each surface has its own rhythm and audience, so 'a quick take on Bitcoin Knots policy' doesn't have to share a feed with a 4000-word architecture postmortem. Both belong to the same one-person operation behind Greater."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hash.pink",
+      "source_label": "hash.pink — Bitcoin-flavored writing",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "hash.pink is the developer's Bitcoin-specific writing — protocol notes, mempool and relay-policy commentary, observations on the Bitcoin Core vs. Bitcoin Knots split, and longer essays about the surrounding ecosystem. It's the source for much of the FinTech persona's tone and for many of the bias-aware citations the FinTech bot serves: when the bot offers you a Core view vs. a Knots view of a question, the underlying writing often comes from hash.pink. Same author as the rest of the .pink properties."
+        }
+      ]
+    },
+    {
+      "source_url": "https://pipes.pink",
+      "source_label": "pipes.pink — the proprietary Pipes layer",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "pipes.pink is the home of the proprietary Pipes extension layer that sits on top of the FOSS Greater shell. A Pipe is a curated knowledge bundle, plus persona tuning, plus optional operator integrations, authored for a specific deployment. The Vite plugin in the FOSS shell reads any Pipe manifests in `data/pipes/` (gitignored) and inlines them into the bundle at build time. When no Pipe is mounted, the shell visibly says 'Generic mode' so visitors aren't misled. Pipes is what fractional engagements with colonhyphenbracket deliver; the FOSS shell still works honestly without one."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/about#proof-its-local",
+      "source_label": "Greater — How to prove the bot is running locally",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "The 'LOCAL · PRIVATE' badge in the chat header is a literal claim about network behavior, and there are two concrete ways to verify it. (1) Open your browser's developer tools, switch to the Network tab, clear it, and ask the bot a question. You should see no outbound request that carries your message text — only static page assets, and (on first visit) the model file downloads from a public CDN. After the first visit those files are cached, so subsequent answers produce essentially no network activity. (2) After the first model download finishes, disconnect from the internet entirely. The bot will still answer, because the model is running in your browser via WebGPU. The only outbound network call that ever carries your message body is the explicit human-escalation contact form, which the visitor triggers by hand."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/about#scope",
+      "source_label": "Greater — What this bot will and won't answer",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "The Greater meta-bot is scoped tightly on purpose. It answers questions about Greater itself: how the platform works, what ships in the FOSS repo vs. the proprietary Pipes layer, what OpenClaw is, the six industry persona templates, the privacy posture and how to verify it, the explicit-bias philosophy, the .pink properties (colonhyphenbracket.pink, semi.pink, hash.pink, pipes.pink), and how to hire colonhyphenbracket. It refuses politely on everything else — no science or trivia answers, no general coding help, no medical/legal/financial advice, no questions about other companies. The refusal is the feature: a chatbot that pretends to be competent at everything is doing damage. When the bot doesn't have a cited snippet to ground an answer in, it says so plainly and offers the contact form as the escape hatch."
         }
       ]
     }

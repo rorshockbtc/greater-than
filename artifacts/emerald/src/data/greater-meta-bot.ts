@@ -23,9 +23,20 @@
  * questions on the persona demos still pulls only from those personas.
  */
 
+/**
+ * Short noun phrase describing what the meta-bot covers. Used by the
+ * strict-grounding refusal in LLMProvider.ask when retrieval misses,
+ * so the user gets "I can only answer questions about Greater itself
+ * — how it works, what ships in the repo, OpenClaw, …" instead of
+ * the generic "topics in this bot's curated knowledge base."
+ */
+export const GREATER_REFUSAL_SCOPE =
+  "Greater itself — the FOSS shell, the six industry bots, OpenClaw (BYO local LLM), the Pipes proprietary layer, the privacy posture, hiring colonhyphenbracket, and the .pink properties";
+
 export const GREATER_META_BOT = {
   slug: "greater",
   brand: "Greater",
+  refusalScope: GREATER_REFUSAL_SCOPE,
 
   welcome:
     "Hi — I'm Greater's product bot, running in your browser on the same engine that powers the six industry templates. Ask how Greater works, what ships in the FOSS repo, what OpenClaw is, where your chat data goes, or how a fork would adopt it. Every claim is cited.",

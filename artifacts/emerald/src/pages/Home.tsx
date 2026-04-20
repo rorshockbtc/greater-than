@@ -50,6 +50,7 @@ export default function Home() {
           personaSlug={GREATER_META_BOT.slug}
           personaBrand={GREATER_META_BOT.brand}
           personaSystemPrompt={GREATER_META_BOT.systemPrompt}
+          refusalScope={GREATER_META_BOT.refusalScope}
           personaExampleTopics={[...GREATER_META_BOT.exampleTopics]}
           suggestedPrompts={[...GREATER_META_BOT.suggestedPrompts]}
           welcomeMessage={GREATER_META_BOT.welcome}

@@ -63,6 +63,58 @@
     {
       "q": "How much does Greater cost?",
       "a": "The FOSS shell is free — MIT-licensed, no signup, no usage caps, no per-message billing. You can fork it and ship it on your own domain today. What costs money is the Pipes proprietary layer: curated knowledge bundles, persona-tuned configuration, and operator integrations, authored for your specific deployment. That's sold as a fractional engagement (the author works on a handful of Pipes at a time). Use the contact form on this site if you'd like to talk about scope and pricing."
+    },
+    {
+      "q": "Tell me about the developer. What does Colon Hyphen Bracket do?",
+      "a": "colonhyphenbracket (also written :-] or CHB) is the solo fractional architect and engineer who builds and maintains Greater. The work is done in public, in pink — four properties, each with a deliberate role. (1) colonhyphenbracket.pink is the long-form notes site: architecture decisions, postmortems, build logs. (2) semi.pink is the short-form companion: snippets, status updates, quick takes. (3) hash.pink is the Bitcoin-flavored writing — protocol notes, mempool/policy commentary, Knots-vs-Core observations. (4) pipes.pink is the home of the proprietary Pipes layer that gets layered on top of the FOSS shell during a hire engagement. Together they make the whole posture legible: you can read how the architect thinks before deciding to hire them. The home page you're on right now (hire.colonhyphenbracket.pink) is where that hiring conversation starts."
+    },
+    {
+      "q": "Who is colonhyphenbracket?",
+      "a": "colonhyphenbracket — sometimes written :-] or CHB — is the fractional architect and engineer behind Greater. Solo developer, working in public, in pink. The handle is a typed-out emoticon. The work spans four .pink properties: colonhyphenbracket.pink (long-form architecture notes), semi.pink (short-form snippets and status), hash.pink (Bitcoin-flavored writing), and pipes.pink (the proprietary Pipes extension layer). The hire site you're on is the front door for fractional engagements — typically building the Pipe (the curated knowledge bundle plus persona tuning plus integrations) on top of a customer's Greater deployment."
+    },
+    {
+      "q": "What is colonhyphenbracket.pink?",
+      "a": "colonhyphenbracket.pink is the long-form notes site for the developer behind Greater — architecture decisions, postmortems, build logs, design memos. It's where 'how I think about a problem' lives, in contrast to the short-form companion at semi.pink. Reading it is the cheap way to evaluate the architect's posture before deciding whether to hire."
+    },
+    {
+      "q": "What is semi.pink?",
+      "a": "semi.pink is the short-form companion to colonhyphenbracket.pink — snippets, status updates, quick takes, work-in-progress notes. The split is intentional: long-form thinking lives at colonhyphenbracket.pink, conversational and micro-content lives at semi.pink, so each surface has a coherent rhythm."
+    },
+    {
+      "q": "What is hash.pink?",
+      "a": "hash.pink is the developer's Bitcoin-flavored writing — protocol notes, mempool and policy commentary, observations on the Bitcoin Core vs. Bitcoin Knots split, and longer-form essays about the Bitcoin ecosystem. It's the source for the FinTech persona's tone and for many of the bias-aware citations the FinTech bot serves."
+    },
+    {
+      "q": "What is pipes.pink?",
+      "a": "pipes.pink is the home of the proprietary Pipes extension layer that sits on top of the FOSS Greater shell. A Pipe is a curated knowledge bundle, plus persona tuning, plus optional operator integrations, authored for a specific deployment. Pipes is what fractional engagements deliver — the FOSS shell ships honestly without one (it visibly shows 'Generic mode'), and a Pipe upgrades the experience for a specific operator. The site at pipes.pink is where the Pipes layer is documented and where in-progress Pipes are tracked."
+    },
+    {
+      "q": "What does CHB stand for?",
+      "a": "CHB stands for colonhyphenbracket — the typed-out form of the :-] emoticon, which is the developer's handle. The same identity is also written :-] or colonhyphenbracket; CHB is the convenient shorthand. All four .pink properties (colonhyphenbracket.pink, semi.pink, hash.pink, pipes.pink) belong to that same one-person operation."
+    },
+    {
+      "q": "Are you really running locally? How can I prove it?",
+      "a": "Two ways to verify, both concrete. (1) Open your browser's DevTools, go to the Network tab, clear it, then ask me a question. You should see no outbound request that carries your message text — only the static page assets and (on first visit) the model file downloads from a public CDN. After the first visit those are cached, so you'll see no network activity at all when I answer. (2) Pull your network connection entirely after the first model download finishes, then keep chatting — I'll still answer, because the model is running in your browser via WebGPU. The only outbound network call that ever carries your message body is the explicit human-escalation contact form, which you have to trigger by hand."
+    },
+    {
+      "q": "Are you calling out to ChatGPT or another external LLM?",
+      "a": "No. I'm running entirely in this browser tab via WebGPU. There is no per-message API call to OpenAI, Anthropic, Google, or any other LLM provider. The model file itself was downloaded once from a public CDN the first time you opened a Greater chat, and it's been served from your browser's cache since. You can verify this by watching the Network tab in DevTools while you chat — you'll see no outbound message content. If I sound less polished than ChatGPT, that's because I'm a small open-weights model running on your device, not a frontier model running in a datacenter. That tradeoff is the whole point of the platform."
+    },
+    {
+      "q": "What can you answer? What questions can I ask?",
+      "a": "I'm scoped tightly on purpose: I only answer questions about Greater itself. That includes how the platform works under the hood, what ships in the open-source repo vs. the proprietary Pipes layer, what OpenClaw (BYO local LLM) does, the six industry persona templates, the privacy posture and how to verify it, the explicit-bias philosophy, the .pink properties (colonhyphenbracket.pink, semi.pink, hash.pink, pipes.pink), and how to hire colonhyphenbracket for a fractional engagement. I will NOT try to be a general-purpose assistant — no science questions, no coding help, no medical/legal/financial advice, no answers about other companies. If you ask me something off-topic I'll decline plainly rather than hallucinate, because 'almost-right' is worse than 'I don't know.' Try one of the suggested prompts above to see what's in scope."
+    },
+    {
+      "q": "Why won't you answer my question?",
+      "a": "Because nothing in my curated knowledge base matched it closely enough, and I refuse to fall back on the underlying model's pretraining to make something up. I'd rather say 'I don't know' than serve you a confident-sounding wrong answer — that's the whole 'almost-right is harmful' posture this platform is built on. Two things you can do: (1) rephrase the question to be about Greater itself (how it works, what's in the repo, OpenClaw, the .pink properties, hiring colonhyphenbracket), or (2) use the contact form on this page to send the question to a human."
+    },
+    {
+      "q": "How do I hire colonhyphenbracket?",
+      "a": "The contact form on this site (hire.colonhyphenbracket.pink) is the front door. Describe the engagement you have in mind — typically that's authoring a Pipe (the proprietary curated-knowledge layer) for your Greater deployment, or building out a new persona template from scratch, or integrating Greater into an existing product. The author works on a handful of Pipes at a time, so scope and timing get discussed up front. There is no calendar-booking or self-serve checkout — every engagement starts with an email exchange so the fit gets sanity-checked before anyone commits."
+    },
+    {
+      "q": "Where can I read more about how you were built?",
+      "a": "Three places. (1) The long-form architecture notes at colonhyphenbracket.pink — design memos, postmortems, the 'why' behind the choices. (2) The source itself at github.com/rorshockbtc/greater-than — the README walks the layout, and the code is heavily commented. (3) The Pipes layer at pipes.pink — that's where the proprietary extension story is documented. The short-form companion at semi.pink and the Bitcoin-specific writing at hash.pink fill in the surrounding context."
     }
   ]
 }

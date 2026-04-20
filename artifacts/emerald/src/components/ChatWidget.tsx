@@ -129,6 +129,14 @@ export interface ChatWidgetProps {
    * shape of what's possible and convert at a higher rate.
    */
   suggestedPrompts?: string[];
+  /**
+   * Short noun phrase describing what this bot covers, threaded through
+   * to LLMProvider.ask so the strict-grounding refusal can name the
+   * bot's scope ("I can only answer questions about Greater itself —
+   * the FOSS shell, OpenClaw, …") instead of falling back to the
+   * generic "topics in this bot's curated knowledge base."
+   */
+  refusalScope?: string;
 }
 
 export function ChatWidget({
@@ -142,6 +150,7 @@ export function ChatWidget({
   personaSystemPrompt,
   personaExampleTopics,
   suggestedPrompts,
+  refusalScope,
 }: ChatWidgetProps = {}) {
   const [, navigate] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -454,6 +463,13 @@ export function ChatWidget({
       // Adds the field even when no other ask options are set.
       if (personaSlug) {
         askOptions = { ...(askOptions ?? {}), personaSlug };
+      }
+      // Carry the refusal scope so the strict-grounding refusal in
+      // LLMProvider.ask can name THIS bot's territory instead of
+      // falling back to generic copy. Always added when supplied,
+      // independent of whichever bias-source branch above ran.
+      if (refusalScope) {
+        askOptions = { ...(askOptions ?? {}), refusalScope };
       }
       const askStart = performance.now();
       const answer = await llm.ask(history, userText, askOptions);
