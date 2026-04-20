@@ -281,6 +281,7 @@ export default function Home() {
           'Green Wallet fees and self-custody',
           'Suspected unauthorised login on a Blockstream wallet',
         ]}
+        suggestedPrompts={scenario?.suggestedPrompts}
       />
     </div>
     </PipeProvider>

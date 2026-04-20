@@ -300,4 +300,10 @@ export interface AskOptions {
   biasId?: string;
   /** Human-readable label for `biasId` (e.g. "Core", "Knots"). */
   biasLabel?: string;
+  /**
+   * Persona slug ("startups", "faith", …) used to scope the curated
+   * Q&A cache lookup. When omitted, the cache check is skipped and
+   * inference falls through to the regular RAG path.
+   */
+  personaSlug?: string;
 }

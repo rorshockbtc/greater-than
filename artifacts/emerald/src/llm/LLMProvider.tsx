@@ -51,6 +51,7 @@ import {
   setCorpusMeta,
   setMetaFlag,
   topK,
+  cosine,
 } from "./vectorStore";
 
 const SEED_CORPUS_VERSION = "v2-seed-blockstream";
@@ -196,6 +197,14 @@ interface LLMContextValue {
    * already-installed bundles short-circuit on the persisted meta flag.
    */
   requestSeedBundle: (slug: string) => void;
+  /**
+   * Request that the curated Q&A cache for a persona be loaded.
+   * Fetches `<base>/qa-bank/<slug>.json`, embeds each question
+   * via the in-browser sentence-transformer, and stores the
+   * vectors in memory. A 404 marks the bank as `absent` so the
+   * FOSS fork doesn't keep re-checking. Idempotent.
+   */
+  requestQaBank: (slug: string) => void;
   /**
    * Per-session quota for cloud-fallback chat calls. When `remaining`
    * hits 0 the chat widget keeps the conversation going on the
@@ -975,6 +984,103 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
     [status, callWorker],
   );
 
+  /* -------------------------------------------------------------- */
+  /*  Curated Q&A cache (semantic short-circuit)                    */
+  /* -------------------------------------------------------------- */
+
+  /**
+   * In-memory store of embedded curated Q&A banks, keyed by persona
+   * slug. Loaded on demand by `requestQaBank` and consulted by `ask`
+   * before doing any model inference. The bank ships as a static
+   * JSON file at `<base>/qa-bank/<slug>.json`; a 404 (the FOSS-fork
+   * shape) marks the slug `absent` so we don't keep re-checking.
+   */
+  type QaItem = { q: string; a: string; vec: number[] };
+  const qaBankRef = useRef<
+    Map<string, { items: QaItem[]; status: "loading" | "ready" | "absent" }>
+  >(new Map());
+  const QA_CACHE_THRESHOLD = 0.78;
+
+  const lookupCachedAnswer = useCallback(
+    async (
+      text: string,
+      slug: string,
+    ): Promise<{ answer: string; score: number } | null> => {
+      const entry = qaBankRef.current.get(slug);
+      if (!entry || entry.status !== "ready" || entry.items.length === 0) {
+        return null;
+      }
+      if (!embedderReadyRef.current) return null;
+      const queryVec = await callWorker<number[]>("embed", { text });
+      let best: { item: QaItem; score: number } | null = null;
+      for (const item of entry.items) {
+        const score = cosine(queryVec, item.vec);
+        if (!best || score > best.score) best = { item, score };
+      }
+      if (!best || best.score < QA_CACHE_THRESHOLD) return null;
+      return { answer: best.item.a, score: best.score };
+    },
+    [callWorker],
+  );
+
+  // Stable ref so `ask` (declared below) can call the latest version
+  // without re-creating itself on every embedder-ready transition.
+  const lookupCachedAnswerRef = useRef(lookupCachedAnswer);
+  useEffect(() => {
+    lookupCachedAnswerRef.current = lookupCachedAnswer;
+  }, [lookupCachedAnswer]);
+
+  const requestQaBank = useCallback(
+    (slug: string) => {
+      const existing = qaBankRef.current.get(slug);
+      if (existing) return; // already loading, ready, or absent
+      qaBankRef.current.set(slug, { items: [], status: "loading" });
+
+      const load = async () => {
+        const url = `${import.meta.env.BASE_URL}qa-bank/${slug}.json`;
+        let bank: { items?: { q: string; a: string }[] } | null = null;
+        try {
+          const res = await fetch(url, { cache: "no-cache" });
+          if (!res.ok) {
+            qaBankRef.current.set(slug, { items: [], status: "absent" });
+            return;
+          }
+          bank = (await res.json()) as { items?: { q: string; a: string }[] };
+        } catch {
+          qaBankRef.current.set(slug, { items: [], status: "absent" });
+          return;
+        }
+        if (!bank?.items?.length) {
+          qaBankRef.current.set(slug, { items: [], status: "absent" });
+          return;
+        }
+        // Wait for the embedder. Polling is acceptable here — the
+        // cache is a nice-to-have and we don't want to gate it on
+        // the embedder-ready callback machinery.
+        const start = Date.now();
+        while (!embedderReadyRef.current && Date.now() - start < 60_000) {
+          await new Promise((r) => setTimeout(r, 250));
+        }
+        if (!embedderReadyRef.current) {
+          qaBankRef.current.set(slug, { items: [], status: "absent" });
+          return;
+        }
+        const items: QaItem[] = [];
+        for (const it of bank.items) {
+          try {
+            const vec = await callWorker<number[]>("embed", { text: it.q });
+            items.push({ q: it.q, a: it.a, vec });
+          } catch {
+            // Skip individual failures rather than aborting the bank.
+          }
+        }
+        qaBankRef.current.set(slug, { items, status: "ready" });
+      };
+      void load();
+    },
+    [callWorker],
+  );
+
   const ask = useCallback<LLMContextValue["ask"]>(
     async (history, userMessage, options) => {
       // OpenClaw takes precedence over both the in-browser model and
@@ -985,6 +1091,35 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
         openClawHealthRef.current.state === "ok"
       ) {
         return askViaOpenClaw(history, userMessage, options);
+      }
+      // Curated Q&A cache short-circuit. When the visitor's question
+      // semantically matches an entry in the persona's curated Q&A
+      // bank above the configured threshold, return that answer
+      // verbatim instead of doing model inference. This is BOTH the
+      // demo-quality lever (every cached answer is hand-curated, no
+      // hallucination) AND the cost lever (zero model tokens spent).
+      // Skipped silently when no slug, no bank, or no embedder.
+      if (options?.personaSlug) {
+        try {
+          const hit = await lookupCachedAnswerRef.current?.(
+            userMessage,
+            options.personaSlug,
+          );
+          if (hit) {
+            return {
+              text: hit.answer,
+              source: "qa-cache",
+              thoughtTrace: {
+                chunks: [],
+                reasoning: `Matched curated Q&A bank for "${options.personaSlug}" (cosine ${hit.score.toFixed(3)}).`,
+              },
+            };
+          }
+        } catch (err) {
+          // Cache lookup failures must NEVER break the chat — fall
+          // through to model inference.
+          console.warn("[LLMProvider] qa-cache lookup failed:", err);
+        }
       }
       if (status !== "ready") {
         throw new Error("Local model not ready");
@@ -1127,6 +1262,7 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
     crawl,
     bundleProgress,
     requestSeedBundle,
+    requestQaBank,
     cloudBudget: {
       used: cloudCallsUsed,
       remaining: Math.max(0, CLOUD_CALL_BUDGET - cloudCallsUsed),

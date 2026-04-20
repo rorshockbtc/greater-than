@@ -47,7 +47,11 @@ function PersonaDemoShellInner({ persona }: { persona: Persona }) {
   // loader marks the slug "absent" so it won't keep re-checking.
   useEffect(() => {
     llm.requestSeedBundle(scenario.seedSlug);
-  }, [llm, scenario.seedSlug]);
+    // The curated Q&A bank for this persona is independent of the
+    // seed corpus — it's a hand-curated short-circuit for the most
+    // common questions. Loaded on demand; FOSS forks 404 silently.
+    llm.requestQaBank(persona.slug);
+  }, [llm, scenario.seedSlug, persona.slug]);
 
   return (
     <PipeProvider
@@ -133,6 +137,7 @@ function PersonaDemoShellInner({ persona }: { persona: Persona }) {
           personaExampleTopics={scenario.shell.articleSections
             .slice(0, 3)
             .map((s) => s.heading)}
+          suggestedPrompts={scenario.suggestedPrompts}
         />
       </div>
     </PipeProvider>

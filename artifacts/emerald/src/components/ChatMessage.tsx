@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Bot, User, AlertTriangle, FileText, ShieldCheck, Cloud, Brain, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
+import { Bot, User, AlertTriangle, FileText, ShieldCheck, Cloud, Brain, ChevronDown, ChevronUp, ExternalLink, ThumbsUp, ThumbsDown, Sparkles } from 'lucide-react';
 import { cn, formatTime } from '@/lib/utils';
 import { TrustBadge } from './TrustBadge';
 import { useToast } from '@/hooks/use-toast';
@@ -47,6 +47,16 @@ export interface MessageProps {
    * alone, which is the normal happy path.
    */
   localOnly?: boolean;
+  /** Stable session id, propagated from ChatWidget for feedback POST. */
+  sessionId?: string;
+  /** Persona slug, propagated from ChatWidget for feedback POST. */
+  personaSlug?: string;
+  /**
+   * The user's question that produced this bot reply. ChatWidget
+   * computes it by walking back to the previous user turn so the
+   * feedback row can record what they actually asked.
+   */
+  precedingUserMessage?: string;
 }
 
 export function ChatMessage({
@@ -66,10 +76,37 @@ export function ChatMessage({
   biasLabel,
   isModeNote,
   localOnly,
+  sessionId,
+  personaSlug,
+  precedingUserMessage,
 }: MessageProps) {
   const isBot = role === 'bot';
   const { toast } = useToast();
   const [traceOpen, setTraceOpen] = useState(false);
+  const traceRef = useRef<HTMLDivElement>(null);
+  const citationRefs = useRef<Map<number, HTMLLIElement | null>>(new Map());
+
+  /**
+   * Click handler for citation chips. Opens the trace panel (if
+   * closed) and scrolls to the matching source so visitors can
+   * verify the answer in-place rather than being yanked off-site.
+   */
+  const handleCitationClick = (n: number) => {
+    setTraceOpen(true);
+    // Wait one frame for the panel to mount before scrolling.
+    requestAnimationFrame(() => {
+      const el = citationRefs.current.get(n);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('ring-2', 'ring-emerald-400/60');
+        window.setTimeout(() => {
+          el.classList.remove('ring-2', 'ring-emerald-400/60');
+        }, 1500);
+      } else {
+        traceRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+  };
 
   if (isModeNote) {
     return (
@@ -150,7 +187,7 @@ export function ChatMessage({
         >
           <div className="whitespace-pre-wrap leading-relaxed">
             {isBot && thoughtTrace && thoughtTrace.chunks.length > 0
-              ? renderWithCitations(content, thoughtTrace.chunks)
+              ? renderWithCitations(content, thoughtTrace.chunks, handleCitationClick)
               : content}
           </div>
         </div>
@@ -273,7 +310,11 @@ export function ChatMessage({
  * Numbers that don't map to a chunk are rendered as plain text — we
  * never invent a destination.
  */
-function renderWithCitations(text: string, chunks: RetrievedChunk[]): React.ReactNode[] {
+function renderWithCitations(
+  text: string,
+  chunks: RetrievedChunk[],
+  onCitationClick?: (n: number) => void,
+): React.ReactNode[] {
   const parts: React.ReactNode[] = [];
   const re = /\[(\d+(?:\s*,\s*\d+)*)\]/g;
   let lastIndex = 0;
@@ -291,16 +332,18 @@ function renderWithCitations(text: string, chunks: RetrievedChunk[]): React.Reac
             return (
               <React.Fragment key={n}>
                 {i > 0 && <span className="text-muted-foreground">,</span>}
-                <a
-                  href={c.page_url}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  title={c.page_label}
-                  className="text-emerald-400 hover:text-emerald-300 hover:underline font-medium"
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onCitationClick?.(n);
+                  }}
+                  title={`${c.page_label} — click to view in trace panel`}
+                  className="text-emerald-400 hover:text-emerald-300 hover:underline font-medium cursor-pointer bg-transparent border-0 p-0"
                   data-testid={`link-citation-${n}`}
                 >
                   [{n}]
-                </a>
+                </button>
               </React.Fragment>
             );
           })}

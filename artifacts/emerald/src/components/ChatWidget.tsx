@@ -121,6 +121,13 @@ export interface ChatWidgetProps {
    * dead-end becomes a redirect to questions that DO work.
    */
   personaExampleTopics?: string[];
+  /**
+   * Tappable suggested-prompt chips shown in the empty state, above
+   * the input. Each chip pre-fills the input on tap. Designed for
+   * the lead-gen path: visitors who don't know what to ask see the
+   * shape of what's possible and convert at a higher rate.
+   */
+  suggestedPrompts?: string[];
 }
 
 export function ChatWidget({
@@ -133,6 +140,7 @@ export function ChatWidget({
   personaBrand,
   personaSystemPrompt,
   personaExampleTopics,
+  suggestedPrompts,
 }: ChatWidgetProps = {}) {
   const [, navigate] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -210,6 +218,14 @@ export function ChatWidget({
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, chatMutation.isPending, isLocalGenerating]);
+
+  // Kick the curated Q&A bank load as soon as we know the persona.
+  // Idempotent inside LLMProvider; safe to call multiple times.
+  useEffect(() => {
+    if (personaSlug) {
+      llm.requestQaBank(personaSlug);
+    }
+  }, [personaSlug, llm]);
 
   /**
    * "Real" turns: user/bot only, mode-notes excluded, and the
@@ -385,18 +401,27 @@ export function ChatWidget({
           systemPrompt: personaSystemPrompt,
         };
       }
+      // Always carry the persona slug so the curated Q&A cache (in
+      // LLMProvider.ask) can short-circuit on a semantic match.
+      // Adds the field even when no other ask options are set.
+      if (personaSlug) {
+        askOptions = { ...(askOptions ?? {}), personaSlug };
+      }
       const answer = await llm.ask(history, userText, askOptions);
       const isOpenClaw = answer.source === 'openclaw';
+      const isQaCache = answer.source === 'qa-cache';
       const botMsg: MessageProps = {
         id: uuidv4(),
         role: 'bot',
         content: answer.text,
         timestamp: new Date(),
         trustScore: 0.96,
-        ciBreakdown: isOpenClaw
-          ? 'OpenClaw · BYO model · grounded in retrieved chunks where available.'
-          : 'Local inference · WebGPU · grounded in retrieved chunks.',
-        responseSource: isOpenClaw ? 'openclaw' : 'local',
+        ciBreakdown: isQaCache
+          ? 'Curated Q&A bank · semantic match above threshold · zero model tokens spent.'
+          : isOpenClaw
+            ? 'OpenClaw · BYO model · grounded in retrieved chunks where available.'
+            : 'Local inference · WebGPU · grounded in retrieved chunks.',
+        responseSource: isQaCache ? 'qa-cache' : isOpenClaw ? 'openclaw' : 'local',
         thoughtTrace: answer.thoughtTrace,
         biasLabel: activeBiasOption?.label,
         biasId: activeBiasOption ? pipe.activeBiasId : undefined,
@@ -819,9 +844,60 @@ export function ChatWidget({
                 {personaSlug && (
                   <DisclaimerBanner personaSlug={personaSlug} />
                 )}
-                {messages.map((msg) => (
-                  <ChatMessage key={msg.id} {...msg} compact={!isFullScreen} />
-                ))}
+                {messages.map((msg, idx) => {
+                  // The preceding user message is what the visitor
+                  // actually asked — needed for the feedback row so
+                  // the admin export shows "what they asked → what
+                  // we replied → thumbs". Walk backwards from the
+                  // current bot turn to find it.
+                  let precedingUser: string | undefined;
+                  if (msg.role === 'bot') {
+                    for (let i = idx - 1; i >= 0; i--) {
+                      if (messages[i].role === 'user') {
+                        precedingUser = messages[i].content;
+                        break;
+                      }
+                    }
+                  }
+                  return (
+                    <ChatMessage
+                      key={msg.id}
+                      {...msg}
+                      compact={!isFullScreen}
+                      sessionId={sessionId}
+                      personaSlug={personaSlug}
+                      precedingUserMessage={precedingUser}
+                    />
+                  );
+                })}
+
+                {/* Suggested-prompt chips — rendered only in the empty
+                    state (no real turns yet) so they don't clutter
+                    the transcript once the conversation starts. */}
+                {realTurns.length === 0 && suggestedPrompts && suggestedPrompts.length > 0 && (
+                  <div
+                    className="mt-2 flex flex-wrap gap-2 px-1"
+                    data-testid="suggested-prompts"
+                  >
+                    <span className="w-full text-[10px] uppercase tracking-wider text-[hsl(var(--widget-muted))] mb-1">
+                      Try asking
+                    </span>
+                    {suggestedPrompts.map((prompt) => (
+                      <button
+                        key={prompt}
+                        type="button"
+                        onClick={() => {
+                          setInput(prompt);
+                          setTimeout(() => inputRef.current?.focus(), 0);
+                        }}
+                        className="text-xs px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/5 text-emerald-200 hover:bg-emerald-500/10 hover:border-emerald-400/50 transition-colors text-left"
+                        data-testid={`button-suggested-prompt-${prompt.slice(0, 16).replace(/\W+/g, '-').toLowerCase()}`}
+                      >
+                        {prompt}
+                      </button>
+                    ))}
+                  </div>
+                )}
 
                 {isPending && (
                   <motion.div
@@ -845,8 +921,8 @@ export function ChatWidget({
 
             <div className="px-4 py-3 border-t border-[hsl(var(--widget-border))] bg-[hsl(220,13%,8%)]">
               {pipe.effectiveBiasOptions.length > 1 && (
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="text-[10px] uppercase tracking-wider text-[hsl(var(--widget-muted))]">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                  <span className="text-[10px] uppercase tracking-wider text-[hsl(var(--widget-muted))] shrink-0">
                     {pipe.biasSource === 'pipe' ? 'Perspective' : 'Audience'}
                   </span>
                   <BiasToggle

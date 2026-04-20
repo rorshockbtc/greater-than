@@ -227,7 +227,7 @@ export async function listSources(): Promise<IndexedSource[]> {
     .sort((a, b) => (b.indexed_at ?? 0) - (a.indexed_at ?? 0));
 }
 
-function cosine(a: number[], b: number[]): number {
+export function cosine(a: number[], b: number[]): number {
   // Embeddings are L2-normalized at the embedder; cosine reduces to dot
   // product, but we still compute the full form to stay correct if the
   // normalization assumption ever changes.

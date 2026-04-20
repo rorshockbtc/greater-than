@@ -70,6 +70,13 @@ export type PersonaScenario = {
   /** Input placeholder for this persona's chat. */
   placeholder: string;
   /**
+   * Three to five short, tappable prompt chips shown in the empty
+   * state of the chat (above the input). Each chip pre-fills the
+   * input on tap. Designed to convert visitors who don't know what
+   * to ask first — the lead-gen path is "show what's possible".
+   */
+  suggestedPrompts?: string[];
+  /**
    * Mock site chrome — a believable host page for the chat to live on.
    * Each demo dramatizes the failure mode by surrounding the chat with
    * a page that obviously cannot answer the suggested question on its
@@ -142,6 +149,12 @@ const PERSONAS: Persona[] = [
       promptSuggestion: 'Can I cancel anytime if my team shrinks below the Team plan minimum?',
       welcome: "Hi — I'm Vellum's pricing & onboarding bot. Ask me about plans, billing cycles, cancellation, the free trial, or how onboarding works. I quote our docs verbatim and tell you when I don't know.",
       placeholder: 'Ask about pricing, plans, or onboarding…',
+      suggestedPrompts: [
+        'How much does Vellum cost?',
+        'Is there a free trial?',
+        "What's the difference between Business and Enterprise?",
+        'Do you offer SSO?',
+      ],
       seedSlug: 'startups',
       systemPrompt: [
         "You are Vellum's pricing and onboarding assistant. You help prospective customers understand Vellum's plans, billing, free trial, cancellation policy, and onboarding flow.",
@@ -238,6 +251,12 @@ Founders who've already realized the chatbot in their corner is costing them dea
       promptSuggestion: 'What does this church teach about hope after a believer dies?',
       welcome: "Peace to you. I'm Cornerstone's website assistant — grounded in our sermons, position papers, and confession. Ask me what we teach, and I'll cite the source. I'm not a pastor; for pastoral care I'll connect you with one of our elders.",
       placeholder: 'Ask what this church teaches about…',
+      suggestedPrompts: [
+        'What does Cornerstone confess?',
+        'Why do you baptize believers and not infants?',
+        'How do I become a member?',
+        'When do you meet?',
+      ],
       seedSlug: 'faith',
       systemPrompt: [
         "You are Cornerstone Reformed Baptist Church's website assistant. You speak from this specific congregation's sermons, position papers, and confession (the 1689 London Baptist Confession of Faith).",
@@ -335,6 +354,12 @@ Churches and faith-based organizations whose distinctive teaching is locked insi
       promptSuggestion: 'How does this school teach worldview formation in the upper school?',
       welcome: "Welcome to Heritage Classical. I'm the admissions assistant — grounded in our scope-and-sequence, parent handbook, and faculty position papers. Ask me about our curriculum, philosophy, or admissions process. I won't improvise answers I don't have.",
       placeholder: 'Ask about curriculum, admissions, or philosophy…',
+      suggestedPrompts: [
+        "What's your admissions process?",
+        'Do you accept students from non-Christian families?',
+        'How big are class sizes?',
+        'How does Heritage handle technology and screens?',
+      ],
       seedSlug: 'schools',
       systemPrompt: [
         "You are Heritage Classical Academy's admissions assistant. You speak from this school's scope-and-sequence, parent handbook, faculty position papers, and admissions documentation.",
@@ -434,6 +459,12 @@ Heads of school, deans of academic affairs, and curriculum directors who are wat
       promptSuggestion: 'Do you have any listings under $400k with three bedrooms in the Riverside Elementary district?',
       welcome: "Welcome to Pinecrest Realty. I'm the listings assistant — grounded in our current MLS feed, school-district overlays, and financing partners. Ask me about a price range, a neighborhood, or a school district. I can pull listings; I can't write an offer.",
       placeholder: 'Ask about listings, neighborhoods, or schools…',
+      suggestedPrompts: [
+        'What homes do you have listed right now?',
+        'Is 892 Hawthorne Drive in the Riverside Elementary district?',
+        'Who are your local lenders for pre-approval?',
+        'What does a first-time buyer typically budget?',
+      ],
       systemPrompt: [
         "You are Pinecrest Realty's listings assistant. You help home buyers explore current listings, neighborhood information, school-district overlays, and financing partner options.",
         "Answer ONLY from the provided knowledge snippets when they are present. If the snippets do not contain the answer (specific transaction status, legal advice, contract drafting), say so plainly and route the visitor to a real agent.",
@@ -533,6 +564,12 @@ Owner-operators who are competent enough to know their site's chat experience is
       promptSuggestion: 'Do you have a knee surgeon in the Raleigh, NC area that\'s in-network?',
       welcome: "Hi — I'm MutualHealth's member-portal assistant. I'm grounded in our membership rules, billing flows, and escalation paths. I run in your browser; nothing you type is sent anywhere unless you explicitly escalate. I'll tell you when I don't know something rather than guess.",
       placeholder: 'Ask about membership, billing, or how a need is processed…',
+      suggestedPrompts: [
+        'Is MutualHealth insurance?',
+        'How do I submit a medical need?',
+        'What does MutualHealth cover?',
+        'Does this chat send my message to a server?',
+      ],
       systemPrompt: [
         "You are MutualHealth's member-portal assistant. MutualHealth is a faith-based health-sharing ministry, NOT an insurance company. You help members understand the membership rules, billing flows, and the documented escalation paths.",
         "Answer ONLY from the provided knowledge snippets when they are present. If the snippets do not contain the answer (a specific provider's network status, a coverage decision, a medical recommendation), say so plainly and route the member to a human reviewer.",
@@ -622,6 +659,12 @@ Healthtech founders and product leads who are watching the AI wave from outside 
     demoLabel: 'Try the live demo — Blockstream support bot',
     scenario: {
       seedSlug: 'bitcoin',
+      suggestedPrompts: [
+        'How do I recover my hardware wallet seed?',
+        'Why are my fees so high right now?',
+        'What is Blockstream Jade?',
+        'Does my message get sent to OpenAI?',
+      ],
       welcome:
         "Hello! I'm Greater's Blockstream support bot. Ask me about Jade, Green, hardware-wallet recovery, fees, or self-custody.",
       placeholder: 'Ask about your wallet, fees, or recovery…',
