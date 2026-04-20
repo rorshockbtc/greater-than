@@ -199,7 +199,14 @@ export default function AdminFeedback() {
 function FeedbackRowItem({ row }: { row: FeedbackRow }) {
   const [open, setOpen] = useState(false);
   const isSuggestion = row.kind === "suggestion";
-  const ratingClass = row.rating === 1 ? "text-emerald-400" : "text-rose-400";
+  // Neutral styling for suggestion rows — the rating cell shows
+  // "—" for them, so a red default would imply a thumbs-down that
+  // wasn't actually given.
+  const ratingClass = isSuggestion
+    ? "text-muted-foreground"
+    : row.rating === 1
+      ? "text-emerald-400"
+      : "text-rose-400";
   return (
     <>
       <tr
