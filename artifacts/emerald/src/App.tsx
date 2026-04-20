@@ -18,6 +18,7 @@ import Proof from "@/pages/Proof";
 import Compliance from "@/pages/Compliance";
 import Nostr from "@/pages/Nostr";
 import NotFound from "@/pages/not-found";
+import AdminFeedback from "@/pages/AdminFeedback";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,9 @@ function Router() {
           outside the Greater Layout so it reads as a standalone
           helpdesk-shaped artifact. Registered before the more
           general /demo/:slug route so wouter resolves it correctly. */}
+      {/* Internal-only feedback dashboard. Gated server-side by
+          ADMIN_FEEDBACK_KEY; the URL alone is not sensitive. */}
+      <Route path="/admin/feedback" component={AdminFeedback} />
       <Route path="/demo/:slug/ticket" component={TicketPreview} />
 
       {/* Live Blockstream (FinTech) demo — bespoke chrome preserved

@@ -206,6 +206,22 @@ export function ChatMessage({
               lastUpdated={lastUpdated}
             />
           )}
+
+          {/* Feedback row — only on bot turns that have a real preceding
+              user question. Quietly POSTs to /api/feedback; if the
+              backend is offline (FOSS fork, no DB), the catch swallows
+              and we still flip the local "thanks" state so visitors
+              don't see an error for what is genuinely a no-op. */}
+          {isBot && precedingUserMessage && sessionId && personaSlug && (
+            <FeedbackButtons
+              sessionId={sessionId}
+              personaSlug={personaSlug}
+              userMessage={precedingUserMessage}
+              botReply={content}
+              responseSource={responseSource ?? "local"}
+              biasLabel={biasLabel}
+            />
+          )}
         </div>
 
         {/* Thought trace — only on local responses; shows the actual
@@ -226,13 +242,23 @@ export function ChatMessage({
               {traceOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
             </button>
             {traceOpen && (
-              <div className="mt-2 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))]/50 p-3 space-y-3">
+              <div
+                ref={traceRef}
+                className="mt-2 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))]/50 p-3 space-y-3"
+              >
                 <p className="text-[11px] text-muted-foreground italic leading-relaxed">
                   {thoughtTrace.reasoning}
                 </p>
                 <ol className="space-y-2 text-[12px]">
                   {thoughtTrace.chunks.map((c, i) => (
-                    <li key={c.id} className="border-l-2 border-emerald-500/40 pl-3">
+                    <li
+                      key={c.id}
+                      ref={(el) => {
+                        citationRefs.current.set(i + 1, el);
+                      }}
+                      className="border-l-2 border-emerald-500/40 pl-3 rounded-sm transition-shadow"
+                      data-testid={`citation-source-${i + 1}`}
+                    >
                       <div className="flex items-center gap-2 mb-1">
                         <span className="font-mono text-[10px] text-muted-foreground">
                           [{i + 1}] sim {c.score.toFixed(3)}
@@ -358,6 +384,100 @@ function renderWithCitations(
   return parts;
 }
 
+/**
+ * Tiny thumbs-up / thumbs-down row appended to every bot turn.
+ * State machine: idle → submitting → thanked. Once the visitor has
+ * rated, the row collapses to a small "Thanks" line so the rating
+ * is visibly final and can't be re-submitted from this turn.
+ *
+ * Failures are silent on purpose — the FOSS fork has no backend, and
+ * a visible error here would punish honest users for something they
+ * can't fix.
+ */
+function FeedbackButtons({
+  sessionId,
+  personaSlug,
+  userMessage,
+  botReply,
+  responseSource,
+  biasLabel,
+}: {
+  sessionId: string;
+  personaSlug: string;
+  userMessage: string;
+  botReply: string;
+  responseSource: ResponseSource;
+  biasLabel?: string;
+}) {
+  const [state, setState] = useState<"idle" | "submitting" | "thanked">("idle");
+  const [given, setGiven] = useState<1 | -1 | null>(null);
+
+  const submit = async (rating: 1 | -1) => {
+    if (state !== "idle") return;
+    setState("submitting");
+    setGiven(rating);
+    try {
+      // BASE_URL already ends with a slash; concatenating "api/feedback"
+      // keeps us inside the artifact's path prefix on the proxied
+      // preview and works in production builds.
+      const base = (import.meta.env.BASE_URL ?? "/").replace(/\/?$/, "/");
+      await fetch(`${base}api/feedback`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId,
+          personaSlug,
+          rating,
+          userMessage: userMessage.slice(0, 4000),
+          botReply: botReply.slice(0, 8000),
+          responseSource,
+          biasLabel,
+        }),
+      });
+    } catch {
+      // Swallow: FOSS fork or transient network. UI still says thanks.
+    } finally {
+      setState("thanked");
+    }
+  };
+
+  if (state === "thanked") {
+    return (
+      <span
+        className="text-[10px] uppercase tracking-wider text-muted-foreground/70"
+        data-testid="feedback-thanks"
+      >
+        {given === 1 ? "Thanks for the upvote" : "Thanks — noted"}
+      </span>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-1" data-testid="feedback-buttons">
+      <button
+        type="button"
+        onClick={() => submit(1)}
+        disabled={state !== "idle"}
+        title="This answer was helpful"
+        className="p-1 rounded hover:bg-emerald-500/10 text-muted-foreground hover:text-emerald-400 transition-colors disabled:opacity-50"
+        data-testid="button-feedback-up"
+      >
+        <ThumbsUp className="w-3 h-3" />
+      </button>
+      <button
+        type="button"
+        onClick={() => submit(-1)}
+        disabled={state !== "idle"}
+        title="This answer wasn't helpful"
+        className="p-1 rounded hover:bg-rose-500/10 text-muted-foreground hover:text-rose-400 transition-colors disabled:opacity-50"
+        data-testid="button-feedback-down"
+      >
+        <ThumbsDown className="w-3 h-3" />
+      </button>
+    </div>
+  );
+}
+
 function SourceBadge({
   source,
   cloudReason,
@@ -367,6 +487,18 @@ function SourceBadge({
   cloudReason?: CloudReason;
   localOnly?: boolean;
 }) {
+  if (source === "qa-cache") {
+    return (
+      <div
+        className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-medium text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-md mb-1"
+        title="Matched a curated Q&A in the persona's knowledge bank — instant, deterministic, zero model tokens spent."
+        data-testid="badge-qa-cache"
+      >
+        <Sparkles className="w-3 h-3" />
+        Curated &middot; Instant
+      </div>
+    );
+  }
   if (source === "openclaw") {
     return (
       <div
