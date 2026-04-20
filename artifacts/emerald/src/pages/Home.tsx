@@ -147,9 +147,9 @@ function Hero() {
             className="underline underline-offset-2 hover:text-foreground"
             data-testid="link-hero-author"
           >
-            colonhyphenbracket
+            ColonHyphenBracket Studio 
           </a>
-          , one fractional architect, in public, in pink. The launch demo
+          , in public, in pink. The launch demo
           is the FinTech bot — answering real Bitcoin questions in your
           browser, no API key, no signup.
         </motion.p>
@@ -236,9 +236,9 @@ function PrinciplesStrip() {
             <span className="chb-mono-label text-pink-500/80 not-italic mr-1">
               note —
             </span>
-            "explicit bias" is not a slogan; it's a refusal. the
+            "Explicit bias" is not just a slogan; it's a refusal. The
             general-purpose chatbots pretending to be neutral are doing
-            damage. ours says where it stands.
+            damage. Ours says where it stands.
           </aside>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">

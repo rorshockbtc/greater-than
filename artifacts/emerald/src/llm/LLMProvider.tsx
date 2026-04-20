@@ -646,6 +646,13 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
         done_chunks: 0,
         done: false,
       });
+      // Drop the prior slice for this job_id before re-installing so a
+      // version bump (e.g. greater v1 → v2) is a clean replacement,
+      // not an append. Without this, removed/renamed chunks from the
+      // old bundle linger in IndexedDB and can score higher than the
+      // new ones during retrieval. The private-overlay path already
+      // does this; the public path was missing it.
+      await deleteByJob(jobId);
       let done = 0;
       const installedAt = Date.now();
       for (const doc of bundle.documents) {

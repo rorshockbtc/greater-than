@@ -65,8 +65,8 @@ export default function About() {
             The author
           </h2>
           <p>
-            Built by colonhyphenbracket. Bitcoin-Core inclined, Knots-curious.
-            Available for fractional architecture engagements via{" "}
+            Built by colonhyphenbracket. Bitcoin-only, privacy-first.
+            Available for fractional or full-time architecture engagements via{" "}
             <a
               href="https://hire.colonhyphenbracket.pink"
               target="_blank"
