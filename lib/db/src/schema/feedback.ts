@@ -15,7 +15,9 @@ export const feedbackTable = pgTable(
     biasLabel: text("bias_label"),
     latencyMs: integer("latency_ms"),
     cosineScore: real("cosine_score"),
-    userAgent: text("user_agent"),
+    // No user-agent or IP captured. The session id sent by the client
+    // is the only stable identifier we want — anything else is a
+    // passive fingerprinting signal that breaks the no-PII commitment.
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => ({

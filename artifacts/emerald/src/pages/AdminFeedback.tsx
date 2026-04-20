@@ -26,7 +26,6 @@ interface FeedbackRow {
   biasLabel?: string | null;
   latencyMs?: number | null;
   cosineScore?: number | null;
-  userAgent?: string | null;
   createdAt: string;
 }
 
@@ -164,29 +163,7 @@ export default function AdminFeedback() {
           </thead>
           <tbody>
             {data.rows.map((r) => (
-              <tr
-                key={r.id}
-                className="border-t border-[hsl(var(--border))] align-top"
-                data-testid={`feedback-row-${r.id}`}
-              >
-                <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">
-                  {new Date(r.createdAt).toLocaleString()}
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap font-medium">{r.personaSlug}</td>
-                <td className={`px-3 py-2 whitespace-nowrap font-semibold ${r.rating === 1 ? "text-emerald-400" : "text-rose-400"}`}>
-                  {r.rating === 1 ? "↑" : "↓"}
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">{r.responseSource}</td>
-                <td className="px-3 py-2 max-w-md">
-                  <div className="line-clamp-3">{r.userMessage}</div>
-                </td>
-                <td className="px-3 py-2 max-w-md">
-                  <div className="line-clamp-3 text-muted-foreground">{r.botReply}</div>
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">
-                  {r.biasLabel ?? "—"}
-                </td>
-              </tr>
+              <FeedbackRowItem key={r.id} row={r} />
             ))}
             {data.rows.length === 0 && (
               <tr>
@@ -199,6 +176,95 @@ export default function AdminFeedback() {
         </table>
       </div>
     </Shell>
+  );
+}
+
+/**
+ * One row in the admin table. Click anywhere on the row to expand
+ * full transcript context: the visitor's question, the bot's full
+ * reply, any optional comment they left, and the session id +
+ * response metadata. Collapsed by default to keep scan-speed high.
+ */
+function FeedbackRowItem({ row }: { row: FeedbackRow }) {
+  const [open, setOpen] = useState(false);
+  const ratingClass = row.rating === 1 ? "text-emerald-400" : "text-rose-400";
+  return (
+    <>
+      <tr
+        className="border-t border-[hsl(var(--border))] align-top hover:bg-[hsl(var(--card))] cursor-pointer"
+        onClick={() => setOpen((v) => !v)}
+        data-testid={`feedback-row-${row.id}`}
+      >
+        <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">
+          {new Date(row.createdAt).toLocaleString()}
+        </td>
+        <td className="px-3 py-2 whitespace-nowrap font-medium">{row.personaSlug}</td>
+        <td className={`px-3 py-2 whitespace-nowrap font-semibold ${ratingClass}`}>
+          {row.rating === 1 ? "↑" : "↓"}
+        </td>
+        <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">{row.responseSource}</td>
+        <td className="px-3 py-2 max-w-md">
+          <div className="line-clamp-3">{row.userMessage}</div>
+        </td>
+        <td className="px-3 py-2 max-w-md">
+          <div className="line-clamp-3 text-muted-foreground">{row.botReply}</div>
+        </td>
+        <td className="px-3 py-2 whitespace-nowrap text-muted-foreground">
+          {row.biasLabel ?? "—"}
+        </td>
+      </tr>
+      {open && (
+        <tr
+          className="border-t border-[hsl(var(--border))] bg-[hsl(var(--card))]"
+          data-testid={`feedback-row-expanded-${row.id}`}
+        >
+          <td colSpan={7} className="px-4 py-4">
+            <div className="grid gap-3 max-w-4xl">
+              <Field label="Question">
+                <p className="text-sm whitespace-pre-wrap">{row.userMessage}</p>
+              </Field>
+              <Field label="Reply">
+                <p className="text-sm whitespace-pre-wrap text-muted-foreground">{row.botReply}</p>
+              </Field>
+              {row.comment && (
+                <Field label="Visitor comment">
+                  <p className="text-sm whitespace-pre-wrap text-rose-300">{row.comment}</p>
+                </Field>
+              )}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-[11px]">
+                <Meta label="Session" value={row.sessionId} />
+                <Meta label="Source" value={row.responseSource} />
+                <Meta label="Bias" value={row.biasLabel ?? row.biasId ?? "—"} />
+                <Meta
+                  label="Cosine"
+                  value={row.cosineScore != null ? row.cosineScore.toFixed(3) : "—"}
+                />
+              </div>
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+        {label}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function Meta({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <div className="text-muted-foreground/70">{label}</div>
+      <div className="font-mono text-foreground break-all">{value}</div>
+    </div>
   );
 }
 

@@ -917,10 +917,23 @@ export function ChatWidget({
                         key={prompt}
                         type="button"
                         onClick={() => {
+                          // Pre-fill the input AND auto-send. Setting state
+                          // is async, so we hand the literal text to a
+                          // microtask-deferred send rather than waiting for
+                          // the controlled input to round-trip.
                           setInput(prompt);
-                          setTimeout(() => inputRef.current?.focus(), 0);
+                          // Use a flushed-on-next-tick send by calling
+                          // handleSend directly; it reads `input.trim()`,
+                          // so we briefly stash the value then clear:
+                          // simplest is to inline-send by mutating input
+                          // state then invoking handleSend on next frame.
+                          requestAnimationFrame(() => {
+                            // input was just set; handleSend will read it.
+                            handleSend();
+                          });
                         }}
-                        className="text-xs px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/5 text-emerald-200 hover:bg-emerald-500/10 hover:border-emerald-400/50 transition-colors text-left"
+                        disabled={isPending}
+                        className="text-xs px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/5 text-emerald-200 hover:bg-emerald-500/10 hover:border-emerald-400/50 transition-colors text-left disabled:opacity-50 disabled:cursor-not-allowed"
                         data-testid={`button-suggested-prompt-${prompt.slice(0, 16).replace(/\W+/g, '-').toLowerCase()}`}
                       >
                         {prompt}

@@ -409,13 +409,28 @@ function FeedbackButtons({
   responseSource: ResponseSource;
   biasLabel?: string;
 }) {
-  const [state, setState] = useState<"idle" | "submitting" | "thanked" | "error">("idle");
+  const [state, setState] = useState<"idle" | "comment" | "submitting" | "thanked" | "error">("idle");
   const [given, setGiven] = useState<1 | -1 | null>(null);
+  const [comment, setComment] = useState("");
 
-  const submit = async (rating: 1 | -1) => {
-    if (state !== "idle" && state !== "error") return;
-    setState("submitting");
+  /**
+   * Thumbs-up posts immediately. Thumbs-down opens an optional
+   * one-line comment box first — visitors who didn't like the
+   * answer often have a one-sentence reason that makes the row
+   * 10× more useful for triage. Comment is optional; "Skip"
+   * submits without it.
+   */
+  const onThumb = (rating: 1 | -1) => {
     setGiven(rating);
+    if (rating === -1) {
+      setState("comment");
+      return;
+    }
+    void submit(rating, "");
+  };
+
+  const submit = async (rating: 1 | -1, withComment: string) => {
+    setState("submitting");
     try {
       // BASE_URL already ends with a slash; concatenating "api/feedback"
       // keeps us inside the artifact's path prefix on the proxied
@@ -432,6 +447,7 @@ function FeedbackButtons({
           botReply: botReply.slice(0, 8000),
           responseSource,
           biasLabel,
+          comment: withComment ? withComment.slice(0, 2000) : undefined,
         }),
       });
       // Don't fake success on a 4xx/5xx — admin telemetry would silently
@@ -468,7 +484,7 @@ function FeedbackButtons({
     return (
       <button
         type="button"
-        onClick={() => given && submit(given)}
+        onClick={() => given && submit(given, comment)}
         className="text-[10px] uppercase tracking-wider text-rose-400 hover:text-rose-300"
         data-testid="feedback-retry"
       >
@@ -477,11 +493,49 @@ function FeedbackButtons({
     );
   }
 
+  if (state === "comment") {
+    return (
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (given) void submit(given, comment.trim());
+        }}
+        className="flex items-center gap-1 w-full max-w-md"
+        data-testid="feedback-comment-form"
+      >
+        <input
+          autoFocus
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          maxLength={2000}
+          placeholder="What was wrong? (optional)"
+          className="flex-1 text-xs bg-[hsl(var(--card))] border border-[hsl(var(--border))] rounded px-2 py-1 text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-rose-400/50"
+          data-testid="input-feedback-comment"
+        />
+        <button
+          type="submit"
+          className="text-[10px] uppercase tracking-wider px-2 py-1 rounded bg-rose-500/10 border border-rose-500/30 text-rose-300 hover:bg-rose-500/20"
+          data-testid="button-feedback-submit"
+        >
+          Send
+        </button>
+        <button
+          type="button"
+          onClick={() => given && submit(given, "")}
+          className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground"
+          data-testid="button-feedback-skip"
+        >
+          Skip
+        </button>
+      </form>
+    );
+  }
+
   return (
     <div className="flex items-center gap-1" data-testid="feedback-buttons">
       <button
         type="button"
-        onClick={() => submit(1)}
+        onClick={() => onThumb(1)}
         disabled={state !== "idle"}
         title="This answer was helpful"
         className="p-1 rounded hover:bg-emerald-500/10 text-muted-foreground hover:text-emerald-400 transition-colors disabled:opacity-50"
@@ -491,7 +545,7 @@ function FeedbackButtons({
       </button>
       <button
         type="button"
-        onClick={() => submit(-1)}
+        onClick={() => onThumb(-1)}
         disabled={state !== "idle"}
         title="This answer wasn't helpful"
         className="p-1 rounded hover:bg-rose-500/10 text-muted-foreground hover:text-rose-400 transition-colors disabled:opacity-50"

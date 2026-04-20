@@ -47,6 +47,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const REPO_ROOT = path.resolve(__dirname, "..", "..", "..");
 const OUTPUT_PATH = path.join(REPO_ROOT, "data", "seeds", "bitcoin.json");
+const PUBLIC_OUTPUT_PATH = path.join(
+  REPO_ROOT,
+  "artifacts",
+  "emerald",
+  "public",
+  "seeds",
+  "bitcoin.json",
+);
 const CACHE_ROOT = path.join(REPO_ROOT, "data", "seeds", ".cache");
 const THREADS_CONFIG = path.join(
   __dirname,
@@ -650,6 +658,7 @@ async function main() {
   };
 
   await writeJsonAtomic(OUTPUT_PATH, bundle);
+  await writeJsonAtomic(PUBLIC_OUTPUT_PATH, bundle);
 
   const totalChunks = countChunks(bundle.documents);
   const sizeMb = ((await readFile(OUTPUT_PATH)).byteLength / 1024 / 1024).toFixed(2);
@@ -663,10 +672,8 @@ async function main() {
       `knots=${bundle.documents.filter((d) => d.bias === "knots").length}, ` +
       `neutral=${bundle.documents.filter((d) => d.bias === "neutral").length}`,
   );
-  console.log("");
   console.log(
-    "Next: copy data/seeds/bitcoin.json → artifacts/emerald/public/seeds/bitcoin.json " +
-      "so the web app can fetch it on first load.",
+    `Synced public copy → ${PUBLIC_OUTPUT_PATH} (gitignored; the web app fetches it on first load).`,
   );
 }
 

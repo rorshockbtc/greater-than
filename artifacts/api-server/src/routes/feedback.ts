@@ -34,11 +34,14 @@ router.post("/feedback", writeLimiter, async (req: Request, res: Response): Prom
     res.status(400).json({ error: parsed.error.message });
     return;
   }
-  const ua = (req.headers["user-agent"] ?? "").slice(0, 256);
+  // Intentionally do NOT capture user-agent here. The session id sent
+  // by the client is the only stable identifier we want; user-agent is
+  // a passive fingerprinting signal that conflicts with our no-PII
+  // commitment for visitor feedback.
   try {
     const inserted = await db
       .insert(feedbackTable)
-      .values({ ...parsed.data, userAgent: ua })
+      .values(parsed.data)
       .returning({ id: feedbackTable.id });
     res.status(201).json({ ok: true, id: inserted[0]?.id });
   } catch (err) {
