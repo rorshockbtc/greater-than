@@ -1,0 +1,39 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-20",
+  "persona": "fintech",
+  "items": [
+    {
+      "q": "How do I recover my hardware wallet seed?",
+      "a": "Your seed phrase is the only recovery path — Blockstream cannot recover it for you, and you should never share it with anyone, including support. To restore: power on a fresh Jade or Green-compatible wallet, choose 'Restore wallet,' and enter your 12 or 24 word recovery phrase in the original order. Verify the first deposit address matches what you expected before sending funds. If your phrase is lost, your funds are not recoverable. If you suspect it's been exposed, move funds immediately to a wallet generated from a new seed."
+    },
+    {
+      "q": "What is the difference between Bitcoin Core and Knots?",
+      "a": "Bitcoin Core is the reference implementation of the Bitcoin protocol. Bitcoin Knots is a downstream client maintained by Luke Dashjr that includes Core's consensus rules plus additional policy and mempool refinements (notably more aggressive spam filtering and stricter relay policy). Both follow the same consensus rules, so they remain in agreement on the chain. Operators choose Knots when they want stricter mempool defaults; Core remains the most widely run implementation. The bias toggle on this demo lets you see answers leaning either way."
+    },
+    {
+      "q": "Why are my fees so high right now?",
+      "a": "Bitcoin transaction fees are set by mempool demand and the block-space market, not by Blockstream or any wallet. When the mempool is congested, miners prioritize the highest-fee transactions per virtual byte. To lower the cost: use a SegWit (bech32) address if you aren't already, batch transactions, or wait for a quieter window. Most Blockstream wallets offer fee estimation tied to confirmation targets — pick a longer target (e.g. 6+ blocks) to pay less. For technical detail on fee markets, see the Bitcoin Optech newsletter."
+    },
+    {
+      "q": "Is self-custody really worth the hassle?",
+      "a": "It depends on how much you hold and how much you trust your custodian. The case for self-custody is that no third party can freeze, lose, or be compelled to surrender your funds. The case against is that you bear the full operational burden — losing your seed phrase or making a signing mistake is irreversible. The pragmatic middle ground for most people is a small operational hot wallet (custodial or non-custodial) plus a hardware wallet for long-term holdings. Blockstream Jade is built for that long-term role."
+    },
+    {
+      "q": "Does my message get sent to OpenAI?",
+      "a": "No. The bot you're talking to runs entirely in your browser. The model is downloaded once and runs locally — your messages are not sent to OpenAI, Anthropic, or any third-party LLM provider. The only outbound network calls happen if you explicitly escalate to a human or if the in-browser model isn't ready yet, in which case a strictly capped fallback is used (and the message badge tells you which path served the answer)."
+    },
+    {
+      "q": "What is Blockstream Jade?",
+      "a": "Jade is Blockstream's air-gapped hardware wallet, designed to keep your private keys isolated from any networked device. It supports Bitcoin and Liquid, can be used with Blockstream Green or other compatible wallets, and the firmware is open source and reproducibly built. Jade has no fingerprint sensor or wireless radio by design — its security model is 'do less, verify more.'"
+    },
+    {
+      "q": "I think my wallet was compromised. What do I do?",
+      "a": "If you suspect your seed phrase or signing device is compromised: (1) Stop using the affected wallet immediately. (2) Generate a fresh wallet on a known-clean device with a brand-new seed phrase. (3) Move your funds to the new wallet. (4) Do NOT type your old seed phrase into anything — including this chat — to 'verify' it; that's a common scam pattern. If funds have already moved without your authorization, a recovery is unfortunately not possible — Bitcoin transactions are final. File a report with your local authorities and consider engaging a forensics firm if the amount warrants it."
+    },
+    {
+      "q": "Why doesn't this bot just answer everything?",
+      "a": "Because answers that are 'almost right' about Bitcoin can lose people money. The bot answers from a curated corpus — Blockstream's own help articles, Bitcoin Core and Knots commit history, the Bitcoin Optech newsletter, and high-signal community sources. When the corpus doesn't cover your question, the bot says so and offers an escalation path Blockstream controls, instead of guessing. That's the correct failure mode for a fintech support surface."
+    }
+  ]
+}

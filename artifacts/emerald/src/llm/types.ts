@@ -136,7 +136,7 @@ export interface RetrievedChunk extends KbChunk {
   score: number;
 }
 
-export type ResponseSource = "local" | "cloud" | "openclaw";
+export type ResponseSource = "local" | "cloud" | "openclaw" | "qa-cache";
 
 /**
  * Bring-Your-Own-LLM config for OpenClaw mode. Any OpenAI-compatible

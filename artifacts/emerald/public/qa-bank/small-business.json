@@ -1,0 +1,43 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-20",
+  "persona": "small-business",
+  "items": [
+    {
+      "q": "Is the house at 892 Hawthorne Drive in the Riverside Elementary district?",
+      "a": "No — and this is the most common boundary confusion in the area. 892 Hawthorne Drive is in the Pinecrest Middle district, not Riverside Elementary, despite being closer to Riverside on the map [1]. If Riverside Elementary matters to you, please verify the address with us before making an offer — the August 2025 redraw moved approximately 40 homes on the south side of Maple Avenue from Riverside Elementary to Pinecrest Middle, and properties that closed before the redraw may still be marketed inaccurately on third-party sites [2]."
+    },
+    {
+      "q": "What homes do you have listed right now?",
+      "a": "Three current listings: 47 Birch Lane, Riverside ($369,500, 3/2, 1,640 sqft, Riverside Elementary district, listed Mar 18); 892 Hawthorne Drive, Pinecrest ($412,000, 4/2.5, 2,210 sqft, Pinecrest Middle district, listed Mar 22); and 12 Sycamore Ridge, Oak Hollow ($445,000, 3/2, 1,950 sqft on 1.4 acres, Oak Hollow High district, listed Mar 28) [1]. Showings are by appointment — call or use the Contact page to schedule."
+    },
+    {
+      "q": "Who are your local lenders for pre-approval?",
+      "a": "Three local lenders we work with: First Pinecrest Bank (most competitive on jumbo loans above $766,550), Oak Hollow Credit Union (most flexible underwriting for self-employed buyers, fastest to close), and Mountain Mortgage Co. (the only one of the three that does USDA rural development loans, which matter for some Oak Hollow properties) [1]. We don't take referral fees from any of them — we'll introduce you to all three on request and let you choose."
+    },
+    {
+      "q": "What does a first-time buyer typically budget?",
+      "a": "Most first-time buyers in our market budget for 3.5–10% down depending on loan type, plus 2–3% for closing costs. The seller typically pays the buyer's agent commission as part of the listing agreement. The full process — pre-approval, search, offer, inspection, appraisal, close — typically takes 35–60 days from accepted offer to keys [1]."
+    },
+    {
+      "q": "Tell me about Pinecrest Realty.",
+      "a": "Pinecrest Realty is a small independent brokerage serving Pinecrest, Riverside, and Oak Hollow. Founded in 2003 by a husband-and-wife team, currently nine licensed agents. We focus on residential resale and small-acreage rural properties; we don't handle large commercial deals or new-construction subdivisions [1]."
+    },
+    {
+      "q": "Do you handle commercial real estate?",
+      "a": "No — we focus on residential resale and small-acreage rural properties. For commercial deals or new-construction subdivisions, we'll happily refer you to brokers in the area who specialize there [1]."
+    },
+    {
+      "q": "How do showings work?",
+      "a": "Showings are by appointment. For most listings we ask for at least 24 hours' notice; some (like 12 Sycamore Ridge) explicitly require 24-hour notice in writing [1]. The fastest path is to call the listing agent directly or use the Contact page — we usually confirm within a few hours during business hours."
+    },
+    {
+      "q": "What changed with school district boundaries last year?",
+      "a": "The August 2025 redraw moved approximately 40 homes on the south side of Maple Avenue from the Riverside Elementary district to the Pinecrest Middle district [1]. Properties that closed before the redraw may still be marketed under the old district on third-party sites. Always verify through the school board's published map or through us [1]."
+    },
+    {
+      "q": "Are you accepting new clients?",
+      "a": "Yes. The fastest path is to use the Contact page or call the office. We'll start with a no-pressure conversation about what you're looking for, your timeline, and your financing situation — and if we're not the right fit (e.g. you need commercial), we'll say so and refer you somewhere that is."
+    }
+  ]
+}

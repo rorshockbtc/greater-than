@@ -1,0 +1,47 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-20",
+  "persona": "healthtech",
+  "items": [
+    {
+      "q": "Is MutualHealth insurance?",
+      "a": "No. MutualHealth is a member-funded health-share community, not insurance [1]. Members pay a monthly share that goes toward other members' eligible medical needs. It is a Health Care Sharing Ministry under federal definition, exempt from the ACA individual mandate where applicable, and not a regulated insurance product [1]. This distinction matters — please don't assume insurance-style behavior, and read the Member Guidelines for what is actually shareable."
+    },
+    {
+      "q": "How do I submit a medical need?",
+      "a": "Submit through the member portal at portal.mutualhealth.example. Required attachments are an itemized provider bill (CMS-1500 or UB-04), proof of any payment made, and a brief description of the underlying condition [1]. Most clean submissions process within 30 days from the date of complete submission. Submissions missing the itemized bill or with illegible attachments are returned and the 30-day window restarts on resubmission [1]."
+    },
+    {
+      "q": "How long does it take to get reimbursed?",
+      "a": "Most clean submissions are reviewed within 30 days. Once approved, eligible needs are placed in the sharing queue and matched to incoming shares; sharing windows for typical eligible needs run 60–120 days from approval [1]. Large needs above $50,000 are handled under the Catastrophic Need protocol with extended sharing windows of up to 12 months [1]."
+    },
+    {
+      "q": "What does MutualHealth cover?",
+      "a": "We cover most acute, unexpected medical needs above the personal responsibility amount (currently $500 per incident on the standard tier). Eligible categories include hospitalization, surgery, ER visits leading to admission, diagnostic imaging tied to an eligible incident, prescriptions during an inpatient stay, and follow-up care within 90 days of an eligible incident [1]. Routine preventive care, elective procedures, and pre-existing conditions follow separate rules — read the Member Guidelines for the precise scope."
+    },
+    {
+      "q": "What's the Catastrophic Need protocol?",
+      "a": "Any single eligible incident expected to exceed $50,000 should be flagged early through catastrophic@mutualhealth.example. Early flagging gets a case manager assigned within 48 hours and unlocks the extended sharing window of up to 12 months [1]. The case manager coordinates sharing logistics with the member, the providers, and the sharing pool — they do not provide medical advice [1]."
+    },
+    {
+      "q": "Is my health information private?",
+      "a": "Yes. Member medical information is treated as confidential and stored under HIPAA-equivalent controls, even though MutualHealth as a health-share is not a covered entity under HIPAA [1]. We do not sell or share member data with third parties for marketing or analytics. We do publish de-identified aggregate statistics in our annual transparency report. Member data is retained for seven years after membership ends, then permanently deleted [1]."
+    },
+    {
+      "q": "Does this chat send my message to a server?",
+      "a": "No. The assistant on this page runs entirely in the member's browser. Nothing typed into the chat is sent to MutualHealth servers, to any third-party LLM provider, or to any analytics tool unless the member explicitly taps the escalation button [1]. This is the only chat surface our compliance team would approve, and it's the same architecture we use for the member portal's in-app help."
+    },
+    {
+      "q": "Can you give me medical advice?",
+      "a": "No, and I won't try. This assistant will not improvise medical advice, will not recommend specific treatments, drugs, or dosages, and will not diagnose conditions [1]. For any medical question — what is wrong, what to do, whether to go to the ER — please contact a licensed medical professional. If this is an emergency, please call 911. For non-urgent questions about your account or sharing, member services can help."
+    },
+    {
+      "q": "Can you tell me the status of my submitted need?",
+      "a": "I can't — this assistant doesn't have access to your specific submitted needs and can't see your portal account [1]. For account-specific status, log into the member portal at portal.mutualhealth.example or contact member services. For provider recommendations, ask your primary care provider."
+    },
+    {
+      "q": "Who is MutualHealth?",
+      "a": "MutualHealth was founded in 2018 and serves approximately 28,000 households across all 50 states [1]. We don't have networks, plans, deductibles, or copays in the insurance sense. We have shares, sharing windows, personal responsibility amounts, and a Member Guidelines document that defines what is and isn't eligible [1]."
+    }
+  ]
+}

@@ -3,6 +3,7 @@ import healthRouter from "./health";
 import articlesRouter from "./articles";
 import chatRouter from "./chat";
 import ingestRouter from "./ingest";
+import feedbackRouter from "./feedback";
 
 const router: IRouter = Router();
 
@@ -10,5 +11,6 @@ router.use(healthRouter);
 router.use(articlesRouter);
 router.use(chatRouter);
 router.use(ingestRouter);
+router.use(feedbackRouter);
 
 export default router;
