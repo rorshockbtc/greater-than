@@ -904,6 +904,7 @@ export function ChatWidget({
                       connected={pipe.connected}
                       pipeName={pipe.pipe?.name}
                       openClawActive={llm.openClawActive}
+                      chatTheme={chatTheme}
                     />
                   </span>
                   <ReadinessPill status={llm.status} progress={llm.progress} stageLabel={llm.loadStageLabel} chatTheme={chatTheme} />
@@ -1521,19 +1522,31 @@ function ModeBadge({
   connected,
   pipeName,
   openClawActive,
+  chatTheme,
 }: {
   connected: boolean;
   pipeName?: string;
   openClawActive: boolean;
+  chatTheme: 'dark' | 'light';
 }) {
+  // Widget theme is controlled by `data-theme` on the widget root,
+  // NOT by Tailwind's document-level `.dark` class — so a `dark:`
+  // modifier here would key off the wrong source of truth. Pick the
+  // per-mode text/chevron pair explicitly from `chatTheme`. The 200
+  // tints render as near-invisible on the pale light surface; the 700
+  // tints pass WCAG AA against the matching tinted background.
+  const isDark = chatTheme === 'dark';
   if (openClawActive) {
     return (
       <span
-        className="inline-flex items-center gap-1 text-[9px] font-mono tracking-wide px-1.5 py-px rounded border border-violet-500/40 bg-violet-500/10 text-violet-200"
+        className={cn(
+          'inline-flex items-center gap-1 text-[9px] font-mono tracking-wide px-1.5 py-px rounded border border-violet-500/40 bg-violet-500/10',
+          isDark ? 'text-violet-200' : 'text-violet-700',
+        )}
         title="OpenClaw mode — chat is being served by your own OpenAI-compatible endpoint. Greater is not making any cloud calls."
         data-testid="badge-mode"
       >
-        <span className="text-violet-400 font-bold">&gt;</span>
+        <span className={cn('font-bold', isDark ? 'text-violet-400' : 'text-violet-700')}>&gt;</span>
         OpenClaw mode
       </span>
     );
@@ -1541,7 +1554,10 @@ function ModeBadge({
   if (connected) {
     return (
       <span
-        className="inline-flex items-center gap-1 text-[9px] font-mono tracking-wide px-1.5 py-px rounded border border-pink-500/40 bg-pink-500/10 text-pink-200"
+        className={cn(
+          'inline-flex items-center gap-1 text-[9px] font-mono tracking-wide px-1.5 py-px rounded border border-pink-500/40 bg-pink-500/10',
+          isDark ? 'text-pink-200' : 'text-pink-700',
+        )}
         title={
           pipeName
             ? `Greater mode · ${pipeName} — running with a curated Pipe loaded from data/pipes/. The shell is FOSS; the Pipe is the part that's for hire.`
@@ -1549,7 +1565,7 @@ function ModeBadge({
         }
         data-testid="badge-mode"
       >
-        <span className="text-pink-400 font-bold">&gt;</span>
+        <span className={cn('font-bold', isDark ? 'text-pink-400' : 'text-pink-700')}>&gt;</span>
         Greater mode
       </span>
     );
