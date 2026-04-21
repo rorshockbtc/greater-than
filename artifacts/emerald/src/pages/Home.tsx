@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowRight, Lock, Cpu, FileText, AlertCircle, MessageSquare, Github, Globe, Sliders, Wrench } from "lucide-react";
+import { ArrowRight, Lock, Cpu, FileText, AlertCircle, MessageSquare, Github, Globe, Sliders, Wrench, Radio, Zap } from "lucide-react";
 import { personas } from "@/data/personas";
 import { PersonaCard } from "@/components/PersonaCard";
 import { ContactCTASection } from "@/components/ContactCTASection";
@@ -21,6 +21,7 @@ export default function Home() {
       <Hero />
       <PrinciplesStrip />
       <Walkthrough />
+      <FeatureHighlights />
       <PersonasGrid />
       <ContactCTASection tone="muted" />
     </>
@@ -267,6 +268,8 @@ function Walkthrough() {
       eyebrow: "Step 1",
       title: "Open the bot in the corner.",
       body: "It runs in your browser, not on a server. The first message takes a moment because the model and the corpus are downloading — every message after that is local.",
+      audience: "For: any visitor on this site, right now.",
+      example: "Try: \"how does this actually work?\"",
       cta: { label: "Watch the loading state", href: "/how-it-works" },
     },
     {
@@ -274,6 +277,8 @@ function Walkthrough() {
       eyebrow: "Step 2",
       title: "Flip the bias toggle.",
       body: "Each persona ships its own perspective options — customer view, founder view, member view. Same question, different answer, on purpose. Generic chatbots pretend neutrality; ours names where it stands.",
+      audience: "For: founders, support leads, anyone tired of vendor-grade fence-sitting.",
+      example: "Try: ask the FinTech bot the same question under \"customer\" then \"company\" view.",
       cta: { label: "Try the FinTech demo", href: "/demo/fintech" },
     },
     {
@@ -281,6 +286,8 @@ function Walkthrough() {
       eyebrow: "Step 3",
       title: "Make it yours, three ways.",
       body: "Fork the MIT shell on GitHub, swap your own LLM in via OpenClaw (BYO local model), or ping me to build a curated Pipe with persona-tuned weights for your domain.",
+      audience: "For: operators who want a real AI surface without a vendor lock-in tax.",
+      example: "Deploys: a Cloudflare Pages static site, a clinic member portal, a church website, an early-stage SaaS docs page.",
       cta: { label: "OpenClaw &middot; NOSTR &middot; the Pipe", href: "/openclaw" },
     },
   ];
@@ -329,6 +336,12 @@ function Walkthrough() {
               <p className="text-sm text-muted-foreground leading-relaxed">
                 {s.body}
               </p>
+              <p className="chb-mono-label text-[10px] text-pink-600 dark:text-pink-400">
+                {s.audience}
+              </p>
+              <p className="text-xs text-foreground/70 italic leading-snug">
+                {s.example}
+              </p>
               <div className="mt-auto pt-2">
                 <Link
                   href={s.cta.href}
@@ -350,6 +363,109 @@ function Walkthrough() {
           <em>"how does this actually work?"</em> and get a grounded
           answer with citations.
         </p>
+      </div>
+    </section>
+  );
+}
+
+function FeatureHighlights() {
+  // Four-feature highlights strip. Friend-review pre-launch + code
+  // review feedback: the previous Walkthrough mentioned NOSTR /
+  // OpenClaw / in-browser inference / explicit bias only as nouns
+  // inside Step 3 prose. They are the four architectural commitments
+  // that distinguish Greater from a generic vendor chatbot, so they
+  // each get their own card with a one-line "what it is + why" and
+  // a direct link to the dedicated page.
+  const features = [
+    {
+      icon: Zap,
+      eyebrow: "In-browser inference",
+      title: "WebGPU runs the model on the visitor's device.",
+      body: "No per-message API tax, no vendor between you and your customers. Message content does not leave the tab.",
+      cta: { label: "How it works", href: "/how-it-works" },
+      testid: "feature-in-browser",
+    },
+    {
+      icon: Sliders,
+      eyebrow: "Explicit bias",
+      title: "Every persona declares the perspective it speaks from.",
+      body: "Customer view, founder view, member view — toggle mid-conversation. Pretending neutrality is the worse failure mode.",
+      cta: { label: "Try the FinTech bias toggle", href: "/demo/fintech" },
+      testid: "feature-bias-toggle",
+    },
+    {
+      icon: Cpu,
+      eyebrow: "OpenClaw",
+      title: "Bring your own local LLM, route the chat through it.",
+      body: "Already running a 7B-or-bigger model on the LAN? Configure once in settings; the data still doesn't leave your network.",
+      cta: { label: "OpenClaw", href: "/openclaw" },
+      testid: "feature-openclaw",
+    },
+    {
+      icon: Radio,
+      eyebrow: "NOSTR",
+      title: "Sovereign distribution for the curated knowledge layer.",
+      body: "Pipe manifests can be authored, versioned, and shipped over NOSTR — no platform gatekeeper between an operator and their bot.",
+      cta: { label: "NOSTR", href: "/nostr" },
+      testid: "feature-nostr",
+    },
+  ];
+  return (
+    <section
+      id="features"
+      className="border-b border-border bg-secondary/40"
+      data-testid="section-feature-highlights"
+    >
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="mb-10 max-w-2xl">
+          <p className="chb-mono-eyebrow text-muted-foreground mb-2">
+            Four commitments
+          </p>
+          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+            Where Greater is architecturally different from a vendor chatbot.
+          </h2>
+          <p className="text-base text-muted-foreground mt-3">
+            Each of these has a dedicated page with the
+            engineering-grade detail. The summaries below are the
+            one-line version.
+          </p>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {features.map((f) => (
+            <article
+              key={f.eyebrow}
+              className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5"
+              data-testid={f.testid}
+            >
+              <div className="flex items-center gap-2">
+                <f.icon
+                  className="w-5 h-5"
+                  style={{ color: "#01a9f4" }}
+                  aria-hidden="true"
+                />
+                <p className="chb-mono-eyebrow text-muted-foreground">
+                  {f.eyebrow}
+                </p>
+              </div>
+              <h3 className="text-base font-semibold leading-snug">
+                {f.title}
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {f.body}
+              </p>
+              <div className="mt-auto pt-2">
+                <Link
+                  href={f.cta.href}
+                  className="chb-mono-label text-foreground hover:text-pink-500 inline-flex items-center gap-1 underline-offset-2 hover:underline"
+                  data-testid={`${f.testid}-cta`}
+                >
+                  {f.cta.label}
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
