@@ -288,7 +288,7 @@ function Walkthrough() {
       body: "Fork the MIT shell on GitHub, swap your own LLM in via OpenClaw (BYO local model), or ping me to build a curated Pipe with persona-tuned weights for your domain.",
       audience: "For: operators who want a real AI surface without a vendor lock-in tax.",
       example: "Deploys: a Cloudflare Pages static site, a clinic member portal, a church website, an early-stage SaaS docs page.",
-      cta: { label: "OpenClaw &middot; NOSTR &middot; the Pipe", href: "/openclaw" },
+      cta: { label: "OpenClaw · NOSTR · the Pipe", href: "/openclaw" },
     },
   ];
   return (
@@ -348,7 +348,7 @@ function Walkthrough() {
                   className="chb-mono-label text-foreground hover:text-pink-500 inline-flex items-center gap-1 underline-offset-2 hover:underline"
                   data-testid={`walkthrough-step-${i + 1}-cta`}
                 >
-                  <span dangerouslySetInnerHTML={{ __html: s.cta.label }} />
+                  <span>{s.cta.label}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
