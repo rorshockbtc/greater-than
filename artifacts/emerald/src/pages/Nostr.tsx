@@ -124,9 +124,9 @@ export default function Nostr() {
           </h2>
           <ul className="space-y-3 text-sm text-muted-foreground">
             {[
-              "A family publishes encrypted notes about household decisions, medical history, and legal documents to a home relay. The Greater shell on any family member's machine can answer questions grounded in that shared, private knowledge.",
-              "A church publishes sermon notes, pastoral letters, and doctrinal positions to a community relay. Members ask the Greater shell questions; the shell answers from the actual corpus, not a generic LLM's hallucinated theology.",
-              "A Bitcoin company publishes internal incident reports, compliance notes, and runbooks to a private relay. The on-call engineer gets a RAG-grounded answer from internal docs without any of it touching a third-party API.",
+              "A family publishes encrypted notes about household decisions, medical history, and legal documents to a home relay. The Greater shell on any family member's machine can answer questions grounded in that shared, private knowledge. When a family member passes, their memory can be preserved.",
+              "A church publishes sermon notes, pastoral letters, and doctrinal positions to a community relay. Members ask the Greater shell questions; the shell answers from the actual corpus, not a generic LLM's hallucinated theology. Notes can be internal or external.",
+              "A Bitcoin company publishes internal incident reports, compliance notes, and runbooks to a private relay. The on-call engineer gets a RAG-grounded answer from internal docs without any of it touching a third-party API. Context can be built out for devTools, allowing new developers to quickly onboard",
               "A solo operator uses a private relay as a second brain — publishing links, notes, and document summaries from a mobile client. The Greater shell on their laptop indexes everything and makes it searchable via natural language.",
             ].map((item, i) => (
               <li key={i} className="flex gap-2">
@@ -139,8 +139,8 @@ export default function Nostr() {
             className="mt-5 text-xs text-muted-foreground border-l-2 border-[hsl(var(--accent))/0.4] pl-3 italic"
           >
             These are architecturally straightforward to wire today. The harder
-            work — relay selection, key management UX, team relay auth — is
-            what a production engagement with my studio covers.
+            work (relay selection, key management UX, team relay auth) is
+            what a production engagement with my studio covers. However, there are many excellent guides on the internet for getting started with NOSTR!
           </aside>
         </section>
 

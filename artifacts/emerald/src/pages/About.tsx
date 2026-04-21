@@ -66,7 +66,7 @@ export default function About() {
           </h2>
           <p>
             Built by colonhyphenbracket. Bitcoin-only, privacy-first.
-            Available for fractional or full-time architecture engagements via{" "}
+            Available for fractional or full-time product architecture engagements via{" "}
             <a
               href="https://hire.colonhyphenbracket.pink"
               target="_blank"

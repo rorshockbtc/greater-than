@@ -99,7 +99,7 @@ export default function HowItWorks() {
             yours. The runtime cost is the visitor's device. The only
             thing you pay for is the work of curating a knowledge base
             sharp enough to win comparisons — which is the part I do for
-            hire.
+            hire. You can build it yourself if you'd prefer, but it's likely more time-efficient to hire an expert.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link

@@ -191,7 +191,7 @@ export default function OpenClaw() {
             optional Lightning settlement layer means a stranger can
             serve your inference without either of you trusting a
             third-party billing system. None of this requires Greater
-            to exist; the seams are all standard web primitives.
+            to exist; the seams are all standard web primitives. It's theoretical, but if you were to set up OpenClaw and connect it to a permanent web instance, you should be able to eventually automate tasks for effectively free. 
           </p>
         </section>
 
