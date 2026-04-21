@@ -1550,7 +1550,15 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
 
       const trace: ThoughtTrace = {
         chunks: retrieved,
-        reasoning: summarizeRetrieval(retrieved),
+        // Tag weak-context turns with a sentinel-prefixed reasoning
+        // string so the ChatWidget can render the same in-bubble
+        // 3-action affordance (browse · contact · rephrase) it
+        // already shows on hard refusals. Same UX contract: a
+        // tangential answer is still a "you might want to escape"
+        // moment for the visitor, not a dead end.
+        reasoning: isWeakContext
+          ? `Weak context: top chunk score ${topScore.toFixed(3)} in 0.18-0.38 band. ${summarizeRetrieval(retrieved)}`
+          : summarizeRetrieval(retrieved),
       };
       return { text, source: "local", thoughtTrace: trace };
     },

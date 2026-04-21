@@ -559,10 +559,11 @@ export function ChatWidget({
       // refusals feel deliberated, not reflexive. Detected via the
       // thoughtTrace.reasoning sentinel that LLMProvider sets on
       // hard-refusal returns.
+      const reasoning = answer.thoughtTrace?.reasoning ?? '';
       const isHardRefusal =
-        answer.source === 'local' &&
-        typeof answer.thoughtTrace?.reasoning === 'string' &&
-        answer.thoughtTrace.reasoning.startsWith('Hard refusal');
+        answer.source === 'local' && reasoning.startsWith('Hard refusal');
+      const isWeakContextReply =
+        answer.source === 'local' && reasoning.startsWith('Weak context');
       if (isHardRefusal) {
         const target = 600 + Math.random() * 300;
         const remaining = Math.max(0, target - askLatency);
@@ -570,6 +571,13 @@ export function ChatWidget({
           await new Promise((r) => setTimeout(r, remaining));
         }
       }
+      // Either flag triggers the in-bubble 3-action row. We carry
+      // the union under the existing `isHardRefusal` MessageProps
+      // field rather than threading a second boolean through —
+      // the row's contract is "this answer wasn't a confident hit;
+      // here are your escape hatches", and that contract holds
+      // identically for hard refusals and weak-context replies.
+      const showRefusalActions = isHardRefusal || isWeakContextReply;
       // Top retrieval similarity from the thought trace (when present)
       // is a useful retrieval-quality signal alongside the binary
       // thumbs rating; record it on the message so it's posted with
@@ -595,7 +603,7 @@ export function ChatWidget({
         localOnly: localOnlyDueToCap,
         latencyMs: askLatency,
         cosineScore: topRetrievalScore,
-        isHardRefusal,
+        isHardRefusal: showRefusalActions,
       };
       setMessages((prev) => [...prev, botMsg]);
     } catch (err) {

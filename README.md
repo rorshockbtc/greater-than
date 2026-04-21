@@ -40,6 +40,13 @@ The other five personas (HealthTech, Startups, Faith, Schools,
 Small Business) ship as persona-tuned holding pages — the seed
 corpora are still being curated.
 
+For the longer story behind why Greater is built the way it is —
+explicit bias, sovereign-by-default, FOSS shell with proprietary
+weights as the work-that-gets-hired — see the company philosophy
+doc:
+
+→ **[Read the CHB company philosophy](./docs/CHB-PHILOSOPHY.md)**
+
 ---
 
 ## What you get out of the box

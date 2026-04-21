@@ -674,7 +674,14 @@ Healthtech founders and product leads who are watching the AI wave from outside 
     name: 'FinTech & Bitcoin',
     shortName: 'FinTech',
     kbStatus: 'Robust',
-    kbItems: 30,
+    // No kbItems for FinTech: its 'Robust' tier reflects the
+    // proprietary multi-thousand-snippet seed corpus loaded via
+    // the Greater Pipe (pipes.pink), NOT the 30-item curated Q&A
+    // bank that all six personas share. Showing "30 items" here
+    // would understate the bot's actual indexed depth and read
+    // as the same tier as Starter — exactly the credibility
+    // mismatch the rest of this pass is trying to fix. Card
+    // falls back to the qualitative "KB: ROBUST" label.
     defaultBias: {
       defaultId: 'customer',
       options: [
