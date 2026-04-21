@@ -160,7 +160,7 @@ export default function AdminFeedback() {
 
       <div className="overflow-x-auto rounded-lg border border-[hsl(var(--border))]">
         <table className="w-full text-xs">
-          <thead className="bg-[hsl(var(--card))] text-[10px] uppercase tracking-wider text-muted-foreground">
+          <thead className="bg-[hsl(var(--card))] text-[11px] font-medium text-muted-foreground">
             <tr>
               <th className="px-3 py-2 text-left">When</th>
               <th className="px-3 py-2 text-left">Persona</th>
@@ -293,7 +293,7 @@ function FeedbackRowItem({ row }: { row: FeedbackRow }) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+      <div className="text-[11px] font-medium text-muted-foreground mb-1">
         {label}
       </div>
       {children}

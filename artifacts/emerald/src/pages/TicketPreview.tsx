@@ -286,7 +286,7 @@ function SummaryCard({ state }: { state: SummaryState }) {
   return (
     <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500">
+        <h2 className="text-sm font-semibold text-slate-500">
           Summary for the human agent
         </h2>
         <span className="text-xs text-slate-500 inline-flex items-center gap-1.5">
@@ -323,7 +323,7 @@ function SummaryCard({ state }: { state: SummaryState }) {
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs text-slate-500 uppercase tracking-wide mb-1">
+      <dt className="text-xs font-medium text-slate-500 mb-1">
         {label}
       </dt>
       <dd className="text-slate-900">{value}</dd>
@@ -334,7 +334,7 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
 function TranscriptCard({ redacted }: { redacted: RedactedTranscript }) {
   return (
     <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-      <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-3">
+      <h2 className="text-sm font-semibold text-slate-500 mb-3">
         Redacted transcript
       </h2>
       <ol className="space-y-3">
@@ -405,7 +405,7 @@ function RedactionsCard({ redactions }: { redactions: Redaction[] }) {
   );
   return (
     <section className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-      <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-3">
+      <h2 className="text-sm font-semibold text-slate-500 mb-3">
         Redactions applied
       </h2>
       <ul className="flex flex-wrap gap-2">

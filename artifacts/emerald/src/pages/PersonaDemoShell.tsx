@@ -240,7 +240,7 @@ function ScopingStrip({ persona }: { persona: Persona }) {
       data-testid={`scoping-strip-${persona.slug}`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 text-xs sm:text-[13px] leading-snug flex flex-wrap items-center gap-x-2 gap-y-1">
-        <span className="font-semibold uppercase tracking-wide text-amber-900/80">
+        <span className="font-semibold text-amber-900/80">
           Scope
         </span>
         <span className="opacity-70">·</span>

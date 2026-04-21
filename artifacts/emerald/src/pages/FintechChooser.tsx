@@ -57,7 +57,7 @@ export default function FintechChooser() {
 
       <main id="main-content" tabIndex={-1} className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-10">
-          <p className="text-xs font-mono uppercase tracking-wider text-primary mb-3">
+          <p className="chb-mono-eyebrow text-primary mb-3">
             FinTech &amp; Bitcoin demo
           </p>
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4">

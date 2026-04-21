@@ -98,7 +98,7 @@ export default function BitcoinDemo() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <div className="flex gap-12">
               <aside className="hidden lg:block w-64 shrink-0">
-                <h3 className="text-sm font-bold text-foreground mb-4 uppercase tracking-wider">Node software</h3>
+                <h3 className="text-sm font-semibold text-foreground mb-4">Node software</h3>
                 <nav className="space-y-1">
                   {sidebarLinks.map((link) => (
                     <a

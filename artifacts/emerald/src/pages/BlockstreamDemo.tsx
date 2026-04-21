@@ -116,7 +116,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="flex gap-12">
             <aside className="hidden lg:block w-64 shrink-0">
-              <h3 className="text-sm font-bold text-foreground mb-4 uppercase tracking-wider">Account Security</h3>
+              <h3 className="text-sm font-semibold text-foreground mb-4">Account security</h3>
               <nav className="space-y-1">
                 {sidebarLinks.map((link) => (
                   <a
