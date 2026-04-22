@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollText, X } from "lucide-react";
 import {
   Dialog,
@@ -98,7 +98,6 @@ export function HarnessPanel({
     () => loadHarness(personaSlug) || HARNESS_TEMPLATE,
   );
   const [saved, setSaved] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -140,7 +139,6 @@ export function HarnessPanel({
 
         <div className="space-y-3">
           <textarea
-            ref={textareaRef}
             value={draft}
             onChange={(e) => {
               setDraft(e.target.value);

@@ -45,10 +45,12 @@ export function isGreaterMode(persona: PipePersona): boolean {
 /**
  * connectPipe — resolve the active Pipe for a known demo persona slug.
  *
- * Returns the mounted PipeManifest for the two known FOSS demo personas
- * ("bitcoin-greater" / "bitcoin"). For any other pipeId the function
- * throws a human-readable consulting-boundary error so FOSS forks
- * discover the limit immediately without hunting for it in the source.
+ * Resolves the mounted PipeManifest for any Pipe inlined at build time,
+ * matched on `pipe_id` (canonical) or `persona` (convenience alias).
+ * For the FOSS shell this covers whichever manifest files live in
+ * `data/pipes/` — typically the bitcoin-greater demo Pipe. Everything
+ * outside the build-time set is a production Pipe that requires a
+ * Greater Studio deployment and triggers the consulting-boundary error.
  *
  * V1.5 design notes (runtime manifest loading, not yet implemented):
  *  - The future signature will accept a URL, fetch + zod-validate the
