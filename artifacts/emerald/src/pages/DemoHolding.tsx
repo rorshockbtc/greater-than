@@ -59,7 +59,21 @@ export default function DemoHolding() {
           declared perspective, and the persona-specific escalation flow.
         </p>
 
-        <div className="mt-10 rounded-xl border border-border bg-secondary/30 p-6">
+        <div className="mt-10 rounded-xl border border-amber-500/30 bg-amber-500/5 p-6">
+          <p className="chb-mono-label text-amber-600 dark:text-amber-400 mb-2">
+            Proprietary Pipe — not in the FOSS shell
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            The Greater shell is open source. This persona&rsquo;s corpus,
+            embeddings, and system-prompt adapters are <em>not</em>. They are
+            curated and delivered as a signed Pipe via pipes.pink — the
+            proprietary extension layer that sits on top of the FOSS shell.
+            Forking the repo will give you the scaffold; it will not give you
+            the data.
+          </p>
+        </div>
+
+        <div className="mt-6 rounded-xl border border-border bg-secondary/30 p-6">
           <div className="flex items-start gap-4">
             <div
               className="w-10 h-10 rounded-full border border-border flex items-center justify-center shrink-0"

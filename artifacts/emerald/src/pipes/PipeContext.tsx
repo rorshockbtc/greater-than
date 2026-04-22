@@ -82,8 +82,19 @@ export function PipeProvider({
   const pipe = useMemo(() => getActivePipe(persona), [persona]);
   const [connected, setConnected] = useState<boolean>(pipe !== null);
 
-  // Initial bias id: prefer Pipe default, then persona default, then "neutral".
+  // Initial bias id: prefer localStorage, then Pipe default, then persona default.
+  const lsKey = `greater:bias:${persona}`;
   const [activeBiasId, setActiveBiasIdState] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem(lsKey);
+      if (saved) {
+        // Validate the saved id is still valid for this Pipe/persona defaults.
+        if (pipe && pipe.bias_options.some((o) => o.id === saved)) return saved;
+        if (personaDefaults?.options.some((o) => o.id === saved)) return saved;
+      }
+    } catch {
+      // Private-browsing or storage disabled — silently fall through.
+    }
     if (pipe) return getDefaultBias(pipe);
     if (personaDefaults) return personaDefaults.defaultId;
     return "neutral";
@@ -109,13 +120,15 @@ export function PipeProvider({
       if (pipe && connected) {
         if (!findBiasOption(pipe, biasId)) return;
         setActiveBiasIdState(biasId);
+        try { localStorage.setItem(lsKey, biasId); } catch { /* ignore */ }
         return;
       }
       if (personaDefaults?.options.some((o) => o.id === biasId)) {
         setActiveBiasIdState(biasId);
+        try { localStorage.setItem(lsKey, biasId); } catch { /* ignore */ }
       }
     },
-    [pipe, connected, personaDefaults],
+    [pipe, connected, personaDefaults, lsKey],
   );
 
   const disconnect = useCallback(() => setConnected(false), []);

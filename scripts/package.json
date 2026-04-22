@@ -9,6 +9,7 @@
     "build-bitcoin-seed": "tsx ./src/build-bitcoin-seed.ts",
     "build-greater-seed": "tsx ./src/build-greater-seed.ts",
     "build-qa-bank": "tsx ./src/build-qa-bank.ts",
+    "check-optech-rss": "tsx ./src/check-optech-rss.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
