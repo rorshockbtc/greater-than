@@ -12,6 +12,7 @@ import { useScenarioModal } from '@/hooks/useScenarioModal';
 import { prefillChat } from '@/hooks/prefillChat';
 import { getPersona } from '@/data/personas';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { BITCOIN_CHARTER } from '@/data/harness/bitcoinCharter';
 
 const sidebarLinks = [
   { label: "Unauthorized login activity", active: true },
@@ -298,6 +299,7 @@ export default function Home() {
         personaSlug="fintech"
         personaBrand="Blockstream"
         personaSystemPrompt={scenario?.systemPrompt}
+        defaultHarnessText={BITCOIN_CHARTER}
         personaExampleTopics={[
           'Jade hardware wallet recovery',
           'Green Wallet fees and self-custody',

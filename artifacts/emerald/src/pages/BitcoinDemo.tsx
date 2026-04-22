@@ -8,6 +8,7 @@ import { PipeProvider } from '@/pipes/PipeContext';
 import { useLLM } from '@/llm/LLMProvider';
 import { getPersona } from '@/data/personas';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { BITCOIN_CHARTER } from '@/data/harness/bitcoinCharter';
 
 /**
  * Sibling demo to BlockstreamDemo: same fintech persona and same
@@ -216,6 +217,7 @@ export default function BitcoinDemo() {
           personaSlug="fintech"
           personaBrand="Bitcoin Info"
           personaSystemPrompt={scenario?.systemPrompt}
+          defaultHarnessText={BITCOIN_CHARTER}
           personaExampleTopics={[
             'Differences between Bitcoin Core and Knots',
             'Mempool policy vs consensus rules',

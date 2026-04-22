@@ -157,6 +157,14 @@ export interface ChatWidgetProps {
    * generic "topics in this bot's curated knowledge base."
    */
   refusalScope?: string;
+  /**
+   * Default harness charter text used when no operator-saved harness
+   * exists in localStorage for this persona. Lets each demo ship with
+   * a pre-authored system persona rather than an empty harness slot.
+   * Any value saved by the operator via the Harness Panel takes
+   * precedence over this default.
+   */
+  defaultHarnessText?: string;
 }
 
 export function ChatWidget({
@@ -171,6 +179,7 @@ export function ChatWidget({
   personaExampleTopics,
   suggestedPrompts,
   refusalScope,
+  defaultHarnessText,
 }: ChatWidgetProps = {}) {
   const [, navigate] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -225,24 +234,24 @@ export function ChatWidget({
   // threaded into every llm.ask() call as the outermost system-prompt frame.
   // Keyed by persona so different bots carry different harnesses independently.
   const [harnessText, setHarnessText] = useState<string>(() => {
-    if (!personaSlug) return "";
+    if (!personaSlug) return defaultHarnessText ?? "";
     try {
-      return localStorage.getItem(`greater:harness:${personaSlug}`) ?? "";
+      return localStorage.getItem(`greater:harness:${personaSlug}`) ?? defaultHarnessText ?? "";
     } catch {
-      return "";
+      return defaultHarnessText ?? "";
     }
   });
   // Reload harness from localStorage whenever the visitor navigates to a
   // different persona — each bot is scoped independently so the wrong
   // charter is never injected after a persona switch.
   useEffect(() => {
-    if (!personaSlug) { setHarnessText(""); return; }
+    if (!personaSlug) { setHarnessText(defaultHarnessText ?? ""); return; }
     try {
-      setHarnessText(localStorage.getItem(`greater:harness:${personaSlug}`) ?? "");
+      setHarnessText(localStorage.getItem(`greater:harness:${personaSlug}`) ?? defaultHarnessText ?? "");
     } catch {
-      setHarnessText("");
+      setHarnessText(defaultHarnessText ?? "");
     }
-  }, [personaSlug]);
+  }, [personaSlug, defaultHarnessText]);
   const [hasSecurityAlertSession, setHasSecurityAlertSession] = useState(false);
   /**
    * Escalation preview dialog state. Clicking the phone icon used to
