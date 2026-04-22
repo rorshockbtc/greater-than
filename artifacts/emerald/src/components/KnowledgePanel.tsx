@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  BookOpen,
   Database,
   Download,
   FileText,
@@ -23,6 +24,13 @@ import {
   hasNip07,
   type NostrSyncOptions,
 } from "@/llm/nostrSync";
+import {
+  subscribeWikiCompiler,
+  setWikiCompilerEnabled,
+  getWikiCompilerState,
+  getOrCompressWikiIndex,
+  type WikiCompilerState,
+} from "@/llm/wikiCompiler";
 import {
   syncLocalFiles,
   hasFileSystemAccess,
@@ -1076,7 +1084,150 @@ function NostrTab({
           </div>
         </div>
       )}
+
+      <WikiCompilerSection />
     </div>
+  );
+}
+
+function WikiCompilerSection() {
+  const [state, setState] = useState<WikiCompilerState>(() =>
+    getWikiCompilerState(),
+  );
+  const [showIndex, setShowIndex] = useState(false);
+  const [indexContent, setIndexContent] = useState<string | null>(null);
+
+  useEffect(() => {
+    return subscribeWikiCompiler(setState);
+  }, []);
+
+  const handleViewIndex = async () => {
+    try {
+      const content = await getOrCompressWikiIndex(6000);
+      setIndexContent(content ?? "_No wiki pages compiled yet._");
+    } catch {
+      setIndexContent("_Failed to read wiki index._");
+    }
+    setShowIndex(true);
+  };
+
+  const formatRelTs = (ts: number | null) => {
+    if (!ts) return "never";
+    const delta = Date.now() - ts;
+    if (delta < 60_000) return "just now";
+    if (delta < 3_600_000) return `${Math.floor(delta / 60_000)}m ago`;
+    if (delta < 86_400_000) return `${Math.floor(delta / 3_600_000)}h ago`;
+    return `${Math.floor(delta / 86_400_000)}d ago`;
+  };
+
+  return (
+    <>
+      <div className="border-t border-[hsl(var(--widget-border))] pt-3 space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="text-xs font-medium text-[hsl(var(--widget-fg))]">
+              Wiki-Compiler
+            </span>
+            {state.running && (
+              <Loader2 className="w-3 h-3 animate-spin text-emerald-400" />
+            )}
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={state.enabled}
+            onClick={() => setWikiCompilerEnabled(!state.enabled)}
+            className={cn(
+              "relative inline-flex h-4 w-7 items-center rounded-full transition-colors",
+              state.enabled ? "bg-emerald-600" : "bg-white/20",
+            )}
+          >
+            <span
+              className={cn(
+                "inline-block h-3 w-3 rounded-full bg-white transition-transform",
+                state.enabled ? "translate-x-3.5" : "translate-x-0.5",
+              )}
+            />
+          </button>
+        </div>
+
+        {state.enabled ? (
+          <div className="text-[10px] text-[hsl(var(--widget-muted))] space-y-1">
+            <p>
+              After each NOSTR sync, the local model synthesises new events
+              into a persistent knowledge wiki. The compiled index is
+              automatically injected into every chat turn.
+            </p>
+            <div className="flex flex-wrap gap-x-3 gap-y-0.5 pt-0.5">
+              <span>
+                Queue:{" "}
+                <span className="text-[hsl(var(--widget-fg))]">
+                  {state.queueDepth}
+                </span>
+              </span>
+              <span>
+                Last compiled:{" "}
+                <span className="text-[hsl(var(--widget-fg))]">
+                  {formatRelTs(state.lastUpdated)}
+                </span>
+              </span>
+              {state.lastProcessed && (
+                <span
+                  className="truncate max-w-[180px]"
+                  title={state.lastProcessed}
+                >
+                  Last event:{" "}
+                  <span className="text-[hsl(var(--widget-fg))]">
+                    {state.lastProcessed}
+                  </span>
+                </span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => void handleViewIndex()}
+              className="text-emerald-400 underline underline-offset-2 hover:text-emerald-300"
+            >
+              View wiki/index.md
+            </button>
+          </div>
+        ) : (
+          <p className="text-[10px] text-[hsl(var(--widget-muted))]">
+            Off by default. Enable to synthesise NOSTR events into a compiled
+            knowledge wiki after each sync.
+          </p>
+        )}
+      </div>
+
+      {showIndex && (
+        <Dialog open={showIndex} onOpenChange={(open) => !open && setShowIndex(false)}>
+          <DialogContent className="max-w-2xl bg-[hsl(var(--widget-bg))] border-[hsl(var(--widget-border))] text-[hsl(var(--widget-fg))]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-sm">
+                <BookOpen className="w-4 h-4 text-emerald-400" />
+                wiki/index.md
+              </DialogTitle>
+              <DialogDescription className="text-[hsl(var(--widget-muted))]">
+                Compiled knowledge index — injected into every chat turn as a
+                dynamic context layer.
+              </DialogDescription>
+            </DialogHeader>
+            <pre className="text-[11px] font-mono whitespace-pre-wrap max-h-96 overflow-y-auto bg-white/[0.03] border border-[hsl(var(--widget-border))] rounded-md p-3 leading-relaxed">
+              {indexContent ?? "Loading…"}
+            </pre>
+            <button
+              type="button"
+              onClick={() => setShowIndex(false)}
+              className="absolute right-3 top-3 p-1 text-[hsl(var(--widget-muted))] hover:text-[hsl(var(--widget-fg))]"
+              aria-label="Close"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </DialogContent>
+        </Dialog>
+      )}
+    </>
   );
 }
 

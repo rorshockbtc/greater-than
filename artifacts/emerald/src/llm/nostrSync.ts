@@ -38,6 +38,7 @@ import type { Event, Filter } from "nostr-tools";
 import { chunkText } from "./chunker";
 import { GLOBAL_PERSONA_SLUG, putChunkWithVector } from "./vectorStore";
 import type { EmbedFn } from "./ingest";
+import { enqueueWikiEvent } from "./wikiCompiler";
 
 function bytesToHex(bytes: Uint8Array): string {
   return Array.from(bytes)
@@ -281,6 +282,11 @@ export async function syncNostr(
         );
         chunks_indexed++;
       }
+
+      // Fire-and-forget: enqueue for wiki synthesis after embedding.
+      // Pass the resolved contentText so encrypted events use the
+      // decrypted plaintext rather than the raw ciphertext.
+      enqueueWikiEvent(event, contentText);
 
       onProgress?.(label, i + 1, events_fetched);
     }

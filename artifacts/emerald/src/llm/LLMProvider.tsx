@@ -55,6 +55,10 @@ import {
   cosine,
 } from "./vectorStore";
 import { lexicalTopK, fuseRetrievals } from "./lexicalIndex";
+import {
+  setWikiCompilerModelReady,
+  getOrCompressWikiIndex,
+} from "./wikiCompiler";
 
 const SEED_CORPUS_VERSION = "v2-seed-blockstream";
 
@@ -920,6 +924,13 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
             setProgress(100);
             setLoadStageLabel("");
             setLoadedAt(new Date());
+            // Signal the wiki compiler that the WebGPU model is ready.
+            // We pass a generate wrapper so the compiler can run inference
+            // without importing the worker directly.
+            setWikiCompilerModelReady(
+              (messages, maxNewTokens) =>
+                callWorker<string>("generate", { messages: messages as ChatTurn[], maxNewTokens }),
+            );
           }
         } else if (msg.type === "error") {
           if (msg.id && pendingRef.current.has(msg.id)) {
@@ -1156,9 +1167,15 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
       // acts as an outer frame around every other instruction. An empty
       // or absent harness is a no-op — the rest of the prompt is
       // identical to the non-harness path.
-      const effectiveSystemPrompt = options?.harnessText?.trim()
-        ? `${options.harnessText.trim()}\n\n${baseSystemPrompt}`
-        : baseSystemPrompt;
+      // Wiki index: compiled knowledge map injected below harness text,
+      // above the base system prompt, so it acts as a persistent
+      // dynamic context layer between operator identity and task rules.
+      const wikiIndex = await getOrCompressWikiIndex(6000).catch(() => null);
+      const effectiveSystemPrompt = _buildEffectiveSystemPrompt(
+        baseSystemPrompt,
+        options?.harnessText,
+        wikiIndex,
+      );
 
       const systemPrompt =
         retrieved.length > 0
@@ -1567,9 +1584,16 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
       // Local Harness charter: user-authored text injected first so it
       // acts as an outer frame around every other instruction. Mirrors
       // the OpenClaw path above — both call sites honour the same field.
-      const effectiveSystemPrompt = options?.harnessText?.trim()
-        ? `${options.harnessText.trim()}\n\n${baseSystemPrompt}`
-        : baseSystemPrompt;
+      // Wiki index: compiled knowledge map injected below harness text,
+      // above the base system prompt. Read from IndexedDB (fast key
+      // lookup). Only injected when the wiki has been compiled at least
+      // once; otherwise this is a no-op.
+      const wikiIndex = await getOrCompressWikiIndex(6000).catch(() => null);
+      const effectiveSystemPrompt = _buildEffectiveSystemPrompt(
+        baseSystemPrompt,
+        options?.harnessText,
+        wikiIndex,
+      );
 
       // Weak-context rider: when the top retrieved snippet is
       // tangential (in the 0.18–0.38 band) the model needs an
@@ -1747,6 +1771,35 @@ export function useLLM(): LLMContextValue {
   const ctx = useContext(LLMContext);
   if (!ctx) throw new Error("useLLM must be used inside <LLMProvider>");
   return ctx;
+}
+
+/**
+ * Compose the effective system prompt from three optional layers:
+ *   1. harnessText — operator identity / persona (outermost frame)
+ *   2. wikiIndex   — compiled NOSTR knowledge map (dynamic layer)
+ *   3. base        — task instructions (innermost frame)
+ *
+ * Any absent layer is silently skipped so the function is fully
+ * backwards-compatible with callers that don't supply harness or wiki.
+ */
+function _buildEffectiveSystemPrompt(
+  base: string,
+  harnessText?: string,
+  wikiIndex?: string | null,
+): string {
+  const harness = harnessText?.trim() ?? "";
+  const wiki = wikiIndex?.trim() ?? "";
+  const wikiSection = wiki
+    ? `\n\n## Compiled Knowledge Index\n${wiki}`
+    : "";
+
+  if (harness) {
+    return `${harness}${wikiSection}\n\n${base}`;
+  }
+  if (wiki) {
+    return `## Compiled Knowledge Index\n${wiki}\n\n${base}`;
+  }
+  return base;
 }
 
 function formatRetrievedForPrompt(chunks: RetrievedChunk[]): string {
