@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation } from 'wouter';
-import { MessageSquare, Send, Bot, Loader2, ChevronDown, Maximize2, Minimize2, ShieldCheck, PhoneCall, AlertOctagon, CircleDashed, Settings, Database, Cable, Info, Ticket, Cpu, BookOpen, Sun, Moon, Code2, Mail } from 'lucide-react';
+import { MessageSquare, Send, Bot, Loader2, ChevronDown, Maximize2, Minimize2, ShieldCheck, PhoneCall, AlertOctagon, CircleDashed, Settings, Database, Cable, Info, Ticket, Cpu, BookOpen, Sun, Moon, Code2, Mail, ScrollText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSendMessage, useEscalateTicket } from '@workspace/api-client-react';
 import { ChatMessage, type MessageProps } from './ChatMessage';
@@ -8,6 +8,7 @@ import { SecurityPanel } from './SecurityPanel';
 import { KnowledgePanel } from './KnowledgePanel';
 import { QaBankPanel } from './QaBankPanel';
 import { OpenClawPanel } from './OpenClawPanel';
+import { HarnessPanel } from './HarnessPanel';
 import { PipeStatusPanel } from './PipeStatusPanel';
 import { BiasToggle } from './BiasToggle';
 import { DisclaimerBanner } from './DisclaimerBanner';
@@ -181,6 +182,18 @@ export function ChatWidget({
   const [showQaBankPanel, setShowQaBankPanel] = useState(false);
   const [showPipePanel, setShowPipePanel] = useState(false);
   const [showOpenClawPanel, setShowOpenClawPanel] = useState(false);
+  const [showHarnessPanel, setShowHarnessPanel] = useState(false);
+  // Local Harness charter — user-authored text read from localStorage and
+  // threaded into every llm.ask() call as the outermost system-prompt frame.
+  // Keyed by persona so different bots carry different harnesses independently.
+  const [harnessText, setHarnessText] = useState<string>(() => {
+    if (!personaSlug) return "";
+    try {
+      return localStorage.getItem(`greater:harness:${personaSlug}`) ?? "";
+    } catch {
+      return "";
+    }
+  });
   const [hasSecurityAlertSession, setHasSecurityAlertSession] = useState(false);
   /**
    * Escalation preview dialog state. Clicking the phone icon used to
@@ -544,6 +557,12 @@ export function ChatWidget({
       // independent of whichever bias-source branch above ran.
       if (refusalScope) {
         askOptions = { ...(askOptions ?? {}), refusalScope };
+      }
+      // Local Harness: inject user-authored charter as the outermost
+      // frame of every system prompt. Trimmed before use; blank string
+      // is a no-op inside LLMProvider so safe to always pass through.
+      if (harnessText.trim()) {
+        askOptions = { ...(askOptions ?? {}), harnessText };
       }
       const askStart = performance.now();
       const answer = await llm.ask(history, userText, askOptions);
@@ -968,6 +987,13 @@ export function ChatWidget({
                       OpenClaw mode (BYO LLM)
                     </DropdownMenuItem>
                     <DropdownMenuItem
+                      onSelect={() => setShowHarnessPanel(true)}
+                      data-testid="menuitem-harness"
+                    >
+                      <ScrollText className="w-3.5 h-3.5 mr-2" />
+                      Local Harness (system charter)
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
                       disabled={!ticketPreviewEnabled}
                       onSelect={() => {
                         if (!ticketPreviewEnabled || !routeSlug) return;
@@ -1190,7 +1216,7 @@ export function ChatWidget({
                     <Settings className="w-3.5 h-3.5 mt-0.5 shrink-0" aria-hidden="true" />
                     <span>
                       Tap the <span className="font-semibold text-[hsl(var(--widget-fg))]">gear</span>{" "}
-                      for the Q&amp;A bank, support-ticket export, and BYO-LLM (OpenClaw) setup.
+                      for the Q&amp;A bank, support-ticket export, BYO-LLM (OpenClaw), and the Local Harness system charter.
                     </span>
                   </div>
                 )}
@@ -1357,6 +1383,13 @@ export function ChatWidget({
       <OpenClawPanel
         isOpen={showOpenClawPanel}
         onClose={() => setShowOpenClawPanel(false)}
+      />
+
+      <HarnessPanel
+        isOpen={showHarnessPanel}
+        onClose={() => setShowHarnessPanel(false)}
+        personaSlug={personaSlug ?? "default"}
+        onHarnessChange={setHarnessText}
       />
 
       {/*

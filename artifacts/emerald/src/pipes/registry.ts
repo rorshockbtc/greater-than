@@ -41,3 +41,33 @@ export function findBiasOption(pipe: PipeManifest, biasId: string) {
 export function isGreaterMode(persona: PipePersona): boolean {
   return getActivePipe(persona) !== null;
 }
+
+/**
+ * connectPipe — future hot-load entry-point for runtime Pipe mounting.
+ *
+ * Today, Pipes are inlined at build time via the `greater-pipes-loader`
+ * Vite plugin. `connectPipe` is stubbed here as the logical place for a
+ * future fetch-and-register path where the operator supplies a manifest
+ * URL (e.g. `https://pipes.pink/manifests/acme-corp.json`) and Greater
+ * loads it at runtime without a rebuild.
+ *
+ * V1 design notes (do not implement until the manifest schema stabilises):
+ *  - Fetch the manifest from `url`; validate against the PipeManifest
+ *    schema (zod parse).
+ *  - Write the validated manifest into a runtime registry (e.g. a Zustand
+ *    store or React context) so downstream `listPipes()` / `getActivePipe()`
+ *    calls can merge build-time + runtime entries.
+ *  - Persist to IndexedDB (not localStorage — manifests can exceed 8 KB)
+ *    so the mounted Pipe survives a hard refresh.
+ *  - Return the parsed manifest on success so the caller can reflect the
+ *    loaded state in the UI.
+ *
+ * @throws NotImplementedError — remove this when the implementation lands.
+ */
+export function connectPipe(_url: string): never {
+  throw new Error(
+    "connectPipe is not yet implemented. " +
+      "Runtime Pipe mounting is planned for V1.5. " +
+      "For now, add the Pipe manifest to data/pipes/ and rebuild.",
+  );
+}

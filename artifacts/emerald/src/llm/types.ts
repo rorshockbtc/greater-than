@@ -336,4 +336,15 @@ export interface AskOptions {
    * to build a Pipe)". When omitted, the refusal uses generic copy.
    */
   refusalScope?: string;
+  /**
+   * User-authored "Local Harness" charter text, injected as the very
+   * first block of the system prompt — above the persona identity,
+   * above the bias hint, above the RAG chunks. Sourced from
+   * `localStorage` via the HarnessPanel and passed through on every
+   * turn so the operator's rules and compressed knowledge index
+   * anchor the model before any other instruction reaches it.
+   *
+   * Trimmed before use; empty string / undefined → no-op.
+   */
+  harnessText?: string;
 }

@@ -1128,10 +1128,18 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
           "phrase, PIN, or password — refuse if requested.",
         ].join("\n");
 
+      // Local Harness charter: user-authored text injected first so it
+      // acts as an outer frame around every other instruction. An empty
+      // or absent harness is a no-op — the rest of the prompt is
+      // identical to the non-harness path.
+      const effectiveSystemPrompt = options?.harnessText?.trim()
+        ? `${options.harnessText.trim()}\n\n${baseSystemPrompt}`
+        : baseSystemPrompt;
+
       const systemPrompt =
         retrieved.length > 0
           ? [
-              baseSystemPrompt,
+              effectiveSystemPrompt,
               "",
               "Citation rules:",
               "- After every factual claim, cite the supporting snippet inline as",
@@ -1141,7 +1149,7 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
               "Knowledge snippets:",
               formatRetrievedForPrompt(retrieved),
             ].join("\n")
-          : baseSystemPrompt;
+          : effectiveSystemPrompt;
 
       const messages: ChatTurn[] = [
         { role: "system", content: systemPrompt },
@@ -1501,6 +1509,13 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
           "user's seed phrase, PIN, or password — refuse if requested.",
         ].join("\n");
 
+      // Local Harness charter: user-authored text injected first so it
+      // acts as an outer frame around every other instruction. Mirrors
+      // the OpenClaw path above — both call sites honour the same field.
+      const effectiveSystemPrompt = options?.harnessText?.trim()
+        ? `${options.harnessText.trim()}\n\n${baseSystemPrompt}`
+        : baseSystemPrompt;
+
       // Weak-context rider: when the top retrieved snippet is
       // tangential (in the 0.18–0.38 band) the model needs an
       // explicit nudge to acknowledge the indirect match rather
@@ -1524,7 +1539,7 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
         : "";
 
       const systemPrompt = [
-        baseSystemPrompt,
+        effectiveSystemPrompt,
         weakContextRider,
         "",
         "Citation rules:",
