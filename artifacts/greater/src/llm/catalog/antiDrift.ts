@@ -60,33 +60,71 @@ export function detectDrift(query: string): DriftDetection {
 }
 
 /**
- * Render the redirect text. Mentions the matched asset by name so the
- * response doesn't read like a generic deflection — visitors who asked
- * about ETH on purpose deserve to know the bot read their question.
+ * Render the redirect text.
+ *
+ * The redirect has two jobs and they fight each other:
+ *
+ *   1. Honestly tell the visitor what's out of scope (so they don't
+ *      think the bot is broken).
+ *   2. NOT cower. A bot that just says "I can't help with that" feels
+ *      weak — and weak is the kiss of death for a support bot. Every
+ *      refusal is also an opportunity to demonstrate fluency on the
+ *      topics the bot CAN go deep on.
+ *
+ * So the shape is always: name the thing that's off-topic, name the
+ * scope plainly, then offer 2–4 concrete paths inside the scope and
+ * ask the visitor to pick. When the catalog supplies `suggestedPaths`
+ * the bot offers them by name; when it doesn't, the bot offers a
+ * generic "what were you trying to figure out?" prompt.
+ *
+ * Mentions the matched asset by name so the response doesn't read like
+ * a generic deflection — visitors who asked about ETH on purpose
+ * deserve to know the bot actually parsed their question.
  */
 export function renderDriftRedirect(
   detection: DriftDetection,
   topicalAnchor: string,
+  suggestedPaths?: string[],
 ): string {
+  /**
+   * Render the "pick a path" tail consistently across all three drift
+   * kinds. When the catalog gave us paths, the bot offers them as a
+   * small bullet list and asks for a pick. Otherwise it asks an open
+   * question.
+   */
+  const renderPathOffer = (lead: string): string => {
+    if (suggestedPaths && suggestedPaths.length > 0) {
+      const bullets = suggestedPaths.map((p) => `  • ${p}`).join("\n");
+      return `${lead}\n\n${bullets}\n\nWhich one?`;
+    }
+    return `${lead} What were you actually trying to figure out?`;
+  };
+
   if (detection.kind === "shitcoin") {
     return [
-      `I don't cover ${detection.match ?? "altcoins"} — this catalog is scoped to ${topicalAnchor}, on purpose.`,
+      `I don't study ${detection.match ?? "altcoins"} — this catalog is ${topicalAnchor}, on purpose.`,
       "",
-      "I can talk about why that scope exists (the monetary case for a single hard asset, the engineering tradeoffs the protocol makes, what self-custody actually looks like in practice), or about what Bitcoin is doing on a specific topic. What were you actually trying to figure out?",
+      renderPathOffer(
+        "Pick a path and I'll go deep — I'm built to hammer these down:",
+      ),
     ].join("\n");
   }
   if (detection.kind === "scam") {
     return [
       `That framing isn't what this assistant is for. I cover ${topicalAnchor} — the monetary thesis, how the protocol actually works, and how to hold keys safely.`,
       "",
-      "If you're trying to evaluate whether something is real or hype, the honest move is to read the primary sources directly — I can point you at them. What's the underlying question?",
+      renderPathOffer(
+        "If there's a real underlying question, I can take it from one of these angles:",
+      ),
     ].join("\n");
   }
   if (detection.kind === "advice") {
     return [
       "I don't give buy/sell/timing advice — that's not a thing a small support bot can answer responsibly, and anyone who claims they can is either guessing or selling something.",
       "",
-      `What I CAN do is explain ${topicalAnchor}: why a fixed-supply asset behaves the way it does, what the protocol actually guarantees, and what self-custody looks like in practice. Want to start there?`,
+      renderPathOffer(
+        `What I CAN do is explain ${topicalAnchor}. Pick a path:`,
+      ),
     ].join("\n");
   }
   // Defensive: caller should not reach here when kind === null.

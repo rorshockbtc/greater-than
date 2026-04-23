@@ -10,12 +10,34 @@ import { PipeProvider } from "@/pipes/PipeContext";
 import { useLLM } from "@/llm/LLMProvider";
 import { GREATER_META_BOT } from "@/data/greater-meta-bot";
 
-const NAV_ITEMS: { href: string; label: string }[] = [
+/**
+ * Top-level navigation links.
+ *
+ * Internal routes use `wouter`'s `<Link>`. The "Contribute" entry is
+ * intentionally an external link to the public GitHub repository —
+ * Greater is FOSS, contributions land as PRs / issues, and there is
+ * no in-app submission flow today (and intentionally so: review
+ * happens on GitHub where it's auditable). The per-item `external`
+ * flag tells the header / mobile nav / footer to render an `<a>` with
+ * `target="_blank"` and `rel="noopener noreferrer"` instead of a
+ * client-side route push.
+ *
+ * Visitors who don't have a GitHub account can still reach a human:
+ * the footer surfaces the maintainer's email
+ * (`cubby@colonhyphenbracket.pink`) and the contact form modal is
+ * available from every page.
+ */
+const NAV_ITEMS: { href: string; label: string; external?: boolean }[] = [
   { href: "/", label: "Home" },
   { href: "/how-it-works", label: "How it works" },
   { href: "/about", label: "About" },
   { href: "/nostr", label: "NOSTR" },
   { href: "/openclaw", label: "OpenClaw" },
+  {
+    href: "https://github.com/rorshockbtc/greater-than",
+    label: "Contribute",
+    external: true,
+  },
 ];
 
 /**
@@ -196,6 +218,31 @@ function Header({
 
           <nav className="hidden md:flex items-center gap-7" aria-label="Primary">
             {NAV_ITEMS.map((item) => {
+              // External links (e.g. the "Contribute" link to GitHub)
+              // need a real `<a>` so the browser opens a new tab and
+              // the wouter router doesn't try to handle the URL as an
+              // in-app route. Internal links continue to use <Link>
+              // for client-side navigation and active-state styling.
+              const baseClassName = cn(
+                "chb-mono-label transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm",
+              );
+              const testId = `link-nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`;
+
+              if (item.external) {
+                return (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(baseClassName, "text-muted-foreground")}
+                    data-testid={testId}
+                  >
+                    {item.label}
+                  </a>
+                );
+              }
+
               const active =
                 item.href === "/" ? location === "/" : location.startsWith(item.href);
               return (
@@ -203,10 +250,10 @@ function Header({
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "chb-mono-label transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm",
+                    baseClassName,
                     active ? "text-foreground" : "text-muted-foreground",
                   )}
-                  data-testid={`link-nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
+                  data-testid={testId}
                 >
                   {item.label}
                 </Link>

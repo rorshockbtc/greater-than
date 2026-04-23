@@ -437,17 +437,23 @@ export async function navigateCatalog(
   const drift = detectDrift(query);
   if (drift.kind) {
     tel("[Catalog]", `Anti-drift gate fired: kind=${drift.kind} match="${drift.match ?? ""}"`);
-    // Load only the root so we know the topical anchor to inject.
+    // Load only the root so we know the topical anchor AND the
+    // suggested-path list. Both are catalog-owned so a future pack
+    // (post-Bitcoin) gets to pick its own confident-redirect copy
+    // without touching antiDrift.ts.
     let anchor = "Bitcoin";
+    let suggestedPaths: string[] | undefined;
     try {
       const root = (await opts.loader("index.json")) as CatalogRoot;
       anchor = root.topicalAnchor ?? anchor;
+      suggestedPaths = root.suggestedPaths;
     } catch {
-      // Fine: anchor falls back to "Bitcoin" generically.
+      // Fine: anchor falls back to "Bitcoin" generically and the
+      // redirect uses its open-question fallback.
     }
     return {
       kind: "refuse",
-      text: renderDriftRedirect(drift, anchor),
+      text: renderDriftRedirect(drift, anchor, suggestedPaths),
       chunks: [],
       reasoning: `Anti-drift refusal (${drift.kind}: "${drift.match}")`,
       hops: [],

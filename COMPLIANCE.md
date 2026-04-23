@@ -13,6 +13,32 @@ If you find an over-claim, please open an issue at
 [github.com/rorshockbtc/greater-than/issues](https://github.com/rorshockbtc/greater-than/issues)
 — accuracy regressions are the kind I want to fix quickly.
 
+## What we've actively built into the shell
+
+Compliance attestations are organizational, not architectural — but
+*controls* live in code, and these are the ones we've shipped on
+purpose. Each is auditable in the public repo.
+
+| Control | Where it lives | What it does |
+| --- | --- | --- |
+| Browser-local inference by default | `artifacts/greater/src/llm/LLMProvider.tsx` | Llama-3.2-1B + bge-small run in a Web Worker on WebGPU. The default-flow conversation never leaves the visitor's machine. |
+| Cloud-fallback budget cap | `LLMProvider.tsx` (`CLOUD_CALL_BUDGET`) | Hard client-side cap on cloud calls per session, with a "Local-only · cloud rate-limited" badge after the cap. Cap is 3; set to 0 to disable cloud entirely. |
+| Cited answers | `artifacts/greater/src/components/ChatWidget.tsx` (Thought trace) | Every retrieved chunk is exposed to the visitor with its source URL and similarity score. No hidden retrieval. |
+| Anti-drift refusal layer | `artifacts/greater/src/llm/catalog/antiDrift.ts` | Deterministic regex gate refuses altcoin / scam / financial-advice probes before the model is consulted. Cannot be bypassed by prompt injection. |
+| Catalog-first retrieval (Bitcoin pack) | `artifacts/greater/src/llm/catalog/navigator.ts` | Curated L1→L2→leaf navigation with structural citations. Sub-2-second first paint, no embedding pass on cold load. |
+| WCAG 2.2 AA surface | `artifacts/greater/src/index.css`, `Layout.tsx` | Skip-to-content link, focus rings, reduced-motion honoured, semantic landmarks, `role="log" aria-live="polite"` transcript, keyboard-operable disclosures. See WCAG section below. |
+| No first-party analytics | (intentional absence) | The shell sets no first-party cookies, ships no first-party analytics, registers no service worker that phones home. |
+| `sessionStorage`-scoped transcripts | `ChatWidget.tsx` | Conversation history exists for the support-ticket preview screen and is cleared when the tab closes. Nothing is persisted to the server in the default flow. |
+| Open license, public history | `LICENSE`, `github.com/rorshockbtc/greater-than` | MIT-licensed shell; commit history is public; weights and corpus are open. Code-escrow story is built-in by definition. |
+
+If a deploying organization needs a stronger control (audit log to a
+SIEM, PII redaction before cloud egress, BYO-LLM endpoint, transcript
+encryption at rest) those are deployment-side additions — out of
+scope for the FOSS shell, in scope for the for-hire integration work
+that `colonhyphenbracket` does.
+
+---
+
 ## What the FOSS shell does by default
 
 - **Browser-local inference.** Llama-3.2-1B-Instruct (q4f16) and

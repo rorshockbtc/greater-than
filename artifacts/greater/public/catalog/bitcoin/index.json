@@ -3,6 +3,11 @@
   "packSlug": "bitcoin",
   "title": "Bitcoin",
   "topicalAnchor": "Bitcoin — the monetary thesis, the protocol's actual mechanics, and the self-custody stack",
+  "suggestedPaths": [
+    "Interest rates and the cost of money",
+    "Central banks and monetary policy",
+    "Financial engineering — derivatives, custody, settlement"
+  ],
   "edges": [
     {
       "id": "austrian-monetary",

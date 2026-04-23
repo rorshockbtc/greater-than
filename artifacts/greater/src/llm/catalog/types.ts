@@ -67,6 +67,21 @@ export interface CatalogRoot {
    * in AskOptions; this one is owned by the catalog itself.
    */
   topicalAnchor: string;
+  /**
+   * Optional. When the anti-drift gate fires (the user asked about an
+   * altcoin, a scam pattern, or for buy/sell advice), the redirect
+   * response invites them to pick a path inside the catalog instead
+   * of just refusing. These are the path labels the user is offered.
+   *
+   * Keep them short — three to five words, evocative, mutually
+   * distinct, and each genuinely answerable from this pack. The
+   * point is to demonstrate fluency: "I don't study altcoins, but
+   * pick one of THESE and watch me hammer it down."
+   *
+   * If absent, the redirect falls back to a generic "what were you
+   * actually trying to figure out?" prompt.
+   */
+  suggestedPaths?: string[];
   edges: CatalogEdge[];
 }
 
