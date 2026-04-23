@@ -64,34 +64,66 @@ function Hero() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, hsl(var(--background)) 0%, hsl(var(--background) / 0.6) 40%, hsl(var(--background) / 0.2) 100%)",
+              "linear-gradient(to bottom, hsl(var(--background)) 0%, hsl(var(--background) / 0.55) 30%, hsl(var(--background) / 0.85) 62%, hsl(var(--background)) 100%)",
           }}
         />
       </div>
 
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 sm:pt-24 sm:pb-28">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 pt-20 pb-28 sm:pt-32 sm:pb-40">
         <motion.p
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="chb-mono-eyebrow text-muted-foreground mb-6"
+          className="chb-mono-eyebrow text-muted-foreground mb-10"
         >
           Greater &mdash; sovereign support bots, FOSS by default
         </motion.p>
-        <motion.h1
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.05 }}
-          className="chb-serif-headline text-4xl sm:text-6xl leading-[1.05] max-w-4xl"
+        {/*
+          Display-scale headline. Two visual moves:
+          1. Type scale jumps from "marketing-page-large" to
+             "magazine-cover-large" via clamp(), so on any wide screen
+             the headline is the entire visual event of the page.
+          2. The pink phrase becomes a serif-italic break-line — the
+             same mixed-typeface trick a print art-director uses to
+             stop a long sans headline from feeling like a wall. Also
+             carries the brand accent (#FE299E) without needing any
+             colored chrome elsewhere.
+          The word-by-word stagger is small in time (~30ms steps) and
+          uses a single `inline-block` per word so descenders/ascenders
+          on the serif line don't collide with the sans line above.
+        */}
+        <h1
+          className="chb-serif-headline text-[clamp(2.6rem,7.6vw,8.4rem)] leading-[0.92] tracking-[-0.012em] max-w-[18ch]"
+          data-testid="hero-headline"
+          aria-label="Your customers deserve a chatbot that actually knows your business."
         >
-          Your customers deserve a chatbot that{" "}
-          <span style={{ color: "#FE299E" }}>actually knows your business</span>.
-        </motion.h1>
+          {/* Visual layer — animated, hidden from assistive tech.
+              The aria-label above is the canonical text. Wrapping the
+              animated spans in aria-hidden prevents screen readers from
+              hearing the words as concatenated tokens (the inline-block
+              motion.spans suppress real word-spacing). */}
+          <span aria-hidden="true">
+            <span className="block">
+              <WordStagger text="Your customers deserve a chatbot that" />
+            </span>
+            <span className="block chb-serif-accent" style={{ color: "#FE299E" }}>
+              <WordStagger text="actually knows your business" delay={0.32} />
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4, delay: 0.32 + 0.04 * 5 + 0.18 }}
+                className="inline-block"
+              >
+                .
+              </motion.span>
+            </span>
+          </span>
+        </h1>
         <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.12 }}
-          className="text-lg sm:text-xl text-muted-foreground mt-6 max-w-2xl leading-relaxed"
+          transition={{ duration: 0.6, delay: 0.85 }}
+          className="text-lg sm:text-xl text-muted-foreground mt-10 max-w-2xl leading-relaxed"
         >
           The free shell runs entirely in the browser. Six industry templates,
           one architectural conviction: bias is unavoidable, so make it explicit
@@ -104,7 +136,7 @@ function Hero() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.18 }}
+          transition={{ duration: 0.6, delay: 0.95 }}
           className="text-sm text-muted-foreground mt-5 italic max-w-2xl"
         >
           — built by{" "}
@@ -172,7 +204,61 @@ function Hero() {
         <span className="inline-block w-6 h-px bg-pink-500/60" />
         <span>Greater v1 · CHB :-]</span>
       </div>
+
+      {/*
+        Vertical edition mark on the right gutter — the print-magazine
+        "spine" treatment. Sits outside the readable column so it never
+        competes with the headline; reads as a single typographic
+        ornament that anchors the right edge of the hero. Hidden below
+        lg because the gutter doesn't exist there.
+      */}
+      <div
+        aria-hidden="true"
+        className="hidden lg:flex absolute right-6 top-32 chb-filemark items-center gap-3 select-none"
+        style={{
+          writingMode: "vertical-rl",
+          transform: "rotate(180deg)",
+          letterSpacing: "0.32em",
+        }}
+      >
+        <span>Edition № 01</span>
+        <span className="inline-block w-px h-8 bg-foreground/20" />
+        <span>Spring 2026</span>
+      </div>
     </section>
+  );
+}
+
+/**
+ * Word-by-word stagger reveal for the hero headline. Each word is
+ * an `inline-block` so its translateY animates without disturbing
+ * the line below it. Step is intentionally small (~40ms) so on a
+ * 7-word line the whole reveal completes in well under a second
+ * and never feels like a "look at me animating" moment. Honors
+ * `prefers-reduced-motion` via the global override in index.css
+ * (framer-motion respects the media query out of the box).
+ */
+function WordStagger({ text, delay = 0 }: { text: string; delay?: number }) {
+  const words = text.split(" ");
+  return (
+    <>
+      {words.map((word, i) => (
+        <motion.span
+          key={i}
+          initial={{ opacity: 0, y: "0.45em" }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.6,
+            delay: delay + i * 0.04,
+            ease: [0.22, 0.61, 0.36, 1],
+          }}
+          className="inline-block"
+          style={{ marginRight: "0.22em" }}
+        >
+          {word}
+        </motion.span>
+      ))}
+    </>
   );
 }
 
@@ -199,37 +285,67 @@ function SectionHeader({
   align?: "left" | "between";
   trailing?: React.ReactNode;
 }) {
-  const headerBlock = (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.4 }}
-      transition={{ duration: 0.5 }}
-      className="max-w-2xl"
-    >
-      <p className="chb-section-sigil mb-3" data-testid={`sigil-${sigil.toLowerCase().replace(/\W+/g, "-")}`}>
-        <span>{sigil}</span>
-        <span className="text-foreground/80">{label}</span>
-      </p>
-      <h2 className="chb-section-headline text-3xl sm:text-[2.4rem]">
-        {children}
-      </h2>
-      {lede && (
-        <p className="text-base text-muted-foreground mt-4 leading-relaxed">
-          {lede}
-        </p>
-      )}
-    </motion.div>
+  // MoMA Bulletin / Vignelli treatment: a wide horizontal hairline
+  // is the section anchor, with the §-numeral hanging at display
+  // scale on the left and the small label sitting beside it. The
+  // headline lives below the rule, free to scale up to display size
+  // without competing with chrome. The hairline `scaleX`s in from
+  // the left when the section enters view — the only motion in the
+  // opener, deliberately a single gesture.
+  const sigilTestId = sigil.toLowerCase().replace(/\W+/g, "-");
+  const numeral = sigil.replace(/^§\s*/, "");
+  return (
+    <div className="mb-16 lg:mb-20">
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.4 }}
+        transition={{ duration: 0.5 }}
+        className="flex items-baseline gap-4 sm:gap-6 mb-10"
+        data-testid={`sigil-${sigilTestId}`}
+      >
+        <span
+          className="font-serif font-light leading-none text-foreground/35 select-none"
+          style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.6rem)", letterSpacing: "-0.01em" }}
+        >
+          §&nbsp;{numeral}
+        </span>
+        <motion.span
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 0.61, 0.36, 1] }}
+          className="flex-1 h-px bg-foreground/20 origin-left"
+          aria-hidden="true"
+        />
+        <span className="chb-mono-eyebrow text-foreground/65 whitespace-nowrap">
+          {label}
+        </span>
+        {align === "between" && trailing && (
+          <span className="hidden lg:inline-flex">{trailing}</span>
+        )}
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.55, delay: 0.15 }}
+        className="max-w-4xl"
+      >
+        <h2 className="chb-section-headline text-[clamp(1.9rem,4.4vw,3.6rem)] leading-[1.02] tracking-[-0.012em]">
+          {children}
+        </h2>
+        {lede && (
+          <p className="text-base sm:text-lg text-muted-foreground mt-5 leading-relaxed max-w-2xl">
+            {lede}
+          </p>
+        )}
+        {align === "between" && trailing && (
+          <div className="mt-6 lg:hidden">{trailing}</div>
+        )}
+      </motion.div>
+    </div>
   );
-  if (align === "between" && trailing) {
-    return (
-      <div className="mb-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-        {headerBlock}
-        {trailing}
-      </div>
-    );
-  }
-  return <div className="mb-10">{headerBlock}</div>;
 }
 
 function PrinciplesStrip() {
@@ -257,7 +373,7 @@ function PrinciplesStrip() {
   ];
   return (
     <section className="border-b border-border bg-secondary/40 relative">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-24 sm:py-32">
         <SectionHeader
           sigil="§ 01"
           label="How it works"
@@ -382,7 +498,7 @@ function Walkthrough() {
       className="border-b border-border"
       data-testid="section-walkthrough"
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-24 sm:py-32">
         <SectionHeader
           sigil="§ 02"
           label="A 30-second tour"
@@ -504,7 +620,7 @@ function FeatureHighlights() {
       className="border-b border-border bg-secondary/40"
       data-testid="section-feature-highlights"
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-24 sm:py-32">
         <SectionHeader
           sigil="§ 03"
           label="Four commitments"
@@ -606,7 +722,7 @@ function CXCostSection() {
       className="border-b border-border"
       data-testid="section-cx-cost"
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-24 sm:py-32">
         <SectionHeader
           sigil="§ 04"
           label="More than a chatbot"

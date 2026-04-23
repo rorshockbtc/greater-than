@@ -1,4 +1,5 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
+import { MotionConfig } from "framer-motion";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { Layout } from "@/components/Layout";
@@ -84,18 +85,28 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      {/* LLMProvider sits ABOVE the router so SPA navigations never
-          re-trigger model download. The worker, the readiness state,
-          and the IndexedDB-cached vector index all persist for the
-          whole SPA session. */}
-      <LLMProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <ContactProvider>
-            <Router />
-          </ContactProvider>
-        </WouterRouter>
-      </LLMProvider>
-      <Toaster />
+      {/*
+        Framer-motion respects the OS-level `prefers-reduced-motion`
+        media query when wrapped in MotionConfig with `reducedMotion`
+        set to "user". This kills all entry/scroll-triggered transforms
+        and opacity timelines for users who've asked the system to
+        reduce motion — the CSS-level override in index.css only
+        catches CSS animations, not JS-driven framer transitions.
+      */}
+      <MotionConfig reducedMotion="user">
+        {/* LLMProvider sits ABOVE the router so SPA navigations never
+            re-trigger model download. The worker, the readiness state,
+            and the IndexedDB-cached vector index all persist for the
+            whole SPA session. */}
+        <LLMProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <ContactProvider>
+              <Router />
+            </ContactProvider>
+          </WouterRouter>
+        </LLMProvider>
+        <Toaster />
+      </MotionConfig>
     </QueryClientProvider>
   );
 }
