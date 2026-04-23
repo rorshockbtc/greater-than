@@ -57,7 +57,7 @@ If you want to add raw long-form documents (not curated leaves), drop them under
 
 ### 6. Re-brand
 
-- `replit.md` — your project info
+- `project.md` (or your equivalent project-level README) — your project info and architecture notes
 - `artifacts/emerald/src/data/harness/bitcoinCharter.ts` — voice and persona
 - `artifacts/emerald/public/catalog/bitcoin/index.json` → `topicalAnchor` — what the bot says when it refuses off-topic
 - Logo, palette, fonts — `artifacts/emerald/src/styles/` and `src/components/`
