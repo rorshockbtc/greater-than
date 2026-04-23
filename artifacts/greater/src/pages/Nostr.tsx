@@ -186,11 +186,20 @@ function FeatureCard({
   title: string;
   body: string;
 }) {
+  // Editorial-entry treatment matching the home-page primitive: no
+  // box, hairline top rule, hanging design glyph in the gutter. The
+  // lucide icon is preserved here because it's small (w-4 h-4), tinted
+  // to the page accent, and reads as a typographic ornament rather than
+  // the standard "rounded card with corner-icon" template tile.
   return (
-    <div className="border border-border rounded-xl p-5 bg-card">
-      <Icon className="w-5 h-5 text-[hsl(var(--accent))] mb-3" />
-      <h3 className="font-semibold text-sm mb-2">{title}</h3>
-      <p className="text-xs text-muted-foreground leading-relaxed">{body}</p>
+    <div className="chb-editorial-entry">
+      <span className="chb-numeral" aria-hidden="true" style={{ fontSize: "1.5rem", marginTop: "0.05rem" }}>
+        <Icon className="w-4 h-4 text-[hsl(var(--accent))]" />
+      </span>
+      <div className="flex flex-col gap-2">
+        <h3 className="font-semibold text-sm">{title}</h3>
+        <p className="text-xs text-muted-foreground leading-relaxed">{body}</p>
+      </div>
     </div>
   );
 }

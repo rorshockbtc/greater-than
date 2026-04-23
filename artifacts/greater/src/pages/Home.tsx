@@ -281,37 +281,33 @@ function PrinciplesStrip() {
           <span className="chb-serif-accent">hired-out curation.</span>
         </SectionHeader>
         {/*
-          Bento-asymmetric strip: four cards with deliberate vertical
-          stagger, alternating surface treatments, and a hairline left-
-          border in CHB-pink on the odd cards. The shape was previously
-          a 4-up uniform grid which read as an AI template. Each card
-          now has its own subtle visual signature without sacrificing
-          scannability or grid alignment on smaller screens.
+          Editorial four-up: no boxes, no lucide-icon-on-corner. The
+          previous treatment was a uniform tile grid that, even with
+          asymmetric stagger and alternating surfaces, still read as a
+          starter-template card row. The replacement is the magazine
+          version: hairline top rules, big serif numerals hanging in
+          the gutter, vertical hairline dividers between columns on
+          desktop. Mobile collapses to a stacked list with mono labels
+          instead of giant digits — same primitive, phone-appropriate.
         */}
         <motion.div
-          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="chb-editorial-grid chb-editorial-divided chb-cols-4 grid sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-8 mt-2"
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.5, delay: 0.05 }}
         >
-          {items.map((it, i) => {
-            const stagger = ["lg:translate-y-0", "lg:translate-y-3", "lg:-translate-y-2", "lg:translate-y-1"][i] ?? "";
-            const surface = i % 2 === 0
-              ? "bg-card border-border"
-              : "bg-secondary/50 border-border/70";
-            return (
-              <div
-                key={it.title}
-                className={`flex flex-col gap-2 rounded-xl border ${surface} p-5 ${stagger} ${i === 1 ? "rotate-[-0.3deg]" : ""}`}
-                style={{ borderLeft: i % 2 === 0 ? "2px solid #FE299E" : undefined }}
-              >
-                <it.icon className="w-5 h-5" style={{ color: "#01a9f4" }} />
-                <h3 className="text-sm font-semibold">{it.title}</h3>
+          {items.map((it, i) => (
+            <div key={it.title} className="chb-editorial-entry">
+              <span className="chb-numeral" aria-hidden="true">
+                <em>0{i + 1}</em>
+              </span>
+              <div className="flex flex-col gap-2">
+                <h3 className="text-[15px] font-semibold leading-snug">{it.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{it.body}</p>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </motion.div>
 
         <div className="mt-10 flex flex-wrap gap-3 text-sm">
@@ -400,44 +396,49 @@ function Walkthrough() {
           Three things to do before you decide{" "}
           <span className="chb-serif-accent">whether this is real.</span>
         </SectionHeader>
-        <ol className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/*
+          Editorial three-up: full-height numbered entries instead of
+          uniform tile cards. The big serif numeral is the design
+          element; the lucide icon corner-tag was redundant and read
+          as starter-template chrome. The pink "For:" annotation and
+          italic try-this line are kept verbatim — those are voice.
+        */}
+        <ol className="chb-editorial-grid chb-editorial-divided chb-cols-2 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 mt-2">
           {steps.map((s, i) => (
             <li
               key={s.eyebrow}
-              className="flex flex-col gap-3 rounded-xl border border-border bg-secondary/40 p-5"
+              className="chb-editorial-entry"
               data-testid={`walkthrough-step-${i + 1}`}
             >
-              <div className="flex items-center gap-2">
-                <s.icon
-                  className="w-5 h-5"
-                  style={{ color: "#01a9f4" }}
-                  aria-hidden="true"
-                />
+              <span className="chb-numeral" aria-hidden="true">
+                0{i + 1}
+              </span>
+              <div className="flex flex-col gap-3">
                 <p className="chb-mono-eyebrow text-muted-foreground">
                   {s.eyebrow}
                 </p>
-              </div>
-              <h3 className="text-lg font-semibold leading-snug">
-                {s.title}
-              </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {s.body}
-              </p>
-              <p className="chb-mono-label text-pink-600 dark:text-pink-400">
-                {s.audience}
-              </p>
-              <p className="text-xs text-foreground/70 italic leading-snug">
-                {s.example}
-              </p>
-              <div className="mt-auto pt-2">
-                <Link
-                  href={s.cta.href}
-                  className="chb-mono-label text-foreground hover:text-pink-500 inline-flex items-center gap-1 underline-offset-2 hover:underline"
-                  data-testid={`walkthrough-step-${i + 1}-cta`}
-                >
-                  <span>{s.cta.label}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
+                <h3 className="text-lg font-semibold leading-snug">
+                  {s.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {s.body}
+                </p>
+                <p className="chb-mono-label text-pink-600 dark:text-pink-400">
+                  {s.audience}
+                </p>
+                <p className="text-xs text-foreground/70 italic leading-snug">
+                  {s.example}
+                </p>
+                <div className="mt-2">
+                  <Link
+                    href={s.cta.href}
+                    className="chb-mono-label text-foreground hover:text-pink-500 inline-flex items-center gap-1 underline-offset-2 hover:underline"
+                    data-testid={`walkthrough-step-${i + 1}-cta`}
+                  >
+                    <span>{s.cta.label}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
             </li>
           ))}
@@ -518,38 +519,45 @@ function FeatureHighlights() {
           <span className="chb-serif-accent">architecturally different</span>{" "}
           from a vendor chatbot.
         </SectionHeader>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {features.map((f) => (
+        {/*
+          Editorial 2x2 — the "four commitments" deserve weight. The
+          previous 4-up flat row gave each commitment one-quarter of a
+          wide screen and turned them into a feature-tiles-with-icons
+          row indistinguishable from any AI-template starter. The 2x2
+          editorial grid gives each commitment double the column width,
+          a hanging serif numeral, and a hairline cross divider in
+          the middle. Reads as a magazine sidebar, not a CMS section.
+        */}
+        <div className="chb-editorial-grid chb-editorial-divided chb-cols-2 grid sm:grid-cols-2 gap-x-10 gap-y-10 mt-2">
+          {features.map((f, i) => (
             <article
               key={f.eyebrow}
-              className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5"
+              className="chb-editorial-entry"
               data-testid={f.testid}
             >
-              <div className="flex items-center gap-2">
-                <f.icon
-                  className="w-5 h-5"
-                  style={{ color: "#01a9f4" }}
-                  aria-hidden="true"
-                />
+              <span className="chb-numeral" aria-hidden="true">
+                <em>0{i + 1}</em>
+              </span>
+              <div className="flex flex-col gap-3">
                 <p className="chb-mono-eyebrow text-muted-foreground">
                   {f.eyebrow}
                 </p>
-              </div>
-              <h3 className="text-base font-semibold leading-snug">
-                {f.title}
-              </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {f.body}
-              </p>
-              <div className="mt-auto pt-2">
-                <Link
-                  href={f.cta.href}
-                  className="chb-mono-label text-foreground hover:text-pink-500 inline-flex items-center gap-1 underline-offset-2 hover:underline"
-                  data-testid={`${f.testid}-cta`}
-                >
-                  {f.cta.label}
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
+                <h3 className="text-lg font-semibold leading-snug">
+                  {f.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {f.body}
+                </p>
+                <div className="mt-1">
+                  <Link
+                    href={f.cta.href}
+                    className="chb-mono-label text-foreground hover:text-pink-500 inline-flex items-center gap-1 underline-offset-2 hover:underline"
+                    data-testid={`${f.testid}-cta`}
+                  >
+                    {f.cta.label}
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
             </article>
           ))}
@@ -669,34 +677,51 @@ function CXCostSection() {
           </div>
         </div>
 
-        <div className="grid sm:grid-cols-3 gap-5">
+        {/*
+          Editorial three-up follow-on to the cost table. The pink
+          eyebrow is the design element here (it's already varied:
+          "The gear menu" / "Support-ticket export" / "$0 / resolution"),
+          so we skip the numeral and use a thin pink em-dash mark in
+          the gutter instead. Different treatment of the same primitive,
+          chosen so §01/§02/§03/§04 don't all read as the same shape.
+        */}
+        <div className="chb-editorial-grid chb-editorial-divided chb-cols-2 grid sm:grid-cols-3 gap-x-8 gap-y-8 mt-2">
           {features.map((f) => (
             <article
               key={f.eyebrow}
-              className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5"
+              className="chb-editorial-entry"
               data-testid={`cx-cost-feature-${f.eyebrow.toLowerCase().replace(/\W+/g, "-")}`}
             >
-              <p className="chb-mono-eyebrow text-pink-600 dark:text-pink-400">
-                {f.eyebrow}
-              </p>
-              <h3 className="text-base font-semibold leading-snug">
-                {f.title}
-              </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {f.body}
-              </p>
-              {f.cta && (
-                <div className="mt-auto pt-2">
-                  <Link
-                    href={f.cta.href}
-                    className="chb-mono-label text-foreground hover:text-pink-500 inline-flex items-center gap-1 underline-offset-2 hover:underline"
-                    data-testid={`cx-cost-feature-cta-${f.eyebrow.toLowerCase().replace(/\W+/g, "-")}`}
-                  >
-                    {f.cta.label}
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              )}
+              <span
+                className="chb-numeral"
+                aria-hidden="true"
+                style={{ color: "#FE299E", opacity: 0.55, fontSize: "1.6rem", marginTop: "-0.05rem" }}
+              >
+                §
+              </span>
+              <div className="flex flex-col gap-2">
+                <p className="chb-mono-eyebrow text-pink-600 dark:text-pink-400">
+                  {f.eyebrow}
+                </p>
+                <h3 className="text-base font-semibold leading-snug">
+                  {f.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {f.body}
+                </p>
+                {f.cta && (
+                  <div className="mt-1">
+                    <Link
+                      href={f.cta.href}
+                      className="chb-mono-label text-foreground hover:text-pink-500 inline-flex items-center gap-1 underline-offset-2 hover:underline"
+                      data-testid={`cx-cost-feature-cta-${f.eyebrow.toLowerCase().replace(/\W+/g, "-")}`}
+                    >
+                      {f.cta.label}
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                )}
+              </div>
             </article>
           ))}
         </div>

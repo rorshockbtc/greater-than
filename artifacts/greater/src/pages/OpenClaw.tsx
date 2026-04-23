@@ -250,23 +250,41 @@ function Tier({
   tone: "ok" | "next" | "future";
   children: React.ReactNode;
 }) {
-  const ringColor =
+  // Editorial timeline entry. The previous treatment was a pastel-
+  // ringed colored box that read as a CRM-card preset. The semantic
+  // meaning of the tone (shipped / planned next / future) is preserved
+  // by a single colored dot in the gutter and a thin colored rule on
+  // the left edge — same information, no candy-box chrome.
+  const dotColor =
     tone === "ok"
-      ? "border-violet-500/40 bg-violet-500/[0.04]"
+      ? "bg-violet-400"
       : tone === "next"
-        ? "border-emerald-500/30 bg-emerald-500/[0.03]"
-        : "border-white/10 bg-white/[0.02]";
-  const iconColor =
+        ? "bg-emerald-400"
+        : "bg-foreground/40";
+  const ruleColor =
     tone === "ok"
-      ? "text-violet-300 bg-violet-500/15 border-violet-500/30"
+      ? "border-violet-500/45"
       : tone === "next"
-        ? "text-emerald-300 bg-emerald-500/15 border-emerald-500/30"
-        : "text-foreground/70 bg-white/5 border-white/15";
+        ? "border-emerald-500/40"
+        : "border-foreground/15";
+  const iconRing =
+    tone === "ok"
+      ? "text-violet-300 border-violet-500/40"
+      : tone === "next"
+        ? "text-emerald-300 border-emerald-500/35"
+        : "text-foreground/60 border-foreground/20";
   return (
-    <div className={`rounded-lg border ${ringColor} p-6`}>
+    <article
+      className={`relative pl-6 pr-2 py-3 border-l ${ruleColor}`}
+    >
+      <span
+        aria-hidden="true"
+        className={`absolute left-0 top-5 -translate-x-1/2 w-2.5 h-2.5 rounded-full ${dotColor}`}
+      />
       <div className="flex items-start gap-4">
         <div
-          className={`shrink-0 w-8 h-8 rounded-full border flex items-center justify-center ${iconColor}`}
+          className={`shrink-0 w-7 h-7 rounded-full border flex items-center justify-center ${iconRing}`}
+          aria-hidden="true"
         >
           {icon}
         </div>
@@ -274,7 +292,7 @@ function Tier({
           <p className="chb-mono-eyebrow text-muted-foreground mb-1">
             {eyebrow}
           </p>
-          <h3 className="text-xl sm:text-2xl font-semibold tracking-tight mb-3">
+          <h3 className="text-xl sm:text-2xl font-semibold tracking-tight mb-3 leading-snug">
             {title}
           </h3>
           <div className="text-[15px] text-foreground/85 leading-relaxed space-y-2">
@@ -282,6 +300,6 @@ function Tier({
           </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

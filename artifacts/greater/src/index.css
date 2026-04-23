@@ -403,6 +403,102 @@
 }
 
 /**
+ * Editorial entry — the magazine-grade replacement for the boxed
+ * "rounded-xl border bg-card p-5" card pattern that was making every
+ * section feel like a generic CMS template. An entry has no box; it
+ * sits on the page separated only by a hairline top rule and tight
+ * whitespace, with a big serif numeral hanging in the gutter as
+ * design furniture. Use inside `.chb-editorial-grid`.
+ *
+ * On screens narrower than `sm` the numeral collapses to a small
+ * mono label inline with the eyebrow, so the layout still reads as
+ * a list rather than a wall of huge digits on a phone.
+ */
+.chb-editorial-grid {
+  display: grid;
+  /* Hairline column dividers via background, not borders, so the
+     number of columns can change without re-pluming each item. */
+  position: relative;
+}
+.chb-editorial-entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 1rem;
+  padding-top: 1.25rem;
+  padding-right: 1rem;
+  border-top: 1px solid hsl(var(--border));
+}
+.chb-editorial-entry > .chb-numeral {
+  font-family: var(--font-serif);
+  font-feature-settings: "lnum", "ss01";
+  font-weight: 400;
+  font-size: 2.4rem;
+  line-height: 0.95;
+  color: hsl(var(--foreground) / 0.18);
+  letter-spacing: -0.02em;
+  margin-top: -0.18rem;
+  user-select: none;
+}
+.chb-editorial-entry > .chb-numeral em {
+  font-style: italic;
+  color: #FE299E;
+  opacity: 0.55;
+}
+@media (max-width: 640px) {
+  .chb-editorial-entry {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+  .chb-editorial-entry > .chb-numeral {
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+    margin: 0 0 0.5rem;
+  }
+}
+
+/**
+ * Vertical hairline dividers between editorial entries laid out as
+ * a 2x2 or 4x1 grid. Drawn via a pseudo-element so it never affects
+ * grid sizing and disappears cleanly at the column boundaries.
+ */
+.chb-editorial-divided > * + * {
+  position: relative;
+}
+@media (min-width: 1024px) {
+  .chb-editorial-divided.chb-cols-4 > *:nth-child(n+2)::before,
+  .chb-editorial-divided.chb-cols-2 > *:nth-child(n+2)::before {
+    content: "";
+    position: absolute;
+    top: 1.25rem;
+    bottom: 0.5rem;
+    left: -1rem;
+    width: 1px;
+    background: hsl(var(--border));
+  }
+}
+
+/**
+ * Pull-quote — large serif italic, hanging quote, used at most once
+ * per page. Borrows the print convention of breaking the body grid
+ * with a single large piece of voice.
+ */
+.chb-pullquote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  color: hsl(var(--foreground) / 0.88);
+  border-left: 2px solid #FE299E;
+  padding-left: 1.25rem;
+}
+
+/**
  * `prose-styles` — light typographic defaults for the Compliance and
  * case-study bodies. Intentionally minimal; we don't load `@tailwind/
  * typography` for one page.
