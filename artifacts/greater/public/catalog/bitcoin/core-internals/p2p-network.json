@@ -1,0 +1,23 @@
+{
+  "id": "p2p-network",
+  "label": "Peer discovery, addrman, and eclipse defenses",
+  "brief": "Bitcoin's P2P network is unstructured: every node maintains a small set of outbound connections (8 by default in Core) and accepts up to 125 inbound connections. There is no DHT, no central directory, no routing protocol — peers gossip blocks and transactions on a best-effort basis, and the network's resilience comes from sheer redundancy [1].\n\nA fresh node bootstraps by querying *DNS seeds*: a set of hard-coded DNS hostnames (`seed.bitcoin.sipa.be`, `dnsseed.bluematt.me`, several others) that resolve to the IPs of long-running nodes. A node might also use the hard-coded fallback list compiled into the source if DNS is unreachable. After the first connection, the new node asks its peer for additional addresses via `addr` and `getaddr` messages, populates its address manager, and stops relying on the seeds [2].\n\nThe *address manager* (addrman) is the persistent in-memory database of addresses the node has heard about. Addresses are bucketed by source-IP group and by which peer told us about them, with separate tables for 'tried' (we successfully connected) and 'new' (we haven't yet). This bucketing is the primary defense against an attacker poisoning addrman with addresses they control: even an attacker connecting from many IPs can fill at most a small fraction of the buckets, so the next outbound connection has a high probability of being a real, independent peer [2].\n\nAn *eclipse attack* is when an attacker controls all of a victim node's connections — both inbound and outbound — and can therefore control what the victim sees of the chain. A successfully-eclipsed merchant could be shown a fake block confirming a fake payment. The defenses are layered: addrman's bucketing makes it hard to monopolize the new node's outbound list, the diversity of outbound connection types (address-net groups, Tor, I2P), feeler connections that probe random addresses to refresh the table, anchor connections preserved across restarts, and asmap-based AS-aware bucketing introduced in 0.20 [3].\n\n*Ban scoring* is the per-peer reputation system: peers that send invalid blocks, repeated invalid transactions, or other protocol violations accumulate a misbehavior score and are eventually disconnected and temporarily banned. This is not a defense against malicious peers in the cryptographic sense — bans are easy to evade by reconnecting from a new IP — but it filters honest-but-buggy peers and rate-limits trivial DoS attempts.",
+  "sources": [
+    {
+      "label": "Satoshi Nakamoto — Bitcoin: A Peer-to-Peer Electronic Cash System",
+      "url": "https://nakamotoinstitute.org/library/bitcoin/",
+      "excerpt": "Messages are broadcast on a best-effort basis. Nodes can leave and rejoin the network at will, accepting the longest proof-of-work chain as proof of what happened while they were gone."
+    },
+    {
+      "label": "Bitcoin Optech — collected newsletters",
+      "url": "https://bitcoinops.org/en/newsletters/",
+      "excerpt": "addrman buckets addresses by source-group so an attacker cannot fill the table from one IP range. The bucketing is the primary structural defense against eclipse attacks at the new-node level."
+    },
+    {
+      "label": "Bitcoin Optech — Topics on Eclipse Attacks",
+      "url": "https://bitcoinops.org/en/topics/eclipse-attacks/",
+      "excerpt": "Anchor connections, asmap-based AS-aware bucketing, feeler probes, and outbound diversity across network types together raise the cost of eclipsing a Core node above what a casual attacker can sustain."
+    }
+  ],
+  "relatedLeafIds": ["consensus-rules", "node-architecture"]
+}

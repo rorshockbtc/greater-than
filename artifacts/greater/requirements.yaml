@@ -1,0 +1,21 @@
+packages:
+  "framer-motion": "For smooth message entry animations, layout transitions, and the security panel slide-in"
+  "uuid": "To generate unique session IDs for the chat API"
+  "@types/uuid": "Types for uuid"
+  "date-fns": "For formatting timestamps in the chat UI and trust badge"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility to merge tailwind classes without style conflicts"
+  "lucide-react": "For beautiful, consistent iconography across the app"
+
+images:
+  - path: "artifacts/greater/public/images/grain.png"
+    description: "A very subtle, dark, semi-transparent noise/grain texture used for premium dark mode backgrounds"
+    aspect_ratio: "1:1"
+  - path: "artifacts/greater/public/images/blockstream-bg.png"
+    description: "Abstract, very dark, deep space grey background with extremely subtle, faint glowing teal and cyan geometric line accents, professional fintech aesthetic"
+    aspect_ratio: "16:9"
+
+notes:
+  - We are building a single-page app focused entirely on the support chat experience.
+  - The API hooks are imported from the workspace `@workspace/api-client-react`.
+  - The app forces dark mode using CSS variables, adhering to the requested Blockstream brand colors (Space Grey, Cyan, Teal).

@@ -1,0 +1,23 @@
+{
+  "id": "inflation-malinvestment",
+  "label": "The Cantillon effect, inflation, and malinvestment",
+  "brief": "Richard Cantillon's eighteenth-century insight is that new money does not enter the economy uniformly. It enters at specific points — the borrower who takes out the new loan, the contractor on the new government project, the bank that receives the new reserves — and works outward from there. Whoever spends it first transacts at the *old* prices; by the time it reaches the periphery, prices have already adjusted upward. The Cantillon effect is therefore a redistribution from the periphery to the centre, hidden inside what looks like a general price rise [1].\n\nThe Austrian theory of the business cycle (ABCT), developed by Mises and Hayek, builds on this. When credit expansion lowers the interest rate below its natural level, entrepreneurs receive a false signal: it now appears profitable to undertake long-duration projects that would not have penciled out at the natural rate. Resources get committed to capital structures that the underlying savings cannot ultimately sustain. Mises calls these *malinvestments* — projects that look profitable on paper because the price signal has been distorted, but which cannot actually be completed or operated profitably once the credit expansion stops [2]. The 'bust' phase of the cycle is the liquidation of those projects and the re-allocation of the resources to uses that the actual savings can support.\n\nHayek extends this in *Prices and Production*: the key cost of monetary intervention is not headline inflation but the structural distortion of the capital structure across time. Even when consumer-price indices stay flat (because the new money flows into asset markets first), the malinvestment is happening underneath — visible only when the cycle eventually unwinds [3].\n\nFor a Bitcoiner, this framing matters because it explains *why* a fixed-supply asset is interesting beyond the obvious 'no inflation' point. A money whose supply cannot be expanded by decree cannot be used to issue cheap credit at non-market rates, which is the upstream cause of the boom-bust cycle in the Austrian account. The argument is not that Bitcoin would prevent every recession — recessions also happen for non-monetary reasons — but that the specifically *monetary* class of distortions disappears.",
+  "sources": [
+    {
+      "label": "Murray N. Rothbard — Man, Economy, and State",
+      "url": "https://mises.org/library/man-economy-and-state-power-and-market",
+      "excerpt": "The early receivers of the new money will be enriched at the expense of the late receivers, who find prices rising before their incomes do. This is the Cantillon effect of monetary expansion — a hidden redistribution that no headline statistic captures."
+    },
+    {
+      "label": "Mises, Hayek, Rothbard, Haberler — The Austrian Theory of the Trade Cycle",
+      "url": "https://mises.org/library/austrian-theory-trade-cycle-and-other-essays",
+      "excerpt": "When the rate of interest is artificially lowered by credit expansion, entrepreneurs are misled into starting projects whose completion would require more capital than the community is in fact prepared to save. The crisis comes when the underlying scarcity of capital reasserts itself."
+    },
+    {
+      "label": "Henry Hazlitt — Economics in One Lesson",
+      "url": "https://mises.org/library/economics-one-lesson",
+      "excerpt": "Inflation is itself a form of taxation. Perhaps the worst form, because it is the most concealed. It falls on those who are unable to defend themselves and rewards those nearest the source of the new money."
+    }
+  ],
+  "relatedLeafIds": ["fiat-end-game", "sound-money"]
+}

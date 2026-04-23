@@ -1,0 +1,23 @@
+{
+  "id": "why-fixed-supply",
+  "label": "Why a fixed supply matters",
+  "brief": "Bitcoin's supply schedule is fixed at 21 million units, approached asymptotically through a sequence of halvings: every ~210,000 blocks (~four years) the per-block subsidy paid to miners is cut in half. The subsidy started at 50 BTC per block in 2009, dropped to 25 in 2012, 12.5 in 2016, 6.25 in 2020, and 3.125 in 2024; it will reach effectively zero by ~2140 [1]. This is not a target or a guideline — it is enforced by every node, every block, with no opt-out.\n\nThe interesting question is not 'why 21 million' (the specific number is arbitrary; Satoshi has said as much in correspondence), but 'why fixed at all'. The Austrian answer is that any discretionary monetary authority — even one staffed entirely by competent and well-meaning people — is structurally compromised, because the *option* to expand the supply for short-term political ends is always present and always eventually exercised [2]. A fixed supply removes the option entirely.\n\nThe halvings are an interesting design choice on top of the cap. They function as a *Schelling point* for monetary policy expectations: every node operator, every miner, every wallet user knows the next halving date years in advance, knows the new issuance rate, and can plan accordingly. There is no FOMC meeting, no surprise policy shift, no leaked memo — just the published schedule, executed by code [3].\n\nThe common objection is that a deflationary money discourages spending and produces hoarding. The Austrian counter is twofold: (a) the relevant deflation is *secular productivity-driven* deflation, which historically tracked nineteenth-century gold-standard economies that nonetheless saw enormous capital investment and growth; and (b) the alleged 'paradox of thrift' confuses cash hoarding with capital formation — savings that are not consumed are precisely what funds investment, regardless of whether they're held in money or in claims on capital. Whether you find this persuasive is a separate question; what is not in dispute is that the supply is in fact fixed, and that this is the design's most consequential single decision.",
+  "sources": [
+    {
+      "label": "Satoshi Nakamoto — collected forum posts",
+      "url": "https://nakamotoinstitute.org/library/satoshi/posts/",
+      "excerpt": "Coins have to get initially distributed somehow, and a constant rate seems like the best formula. The fact that new coins are produced means the money supply increases by a planned amount, but this does not necessarily result in inflation."
+    },
+    {
+      "label": "Murray N. Rothbard — The Case Against the Fed",
+      "url": "https://mises.org/library/case-against-fed",
+      "excerpt": "The very existence of a central bank with discretionary control over the money supply is the underlying mechanism of monetary mischief. Removing the discretion is the only structural fix."
+    },
+    {
+      "label": "Mises Institute Wire — Why Bitcoin Is Revolutionary",
+      "url": "https://mises.org/wire/why-bitcoin-revolutionary",
+      "excerpt": "What Bitcoin offers that no prior monetary system did is a credibly-bound supply schedule that does not depend on the trustworthiness of any issuer. The schedule is enforced by every node, in software each operator runs against the others."
+    }
+  ],
+  "relatedLeafIds": ["sound-money", "fiat-end-game"]
+}

@@ -1,0 +1,49 @@
+{
+  "id": "core-internals",
+  "title": "Bitcoin Core internals",
+  "summary": "How the reference client actually works under the hood. The UTXO set, transaction validation, mempool policy, the consensus rules, block templates, the P2P network, initial block download. What a node does on every block.",
+  "edges": [
+    {
+      "id": "utxo-model",
+      "label": "UTXO model versus account model",
+      "summary": "Why Bitcoin uses unspent transaction outputs instead of an account ledger. How transactions are structured. What the chainstate database actually contains. Implications for parallelism, privacy, and validation.",
+      "kind": "leaf",
+      "searchTerms": ["utxo", "utxos", "unspent transaction output", "account model", "account ledger", "scriptpubkey", "transaction outputs", "ledger model"]
+    },
+    {
+      "id": "mempool",
+      "label": "The mempool, fee estimation, and RBF",
+      "summary": "What the mempool is, how policy filters differ from consensus rules, replace-by-fee semantics, child-pays-for-parent, why the mempool is per-node rather than global, fee estimation strategies.",
+      "kind": "leaf",
+      "searchTerms": ["mempool", "memory pool", "fee estimation", "estimatesmartfee", "rbf", "replace by fee", "replace-by-fee", "bip-125", "bip 125", "cpfp", "child pays for parent", "stuck transaction", "fee bump", "policy", "relay policy"]
+    },
+    {
+      "id": "consensus-rules",
+      "label": "Consensus rules, soft forks, hard forks",
+      "summary": "What makes a block or transaction valid in the strict consensus sense, the difference between soft forks (tightening rules) and hard forks (loosening or changing rules), why soft forks are the dominant upgrade mechanism.",
+      "kind": "leaf",
+      "searchTerms": ["consensus", "consensus rules", "soft fork", "hard fork", "soft forks", "hard forks", "p2sh", "segwit activation", "taproot activation", "bip-9", "bip-8", "bip 9", "bip 8", "policy vs consensus", "policy versus consensus", "upgrade mechanism"]
+    },
+    {
+      "id": "block-template",
+      "label": "Block templates, the coinbase, and witness commitments",
+      "summary": "How a miner assembles a candidate block from the mempool, the coinbase transaction's special status, the segwit witness commitment, BIP-9 / BIP-8 version-bits signaling.",
+      "kind": "leaf",
+      "searchTerms": ["block template", "getblocktemplate", "coinbase", "coinbase transaction", "coinbase maturity", "witness commitment", "segwit", "segregated witness", "version bits", "bip-9", "bip 9", "extranonce", "block assembly", "candidate block"]
+    },
+    {
+      "id": "p2p-network",
+      "label": "Peer discovery, addrman, and eclipse defenses",
+      "summary": "How nodes find each other (DNS seeds, addrman, fixed seeds), the gossip protocol for blocks and transactions, ban scoring, the eclipse-attack threat model and the defenses against it.",
+      "kind": "leaf",
+      "searchTerms": ["p2p", "peer", "peers", "peer discovery", "dns seed", "dns seeds", "addrman", "address manager", "eclipse attack", "eclipse", "asmap", "ban score", "gossip protocol", "feeler connection", "anchor connection"]
+    },
+    {
+      "id": "node-architecture",
+      "label": "IBD, chainstate, indexing options",
+      "summary": "Initial block download, the chainstate (UTXO) database, pruning, the txindex / coinstatsindex / blockfilterindex options, assumeutxo, what a fresh node actually does on first start.",
+      "kind": "leaf",
+      "searchTerms": ["ibd", "initial block download", "chainstate", "pruning", "prune", "pruned node", "txindex", "coinstatsindex", "blockfilterindex", "assumeutxo", "assumevalid", "headers first", "leveldb", "first start", "fresh node", "running a node"]
+    }
+  ]
+}

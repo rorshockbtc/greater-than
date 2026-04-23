@@ -1,0 +1,100 @@
+{
+  "id": "lightning",
+  "title": "Lightning Network",
+  "summary": "Bitcoin's off-chain payment layer. The funding transaction and asymmetric commitment construction that gives a channel its security model, HTLCs and Sphinx onion routing for atomic multi-hop payments, the BOLT-7 gossip protocol that lets nodes find a route, watchtowers that punish breach attempts on offline channels, splicing and channel management, and the LSP layer that makes Lightning usable on a smartphone without taking custody.",
+  "edges": [
+    {
+      "id": "payment-channels",
+      "label": "Payment channels and the funding transaction",
+      "summary": "How a 2-of-2 multisig funding output becomes a private ledger between two parties. Asymmetric commitment transactions, revocation secrets, the punishment mechanism, cooperative vs force close, and the to_self_delay window that the security model rests on.",
+      "kind": "leaf",
+      "searchTerms": [
+        "payment channel", "payment channels", "channel", "channels",
+        "funding transaction", "funding tx", "2-of-2", "multisig",
+        "commitment transaction", "commitment tx", "asymmetric commitment",
+        "revocation", "revocation secret", "revoked state", "old state",
+        "punishment", "justice transaction", "penalty",
+        "cooperative close", "coop close", "mutual close", "force close",
+        "to_self_delay", "to self delay", "channel close", "channel closure",
+        "csv timelock", "checksequenceverify"
+      ]
+    },
+    {
+      "id": "htlc-routing",
+      "label": "HTLCs, Sphinx onion routing, MPP",
+      "summary": "Hash Time-Locked Contracts as the primitive that lets a payment hop across multiple channels atomically without intermediaries being able to steal in flight. Sphinx onion encryption for sender anonymity. Multi-Path Payments and AMP for splitting large payments across routes.",
+      "kind": "leaf",
+      "searchTerms": [
+        "htlc", "htlcs", "hash time-locked", "hash time locked", "hash timelock",
+        "preimage", "payment hash", "payment preimage",
+        "routing", "route", "multi hop", "multi-hop", "hops",
+        "onion routing", "sphinx", "sphinx onion", "onion encryption",
+        "mpp", "multi-path payment", "multi path payment", "multipath",
+        "amp", "atomic multi-path", "atomic multipath",
+        "cltv", "cltv_delta", "cltv delta",
+        "pickhardt", "pickhardt-richter", "min-cost flow", "path-finding"
+      ]
+    },
+    {
+      "id": "gossip-protocol",
+      "label": "BOLT-7 gossip and the channel graph",
+      "summary": "How nodes propagate the public channel graph without a central directory. channel_announcement, channel_update, node_announcement, the on-chain anchoring that prevents fake channels, range queries for fast initial sync, and the privacy/efficiency trade-off that drives the use of private channels with route hints.",
+      "kind": "leaf",
+      "searchTerms": [
+        "gossip", "gossip protocol", "bolt-7", "bolt 7",
+        "channel_announcement", "channel announcement",
+        "channel_update", "channel update",
+        "node_announcement", "node announcement",
+        "channel graph", "ln graph", "lightning graph", "topology",
+        "short_channel_id", "short channel id", "scid",
+        "route hint", "route hints", "private channel", "private channels",
+        "gossip query", "query_channel_range", "initial sync"
+      ]
+    },
+    {
+      "id": "watchtowers",
+      "label": "Watchtowers and the offline-channel problem",
+      "summary": "Lightning's punishment mechanism only works if you are online to react. Watchtowers (BOLT-13 / The Eye of Satoshi) watch the chain on your behalf and broadcast a pre-signed justice transaction if a revoked commitment ever surfaces — without holding your keys, your channel balance, or knowing which channel triggered the response. Why mobile users need them and what eltoo would change.",
+      "kind": "leaf",
+      "searchTerms": [
+        "watchtower", "watchtowers", "watch tower",
+        "bolt-13", "bolt 13", "eye of satoshi", "eots", "teos",
+        "justice transaction", "breach response", "breach remedy",
+        "offline channel", "offline channels", "offline node",
+        "revoked commitment", "stale state", "old commitment",
+        "eltoo", "anyprevout", "sighash_noinput", "noinput",
+        "blind tower", "encrypted blob"
+      ]
+    },
+    {
+      "id": "channel-management",
+      "label": "Splicing, fees, and operational realities",
+      "summary": "Channel sizing economics, splicing (BOLT-2 update_splice) for in-place capital adjustment without closing, fee policy (base_fee_msat and fee_rate_milli_msat) as the income side of routing, force-close cleanup of in-flight HTLCs, and what running a routing node actually requires day to day.",
+      "kind": "leaf",
+      "searchTerms": [
+        "splicing", "splice", "splice in", "splice out", "update_splice",
+        "channel management", "channel sizing", "capital efficiency",
+        "base_fee_msat", "base fee", "fee_rate_milli_msat", "ppm",
+        "routing fee", "routing fees", "forwarding fee", "forwarding fees",
+        "rebalancing", "rebalance", "circular rebalancing",
+        "channel reliability", "node operation", "running a routing node",
+        "umbrel", "voltage", "start9", "ride the lightning", "rtl"
+      ]
+    },
+    {
+      "id": "lightning-services",
+      "label": "LSPs, JIT channels, liquidity ads",
+      "summary": "Lightning Service Providers solve the inbound-liquidity bootstrap problem for new users by opening JIT channels on demand. The BLIP-51 / LSPS spec family standardizes channel-purchase and HTLC-interception APIs so a wallet can talk to any compliant LSP. Liquidity ads (BOLT-12 extension) turn liquidity into a market rather than a relationship — what makes Lightning usable on a smartphone without taking custody.",
+      "kind": "leaf",
+      "searchTerms": [
+        "lsp", "lsps", "lightning service provider", "lightning service providers",
+        "jit channel", "jit channels", "just in time channel",
+        "blip-51", "blip 51", "lsps0", "lsps1", "lsps2",
+        "phoenix", "breez", "zeus", "mutiny", "wallet of satoshi", "alby",
+        "liquidity ads", "liquidity ad", "inbound liquidity", "outbound liquidity",
+        "bolt-12", "bolt 12", "bolt12", "offers",
+        "lightning labs", "acinq", "blockstream lightning"
+      ]
+    }
+  ]
+}

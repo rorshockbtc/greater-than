@@ -1,0 +1,137 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-19",
+  "documents": [
+    {
+      "source_url": "https://heritage.example/about",
+      "source_label": "Heritage Classical — About",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Heritage Classical Academy is a K–12 independent school in the classical Christian tradition. We were founded in 2009 by a group of teachers and parents who wanted a school grounded in the great-books canon, the trivium, and a coherent Christian worldview. We currently enroll 412 students across three campuses. We are accredited by the Association of Classical Christian Schools (ACCS)."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Our mission is to graduate students who can read closely, think rigorously, write clearly, speak persuasively, and live faithfully. We measure success not by test scores alone — though our graduates do well on standardized tests — but by the long arc of formed character: students who go on to be thoughtful citizens, faithful spouses and parents, and contributing members of their communities."
+        }
+      ]
+    },
+    {
+      "source_url": "https://heritage.example/curriculum/scope-sequence",
+      "source_label": "Heritage Classical — Scope and sequence overview",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Grammar stage (K–6) emphasizes memorization, recitation, and the building blocks of each discipline. Students learn the chronological narrative of history, memorize Latin grammar, recite poetry weekly, and master arithmetic facts. The grammar-stage child has a remarkable capacity for absorbing facts; we lean into that capacity rather than rushing to abstract analysis."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Logic stage (7–9) introduces formal reasoning. Students take a year of formal logic in 7th grade, learn the structures of argument, and begin to engage primary sources analytically rather than receptively. History pivots from narrative to causation; literature pivots from plot to theme; math pivots from computation to proof. The logic-stage child is naturally argumentative; we channel that into disciplined argument."
+        },
+        {
+          "chunk_index": 2,
+          "text": "Rhetoric stage (10–12) trains students to write and speak persuasively from a settled body of knowledge. Seniors complete a year-long thesis project — a written defense of a substantive position, presented orally before a faculty committee. Students read deeply in primary sources across history, philosophy, theology, and literature. The rhetoric-stage student is preparing not just for college but for adulthood."
+        }
+      ]
+    },
+    {
+      "source_url": "https://heritage.example/curriculum/worldview",
+      "source_label": "Heritage Classical — Worldview integration",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "We teach from a Christian worldview. We do not pretend that neutrality on first-order questions is possible; every curriculum proceeds from some set of assumptions about what is real, what is true, and what is good. Ours are explicit. The Apostles' Creed is the floor; the Westminster Confession of Faith and the historic Christian tradition shape the upper-school theology and ethics curriculum."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Worldview integration is not indoctrination. Students read primary sources from authors we disagree with — Marx, Nietzsche, Freud, Singer — and learn to engage them charitably and critically. The goal is not to inoculate students against opposing views by caricaturing them; it is to train students to read those views in their strongest form and to articulate a reasoned response."
+        },
+        {
+          "chunk_index": 2,
+          "text": "Faculty are Christians who have signed the school's statement of faith and demonstrated competency in their discipline. We do not require students or families to be Christians; we do require that families understand and accept that the curriculum is taught from this perspective. We have a small but real population of non-Christian families who chose Heritage for the rigor and the small classes; we are glad to have them."
+        }
+      ]
+    },
+    {
+      "source_url": "https://heritage.example/admissions",
+      "source_label": "Heritage Classical — Admissions process",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Admissions is rolling, with priority deadlines on January 15 (financial aid) and March 1 (general). The application includes a written family statement, a student writing sample (grades 4 and up), prior school records, a teacher recommendation, and a family interview. We are not testing for genius; we are looking for students who are ready to be formed and families who are ready to partner with the school."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Tours are scheduled through the admissions office. We offer two formats: a 45-minute campus walk-through with the admissions director, and a half-day shadow visit for prospective students in grades 4 and up. We do not run open houses; we prefer the slower, more honest format of one-on-one conversation."
+        }
+      ]
+    },
+    {
+      "source_url": "https://heritage.example/admissions/financial-aid",
+      "source_label": "Heritage Classical — Financial aid",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Tuition for 2026–2027 is $14,800 per K–6 student, $16,200 per 7–9 student, and $17,800 per 10–12 student, with a 5% discount for additional siblings. We commit a meaningful percentage of the operating budget to need-based financial aid; in the 2025–2026 year, 28% of families received some level of aid. Aid is determined by an independent financial review service, not by the admissions team."
+        }
+      ]
+    },
+    {
+      "source_url": "https://heritage.example/handbook/parent",
+      "source_label": "Heritage Classical — Parent handbook (excerpts)",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Parents are the primary educators of their children; the school exists to serve and extend that work, not to replace it. We expect parents to read the books their children are reading (or, at minimum, to know what they are about), to attend the parent-teacher conferences scheduled twice yearly, and to participate in the life of the school in some meaningful way. Heritage is not a drop-off service."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Personal devices: students do not carry phones during the school day. Phones are surrendered at the front office on arrival and returned at dismissal. Upper-school students may have a basic device for after-school coordination but it is not used during instructional time. This policy exists because we believe attention is the primary curriculum, and the smartphone is its primary competitor."
+        },
+        {
+          "chunk_index": 2,
+          "text": "Athletics: Heritage fields varsity teams in cross country, basketball, and soccer. Athletics are participatory rather than recruited; we do not give athletic scholarships and we do not adjust academic expectations for athletes. The point of school athletics is the formation of the athlete, not the production of a team. Practices are scheduled around the academic day, not the other way around."
+        }
+      ]
+    },
+    {
+      "source_url": "https://heritage.example/calendar",
+      "source_label": "Heritage Classical — Academic calendar 2026–2027",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "The 2026–2027 academic year begins August 18, 2026 and ends May 28, 2027. There are 178 instructional days. Major breaks: Thanksgiving (full week), Christmas (two weeks), spring break (one week in March). The full calendar including in-service days, parent-teacher conferences, and the upper-school exam schedule is published on this page each spring; the assistant can pull specific dates."
+        }
+      ]
+    },
+    {
+      "source_url": "https://heritage.example/faculty",
+      "source_label": "Heritage Classical — Faculty",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Our faculty are credentialed in their disciplines and committed to the classical tradition. We hire for character first, competency second, credentials third — though the credentials matter and we expect them. The full faculty roster, with degrees and brief biographies, is published on this page. For a specific teacher's biography, the assistant can pull it; for any personnel question, please contact the head of school directly."
+        }
+      ]
+    },
+    {
+      "source_url": "https://heritage.example/limits",
+      "source_label": "Heritage Classical — What this assistant cannot do",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "This assistant is grounded in our published handbook, scope and sequence, faculty profiles, calendar, and admissions materials. It will not improvise answers about lunch menus, individual student grades, sports schedules, or any operational detail not in the published materials. For those, it will route you to the right office: admissions, the registrar, athletics, or the head of school. The corpus is inspectable; ask and we will show you what the assistant is allowed to speak from."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,152 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-20",
+  "persona": "greater",
+  "_comment": "Curated Q&A short-circuit for the Greater meta-bot. When a visitor's question semantically matches one of these `q` strings above the cosine threshold (0.78), the corresponding `a` is returned verbatim and no model inference happens. This is the demo-quality lever: it guarantees the suggested-prompt buttons and common follow-ups always get a hand-written answer, while the retrieval+model path still handles the long tail.",
+  "items": [
+    {
+      "q": "How does Greater work in plain English?",
+      "a": "Greater is a free, open-source platform for support chatbots that run inside the visitor's browser. The first time you open a Greater-powered chat, your browser quietly downloads a small language model and an embedding model and caches them. After that, every question you type is answered locally on your device — there's no per-message API call to any vendor. The site you're talking to ships a curated knowledge bundle (a small JSON file of vetted text snippets); when you ask a question, the engine pulls the most relevant snippets and asks the in-browser model to write a grounded answer with inline citations. If the snippets don't cover your question, the bot says so plainly instead of guessing."
+    },
+    {
+      "q": "What is Greater?",
+      "a": "Greater is a sovereign, open-source support-bot platform. The shell is MIT-licensed and runs entirely in the visitor's browser via WebGPU. It ships with six industry persona templates (FinTech, Faith, Schools, Small Business, HealthTech, Startups) so you can see the same engine adapted to very different contexts. The site you're on is also the home page for hiring the author for a fractional engagement to build out the proprietary Pipes layer (curated knowledge bundles, persona-tuned weights, integrations) on top."
+    },
+    {
+      "q": "Is my chat data sent to the cloud?",
+      "a": "No — by default, your chat content stays on your device. Greater runs the language model in WebGPU, in your browser. The text you type, the retrieved snippets, and the model's answer all live inside this tab — they are not sent to a server. The 'LOCAL · PRIVATE' badge in the chat header is a literal claim about that round trip: while it's green, your messages are not leaving the browser. Two things DO leave the browser, and the shell is honest about both: (1) the first time you open a Greater chat, your browser downloads the model files from a public CDN — that's a normal HTTPS file fetch, not message content, and the file is then cached; and (2) if you choose to escalate to a human via the contact form, your name, email, and message body are POSTed to the operator's contact endpoint. That escalation is opt-in and is the only path that ever sends your message to a server."
+    },
+    {
+      "q": "Where does my chat data go?",
+      "a": "Your chat content stays on your device. The language model, the embedding model, and the retrieval index all run inside your browser tab. There is no per-message round trip to OpenAI, Anthropic, or any third-party LLM provider. The model files themselves are downloaded once from a public CDN and cached locally. The only outbound network call that ever carries your message text is the optional human-escalation contact form, which you trigger explicitly."
+    },
+    {
+      "q": "What is OpenClaw?",
+      "a": "OpenClaw is the bring-your-own-LLM mode. By default, Greater downloads a small open-weights model into your browser via WebGPU. If you'd rather route the chat through a local model you're already running on your own machine — Ollama, LM Studio, llama.cpp's server, anything OpenAI-API-compatible — you can switch the chat into OpenClaw mode and point it at that endpoint. The shell stops downloading the in-browser model and instead sends each prompt to your local server. Your messages still don't leave your local network, because the endpoint you point at is yours. OpenClaw exists because the in-browser default has real tradeoffs: small models, slow first load, and limited reasoning. Operators or visitors who already have a 7B-or-bigger local model can get dramatically better answers without giving up the privacy story."
+    },
+    {
+      "q": "What bots ship out of the box?",
+      "a": "Greater ships with six industry persona templates: (1) FinTech — the launch demo, answering real Bitcoin questions in your browser with no API key and no signup; (2) Faith — a confessional church support bot demonstrating explicit doctrinal posture; (3) Schools — an admissions and parent-questions bot for a small private school; (4) Small Business — a real-estate office front desk; (5) HealthTech — a member-services bot for a health-share community, including the explicit medical-advice refusal; and (6) Startups — a product-support bot for an early-stage SaaS. Each persona ships with its own knowledge bundle, its own tone prompt, and its own bias options. Every persona's knowledge is scoped to that persona — they don't bleed into each other."
+    },
+    {
+      "q": "Can I run this on my own domain?",
+      "a": "Yes. The whole shell is MIT-licensed and lives at github.com/rorshockbtc/greater-than. Clone it, install dependencies with pnpm, replace the persona content under `artifacts/greater/src/data/personas.ts` and the knowledge bundles under `artifacts/greater/public/seeds/`, and deploy the static build to any host (Cloudflare Pages, Netlify, Vercel, your own NGINX). There is no proprietary backend you have to license to ship. The only optional server piece is the API server, which handles the human-escalation contact form and the admin feedback inbox; that's also in the repo. Forks get the FOSS shell plus the six persona scaffolds for free. What forks do NOT get is Pipes — the proprietary extension layer with curated, persona-tuned bundles and operator integrations. That's sold as a fractional engagement."
+    },
+    {
+      "q": "Is Greater open source?",
+      "a": "Yes — the shell is MIT-licensed and the source lives at github.com/rorshockbtc/greater-than. That includes the chat UI, the WebGPU model loader, the retrieval engine, the persona scaffolding, the six industry templates with their committed knowledge bundles, and the optional API server for human escalation. The proprietary layer is called Pipes — it's the curated, persona-tuned knowledge bundles and operator integrations that sit on top of the FOSS shell. Pipes is sold as a fractional engagement; the shell works honestly without it."
+    },
+    {
+      "q": "What is Pipes?",
+      "a": "Pipes is the proprietary extension layer on top of the FOSS Greater shell. A Pipe is a curated knowledge bundle plus a persona-tuned configuration plus optional operator integrations, authored for a specific deployment. The Vite plugin reads any manifests in `data/pipes/` (gitignored) at build time and inlines them into the bundle; the chat widget binds at most one Pipe per persona. When no Pipe is mounted, the chat falls back to 'Generic mode' visibly — the shell never pretends to know things it doesn't. Pipes is what fractional engagements deliver; it lives at pipes.pink."
+    },
+    {
+      "q": "What is Generic mode?",
+      "a": "Generic mode is what you see when no Pipe is loaded for the current persona — the FOSS shell is running honestly without curated knowledge wired in. The chat header shows a 'GENERIC MODE' badge so visitors aren't misled. Mounting a Pipe under `data/pipes/` (the proprietary layer) unlocks the full Greater mode for that persona, with curated knowledge, tuned tone, and any operator integrations. The meta-bot you're talking to right now is a special case: it has a hand-curated knowledge bundle but no Pipe, because the meta-bot ships in the FOSS repo so forks get it too."
+    },
+    {
+      "q": "Who built this?",
+      "a": "Greater is built by colonhyphenbracket — a fractional architect and engineer working in public, in pink. The author publishes long-form notes at colonhyphenbracket.pink, short-form at semi.pink, Bitcoin-flavored writing at hash.pink, and the Pipes proprietary extension layer at pipes.pink. The launch demo for the platform is the FinTech bot, which answers real Bitcoin questions in the browser with no API key and no signup, citing the Bitcoin Optech newsletter and the bitcoin-core / bitcoin-knots commit history."
+    },
+    {
+      "q": "Why does Greater have explicit bias toggles?",
+      "a": "Because pretending to be neutral does damage. Every retrieval engine has a corpus, every corpus has a perspective, and a chatbot that hides that fact leaves the user with no way to evaluate the answer. Greater takes the opposite stance: every persona declares its perspective up front, and personas with multiple legitimate stances (the FinTech bot's Bitcoin Core vs Bitcoin Knots options are the canonical example) expose a bias toggle so the user can pick which lens they want the answer through. The toggle changes which subset of the corpus is privileged — but the underlying citations are always shown, so you can audit the answer."
+    },
+    {
+      "q": "Why won't the bot answer some questions?",
+      "a": "Because answers that are 'almost right' are worse than 'I don't know.' Greater's engine is told to answer ONLY from the curated snippets that retrieval pulled, and to say so plainly when the snippets don't cover your question. That refusal is the feature, not a bug. If you want the bot to know about a topic, the answer is to put a chunk about that topic into its knowledge bundle — not to loosen the grounding rules. For long-tail questions the curated bundle doesn't cover, the right escape hatch is the human-escalation contact form."
+    },
+    {
+      "q": "How do citations work?",
+      "a": "When you ask a question, the engine embeds your message into a vector, scores it against the in-browser vector store of indexed chunks, pulls the top few chunks, and feeds them to the language model along with a strict instruction: cite every factual claim inline as [N] where N matches the snippet number. That's why every answer comes with a 'Sources' block underneath — those are the actual chunks the model was given. Click any citation to see the source page. If the model can't find a good match, you'll get a short 'I don't know from these sources' response instead of a confident hallucination."
+    },
+    {
+      "q": "How much does Greater cost?",
+      "a": "The FOSS shell is free — MIT-licensed, no signup, no usage caps, no per-message billing. You can fork it and ship it on your own domain today. What costs money is the Pipes proprietary layer: curated knowledge bundles, persona-tuned configuration, and operator integrations, authored for your specific deployment. That's sold as a fractional engagement (the author works on a handful of Pipes at a time). Use the contact form on this site if you'd like to talk about scope and pricing."
+    },
+    {
+      "q": "Tell me about the developer. What does Colon Hyphen Bracket do?",
+      "a": "colonhyphenbracket (also written :-] or CHB) is the solo fractional architect and engineer who builds and maintains Greater. The work is done in public, in pink — four properties, each with a deliberate role. (1) colonhyphenbracket.pink is the long-form notes site: architecture decisions, postmortems, build logs. (2) semi.pink is the short-form companion: snippets, status updates, quick takes. (3) hash.pink is the Bitcoin-flavored writing — protocol notes, mempool/policy commentary, Knots-vs-Core observations. (4) pipes.pink is the home of the proprietary Pipes layer that gets layered on top of the FOSS shell during a hire engagement. Together they make the whole posture legible: you can read how the architect thinks before deciding to hire them. The home page you're on right now (hire.colonhyphenbracket.pink) is where that hiring conversation starts."
+    },
+    {
+      "q": "Who is colonhyphenbracket?",
+      "a": "colonhyphenbracket — sometimes written :-] or CHB — is the fractional architect and engineer behind Greater. Solo developer, working in public, in pink. The handle is a typed-out emoticon. The work spans four .pink properties: colonhyphenbracket.pink (long-form architecture notes), semi.pink (short-form snippets and status), hash.pink (Bitcoin-flavored writing), and pipes.pink (the proprietary Pipes extension layer). The hire site you're on is the front door for fractional engagements — typically building the Pipe (the curated knowledge bundle plus persona tuning plus integrations) on top of a customer's Greater deployment."
+    },
+    {
+      "q": "What is colonhyphenbracket.pink?",
+      "a": "colonhyphenbracket.pink is the long-form notes site for the developer behind Greater — architecture decisions, postmortems, build logs, design memos. It's where 'how I think about a problem' lives, in contrast to the short-form companion at semi.pink. Reading it is the cheap way to evaluate the architect's posture before deciding whether to hire."
+    },
+    {
+      "q": "What is semi.pink?",
+      "a": "semi.pink is the short-form companion to colonhyphenbracket.pink — snippets, status updates, quick takes, work-in-progress notes. The split is intentional: long-form thinking lives at colonhyphenbracket.pink, conversational and micro-content lives at semi.pink, so each surface has a coherent rhythm."
+    },
+    {
+      "q": "What is hash.pink?",
+      "a": "hash.pink is the developer's Bitcoin-flavored writing — protocol notes, mempool and policy commentary, observations on the Bitcoin Core vs. Bitcoin Knots split, and longer-form essays about the Bitcoin ecosystem. It's the source for the FinTech persona's tone and for many of the bias-aware citations the FinTech bot serves."
+    },
+    {
+      "q": "What is pipes.pink?",
+      "a": "pipes.pink is the home of the proprietary Pipes extension layer that sits on top of the FOSS Greater shell. A Pipe is a curated knowledge bundle, plus persona tuning, plus optional operator integrations, authored for a specific deployment. Pipes is what fractional engagements deliver — the FOSS shell ships honestly without one (it visibly shows 'Generic mode'), and a Pipe upgrades the experience for a specific operator. The site at pipes.pink is where the Pipes layer is documented and where in-progress Pipes are tracked."
+    },
+    {
+      "q": "What does CHB stand for?",
+      "a": "CHB stands for colonhyphenbracket — the typed-out form of the :-] emoticon, which is the developer's handle. The same identity is also written :-] or colonhyphenbracket; CHB is the convenient shorthand. All four .pink properties (colonhyphenbracket.pink, semi.pink, hash.pink, pipes.pink) belong to that same one-person operation."
+    },
+    {
+      "q": "Are you really running locally? How can I prove it?",
+      "a": "Two ways to verify, both concrete. (1) Open your browser's DevTools, go to the Network tab, clear it, then ask me a question. You should see no outbound request that carries your message text — only the static page assets and (on first visit) the model file downloads from a public CDN. After the first visit those are cached, so you'll see no network activity at all when I answer. (2) Pull your network connection entirely after the first model download finishes, then keep chatting — I'll still answer, because the model is running in your browser via WebGPU. The only outbound network call that ever carries your message body is the explicit human-escalation contact form, which you have to trigger by hand."
+    },
+    {
+      "q": "Are you calling out to ChatGPT or another external LLM?",
+      "a": "No. I'm running entirely in this browser tab via WebGPU. There is no per-message API call to OpenAI, Anthropic, Google, or any other LLM provider. The model file itself was downloaded once from a public CDN the first time you opened a Greater chat, and it's been served from your browser's cache since. You can verify this by watching the Network tab in DevTools while you chat — you'll see no outbound message content. If I sound less polished than ChatGPT, that's because I'm a small open-weights model running on your device, not a frontier model running in a datacenter. That tradeoff is the whole point of the platform."
+    },
+    {
+      "q": "What can you answer? What questions can I ask?",
+      "a": "I'm scoped tightly on purpose: I only answer questions about Greater itself. That includes how the platform works under the hood, what ships in the open-source repo vs. the proprietary Pipes layer, what OpenClaw (BYO local LLM) does, the six industry persona templates, the privacy posture and how to verify it, the explicit-bias philosophy, the .pink properties (colonhyphenbracket.pink, semi.pink, hash.pink, pipes.pink), and how to hire colonhyphenbracket for a fractional engagement. I will NOT try to be a general-purpose assistant — no science questions, no coding help, no medical/legal/financial advice, no answers about other companies. If you ask me something off-topic I'll decline plainly rather than hallucinate, because 'almost-right' is worse than 'I don't know.' Try one of the suggested prompts above to see what's in scope."
+    },
+    {
+      "q": "Why won't you answer my question?",
+      "a": "Because nothing in my curated knowledge base matched it closely enough, and I refuse to fall back on the underlying model's pretraining to make something up. I'd rather say 'I don't know' than serve you a confident-sounding wrong answer — that's the whole 'almost-right is harmful' posture this platform is built on. Two things you can do: (1) rephrase the question to be about Greater itself (how it works, what's in the repo, OpenClaw, the .pink properties, hiring colonhyphenbracket), or (2) use the contact form on this page to send the question to a human."
+    },
+    {
+      "q": "How do I hire colonhyphenbracket?",
+      "a": "The contact form on this site (hire.colonhyphenbracket.pink) is the front door. Describe the engagement you have in mind — typically that's authoring a Pipe (the proprietary curated-knowledge layer) for your Greater deployment, or building out a new persona template from scratch, or integrating Greater into an existing product. The author works on a handful of Pipes at a time, so scope and timing get discussed up front. There is no calendar-booking or self-serve checkout — every engagement starts with an email exchange so the fit gets sanity-checked before anyone commits."
+    },
+    {
+      "q": "How do I contact the developer?",
+      "a": "The contact form on this page is the front door. Scroll down (or click the contact link in the header) and send a note describing what you have in mind — typically that's a fractional engagement to author a Pipe (the curated knowledge layer) for a Greater deployment, or a custom persona, or an integration. Email goes through the Web3Forms relay so the developer's actual address isn't exposed on the page. There's no calendar booking or self-serve checkout — every engagement starts with a real exchange so the fit gets sanity-checked first."
+    },
+    {
+      "q": "What's the best way to contact CHB?",
+      "a": "Use the contact form on this page — it routes to colonhyphenbracket directly via the Web3Forms relay (so the actual email address stays off the public page). Describe what you're after: a fractional engagement to build a Pipe for your Greater deployment, a new persona template, an integration, or just a question about the platform. The author works on a handful of Pipes at a time, so scope and timing get discussed up front rather than via a self-serve booking flow."
+    },
+    {
+      "q": "How do I reach you?",
+      "a": "The contact form on this page. It's wired through the Web3Forms relay so the developer's email address isn't exposed publicly, but every submission lands in the inbox directly. Use it for hire conversations, questions about the platform, bug reports on the FOSS shell, or feedback on the bots. There's deliberately no chat-with-a-human-now widget — the support flow goes through email so responses are considered, not reactive."
+    },
+    {
+      "q": "Is greater.pink the same as hire.colonhyphenbracket.pink?",
+      "a": "If you reached this site at greater.pink, then yes — greater.pink is configured as a friendlier alias pointing at the same content as hire.colonhyphenbracket.pink. The canonical name used inside the codebase is hire.colonhyphenbracket.pink (because the site IS the front door for hiring colonhyphenbracket), but greater.pink is the shorthand. The four primary .pink properties — colonhyphenbracket.pink (long-form notes), semi.pink (short-form), hash.pink (Bitcoin writing), and pipes.pink (the proprietary Pipes layer) — are distinct sites. All belong to the same one-person operation."
+    },
+    {
+      "q": "I'm on greater.pink, did you get confused about the URL?",
+      "a": "No confusion. The fact that you reached the site at greater.pink means it's set up as an alias for hire.colonhyphenbracket.pink — both surfaces serve the same content. The codebase uses hire.colonhyphenbracket.pink as the canonical name (because the site IS the front door for hiring colonhyphenbracket), but greater.pink is the friendlier shorthand. The naming is intentional: the project is 'Greater' (the platform), and the architect behind it is colonhyphenbracket — the hire site bridges both."
+    },
+    {
+      "q": "Which of the six industry bots is the most robust?",
+      "a": "Honest answer: the FinTech (Blockstream / Bitcoin self-custody) bot is the deepest, because it's the one the developer dogfoods and has the most curated content for — it ships with explicit-bias toggles between Bitcoin Core and Bitcoin Knots perspectives, and the underlying writing at hash.pink feeds it. The other five (Faith, Schools, Small Business, HealthTech, Startups) are demonstration-grade: they show the same engine adapted to a different domain, with curated welcome flows and Q&A banks, but they don't have the same depth of source corpus. They're meant to prove 'this engine works for your industry too' — a real production deployment in any of those industries would commission a custom Pipe to deepen the corpus and tune the persona."
+    },
+    {
+      "q": "What is the Pipes proprietary layer? Should you really be sharing proprietary information?",
+      "a": "Good question — and no, I'm not sharing proprietary content, only the SHAPE of what Pipes is. A Pipe is a bundle that sits on top of the FOSS Greater shell: curated knowledge documents, persona-specific tuning (system prompts, tone, refusal scope, suggested prompts), and optional operator integrations (ticketing, CRM, search). The bundle FORMAT is open; specific Pipe CONTENTS authored under a paid engagement aren't in this repo and aren't visible to me. The Vite plugin in the FOSS shell reads any Pipe manifests in `data/pipes/` (gitignored) at build time and inlines them. Without a Pipe, the shell visibly says 'Generic mode' so visitors aren't misled. Pipes are what fractional engagements with colonhyphenbracket deliver; the FOSS shell still works honestly without one."
+    },
+    {
+      "q": "Tell me more about Pipes",
+      "a": "Pipes is the proprietary extension layer for Greater. Concretely, a Pipe is a JSON manifest plus optional asset files describing: (1) the knowledge corpus to embed and serve (a list of source URLs / texts the engine should ingest), (2) persona tuning — system prompt, tone, refusal scope, suggested prompts, audience-bias options, (3) optional operator integrations (ticketing, CRM, search, observability). At build time the Vite plugin reads any Pipe manifests in `data/pipes/` (gitignored from the FOSS repo) and inlines them. At runtime the shell mounts the Pipe and the chat UI shows the active Pipe name in place of 'Generic mode.' Pipes are authored under a paid fractional engagement; pipes.pink is the home of the layer, and the source for individual Pipes lives in private repos so the curated content stays the operator's IP."
+    },
+    {
+      "q": "Where can I read more about how you were built?",
+      "a": "Three places. (1) The long-form architecture notes at colonhyphenbracket.pink — design memos, postmortems, the 'why' behind the choices. (2) The source itself at github.com/rorshockbtc/greater-than — the README walks the layout, and the code is heavily commented. (3) The Pipes layer at pipes.pink — that's where the proprietary extension story is documented. The short-form companion at semi.pink and the Bitcoin-specific writing at hash.pink fill in the surrounding context."
+    }
+  ]
+}

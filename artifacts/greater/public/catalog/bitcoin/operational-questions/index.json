@@ -1,0 +1,49 @@
+{
+  "id": "operational-questions",
+  "title": "Operational how-to",
+  "summary": "Setting up a node, choosing a signer, receiving payments without a custodian, backup procedures, fee estimation, and what to do when something goes wrong. Concept-level explanations, not vendor recommendations.",
+  "edges": [
+    {
+      "id": "running-a-node",
+      "label": "Running your own full node",
+      "summary": "What a full node actually does for you, what it doesn't, and the realistic resource and operational requirements as of 2026.",
+      "kind": "leaf",
+      "searchTerms": ["run a node", "running a node", "full node", "my own node", "self-host node", "bitcoin core node", "node setup", "ibd time", "pruned node", "raspberry pi node", "umbrel", "start9", "myNode"]
+    },
+    {
+      "id": "choosing-a-signer",
+      "label": "Choosing a hardware signer",
+      "summary": "The properties to evaluate — open firmware, verifying display, vulnerability disclosure history — without the project recommending a specific vendor.",
+      "kind": "leaf",
+      "searchTerms": ["choose hardware wallet", "pick a signer", "evaluate hardware wallet", "what to look for in a signer", "open source signer", "verifying display", "cve hardware wallet", "vulnerability disclosure"]
+    },
+    {
+      "id": "receiving-without-custodian",
+      "label": "Receiving payments without a custodian",
+      "summary": "From a one-off donation to a recurring business inflow: how to accept Bitcoin directly to keys you control, on-chain or via Lightning.",
+      "kind": "leaf",
+      "searchTerms": ["accept bitcoin", "receive bitcoin", "receive payments", "no custodian", "non-custodial receive", "btcpayserver", "btcpay server", "donation page", "merchant bitcoin", "self-hosted payments", "self hosted payments"]
+    },
+    {
+      "id": "backup-procedures",
+      "label": "Backup procedures",
+      "summary": "What you actually need to back up (it's not just the seed), where to store it, how to test recovery, and the common failure modes.",
+      "kind": "leaf",
+      "searchTerms": ["backup", "back up wallet", "backup procedure", "wallet backup", "metal backup", "metal seed plate", "seed storage", "recovery rehearsal", "test recovery", "geographic redundancy"]
+    },
+    {
+      "id": "fee-estimation",
+      "label": "Fee estimation and getting a transaction confirmed",
+      "summary": "How fee markets work block to block, what the wallet's fee picker is reading, and what to do when an under-fee transaction is stuck.",
+      "kind": "leaf",
+      "searchTerms": ["fee estimation", "fee picker", "transaction fee", "stuck transaction", "stuck tx", "low fee", "rbf bump", "replace by fee bump", "cpfp bump", "child pays for parent", "sat per vbyte", "sat/vb", "mempool.space fees"]
+    },
+    {
+      "id": "recovery-when-things-go-wrong",
+      "label": "Recovery when things go wrong",
+      "summary": "Lost device with the seed safe; lost seed with the device safe; partial multisig key loss; sent to the wrong address. What's recoverable, what isn't, and the honest limit on what an outside expert can do.",
+      "kind": "leaf",
+      "searchTerms": ["lost wallet", "lost device", "lost hardware wallet", "lost seed", "forgot passphrase", "wrong address", "sent to wrong address", "stuck multisig key", "recovery service", "recover bitcoin", "wallet recovery"]
+    }
+  ]
+}

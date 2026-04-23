@@ -1,0 +1,23 @@
+{
+  "id": "receiving-without-custodian",
+  "label": "Receiving payments without a custodian",
+  "brief": "If you control the keys, you don't need anyone's permission to receive a payment, and nobody can freeze the inflow. The setup that makes this routine in practice: a wallet you control (mobile, desktop, or hardware-backed) generates a fresh address for every payment, the sender pays that address, and the funds appear in your wallet as soon as the network confirms the transaction [1]. There is no merchant account, no underwriting, no chargeback period — the transaction either confirmed or it didn't, and confirmed is final.\n\nFor higher-volume use the relevant choice is whether to receive on-chain or over Lightning. On-chain payments confirm in roughly 10–60 minutes depending on fee, cost the sender whatever the fee market currently demands, and leave a permanent on-chain record. Lightning payments settle in seconds at near-zero fee but require both you and the sender to be able to route to each other on the channel graph, which in turn requires having an open channel with sufficient inbound liquidity — meaning, capacity on the remote side of one of your channels [2]. For a donation page or small business, BTCPayServer is the canonical self-hosted option that handles both on-chain and Lightning out of one open-source stack.\n\nThe two operational decisions worth being deliberate about: how you generate addresses (use a watch-only wallet derived from your hardware signer's xpub, so the keys never touch your point-of-sale machine), and how you handle Lightning channel management at the volume you actually expect. Most non-custodial Lightning setups for businesses use a self-hosted node with periodic liquidity rebalancing, or pay a liquidity-services provider for inbound capacity on demand [3]. The custodial alternative — letting a payment processor receive on your behalf — is operationally simpler and reintroduces exactly the third-party dependency you started out wanting to avoid.",
+  "sources": [
+    {
+      "label": "Bitcoin.org — Choosing your wallet",
+      "url": "https://bitcoin.org/en/choose-your-wallet",
+      "excerpt": "A wallet that gives you control of your private keys also gives you control of the addresses you receive to. There is no intermediate party that can refuse to credit a payment, freeze the funds after they arrive, or impose a chargeback. The tradeoff is operational: the keys are your responsibility to back up and protect."
+    },
+    {
+      "label": "BTCPayServer documentation — Self-hosted payment processor",
+      "url": "https://docs.btcpayserver.org/",
+      "excerpt": "BTCPayServer is a self-hosted, open-source Bitcoin payment processor. It supports on-chain and Lightning payments, integrates with common e-commerce platforms, and operates on a non-custodial model: payments go directly to addresses derived from a hardware-backed xpub or to a Lightning node the operator controls."
+    },
+    {
+      "label": "Bitcoin Optech — Topic: Lightning liquidity",
+      "url": "https://bitcoinops.org/en/topics/lightning-network/",
+      "excerpt": "Receiving Lightning payments requires inbound liquidity — capacity on the remote side of an open channel. Liquidity can be obtained by paying out from one's own channels, by purchasing channel capacity from a liquidity provider, or by participating in a liquidity ad market. Routine operations involve rebalancing channels to maintain receive capacity proportional to expected volume."
+    }
+  ],
+  "relatedLeafIds": ["running-a-node", "fee-estimation"]
+}

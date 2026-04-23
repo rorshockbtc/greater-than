@@ -1,0 +1,23 @@
+{
+  "id": "surveillance-firms",
+  "label": "What chain analysis firms actually do",
+  "brief": "Chain analysis is mostly heuristics plus subpoenas, not cryptography. The structural part — running the heuristics over the public chain — produces clusters of addresses that probably belong to one entity. The two big ones are common-input-ownership (multiple inputs in one transaction belong to the same wallet) and change-output identification (one of the outputs of a typical user-payment looks like change going back to the sender) [1]. Both are statistical guesses that fail the moment a coinjoin, payjoin, or unusual transaction shape gets introduced.\n\nThe non-structural part — turning a cluster into a name — comes from the regulated edges of the system. Exchanges and brokers do KYC at sign-up and report deposits and withdrawals on subpoena; surveillance vendors stitch their own clusters to those names and resell the stitched dataset to other exchanges, banks, and law enforcement [2]. This is also why \"chain analysis can de-anonymize Bitcoin\" claims should be read carefully: they conflate \"we have a database of exchange-supplied identities tagged to known clusters\" with \"we cracked the chain.\" The first is true and dangerous if you cycle coins through KYC venues; the second is not happening.\n\nWhere the marketing diverges from reality: aggregate cluster sizes get reported with confidence intervals that are not always disclosed; coins that have passed through coinjoins are sometimes labeled \"high risk\" by default rather than analyzed; and the chain itself doesn't distinguish a collaborative spend from a 1-input-1-output transfer to yourself [3]. The defensive posture for an individual is the same regardless: avoid address reuse, separate the UTXOs that touch KYC from the UTXOs that don't, and use coinjoin or payjoin when you need to break the linkage between two histories.",
+  "sources": [
+    {
+      "label": "Sarah Meiklejohn et al. — A Fistful of Bitcoins (2013)",
+      "url": "https://cseweb.ucsd.edu/~smeiklejohn/files/imc13.pdf",
+      "excerpt": "We use the heuristic that all input addresses in a single transaction are controlled by the same user. Combined with a small number of identified addresses obtained by interacting with services, this lets us cluster a substantial fraction of the active address set into entities. Most subsequent commercial chain analysis is a refinement of this approach."
+    },
+    {
+      "label": "Bitcoin Optech — Privacy improvements topic",
+      "url": "https://bitcoinops.org/en/topics/privacy/",
+      "excerpt": "Practical Bitcoin privacy is a question of which heuristics are usable against your wallet's transaction history. The heuristics depend on patterns that are easy to introduce by accident — round-number outputs, address reuse, change in a different script type — and easy to break with intent: payjoin, coinjoin, or careful UTXO management."
+    },
+    {
+      "label": "Matt Corallo — On chain surveillance and what it can and can't do (bitcoin-dev list)",
+      "url": "https://gnusha.org/url/https%3A%2F%2Flists.linuxfoundation.org%2Fpipermail%2Fbitcoin-dev%2F2021-July%2F019249.html",
+      "excerpt": "Most of what is sold as 'chain analysis' is the combination of public-chain heuristics with private databases of exchange-supplied identities. The chain itself does not authenticate identity. The risk model is not 'they will deanonymize my wallet from the chain'; it is 'they already know which wallet is mine because of where I bought the coins, and now they can follow it.'"
+    }
+  ],
+  "relatedLeafIds": ["address-reuse", "coinjoin", "taproot-privacy"]
+}

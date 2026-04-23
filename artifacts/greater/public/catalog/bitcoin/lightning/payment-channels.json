@@ -1,0 +1,23 @@
+{
+  "id": "payment-channels",
+  "label": "Payment channels and the funding transaction",
+  "brief": "A Lightning payment channel is a 2-of-2 multisig output on the Bitcoin chain that two parties agree to treat as a private ledger between themselves. The channel is opened with a single on-chain *funding transaction* that locks bitcoin into the multisig; from that point onward the parties can update their balance allocation thousands of times by exchanging signed off-chain *commitment transactions*, none of which touch the Bitcoin chain unless the channel is closed [1].\n\nEach commitment transaction is asymmetric. My version of the current state pays you immediately and pays me on a relative timelock (CSV); your version of the same state pays me immediately and pays you on a timelock. Whenever the parties agree on a new state, they exchange the per-commitment *revocation secret* for the previous state. If you ever broadcast an old commitment, I can use the revocation secret to sweep both your output and mine before your timelock expires — this is the *justice transaction* that keeps both parties honest without a third-party arbiter [2].\n\nThe happy path is a *cooperative close*: the parties agree on the final state and exchange a single mutually-signed transaction paying out the current balances. One on-chain transaction, no timelocks, both outputs spendable immediately. The unhappy path is a *force close*, used when one party is offline or uncooperative: the other broadcasts the most recent commitment unilaterally and waits out the `to_self_delay` window (typically 144 to 1008 blocks) before being able to spend its own output. HTLC outputs in flight at force-close time have their own cleanup paths via HTLC-timeout and HTLC-success transactions, each with its own timelock [3].\n\nThe funding transaction is what gives Lightning its security model. The worst case for any participant is that they end up settling on Bitcoin's chain with the most recent state they can prove. They never need to trust the counterparty with custody — only with availability long enough to exchange a final commitment, plus a mechanism (a watchtower, or simply being online) to punish breach attempts.\n\nChannels can be unidirectional, bidirectional with explicit liquidity in both directions, or part of a routed payment graph where the channel's role is to forward payments for fees rather than to settle balance between the two endpoints. The economics of channel sizing — how much capital to commit, in which direction, and for how long — is the operational question that separates a routing node that earns fees from one whose capital sits idle.",
+  "sources": [
+    {
+      "label": "BOLT-2: Peer Protocol for Channel Management",
+      "url": "https://github.com/lightning/bolts/blob/master/02-peer-protocol.md",
+      "excerpt": "The funding output is a 2-of-2 multisig of the two channel parties. Once it is mined, the channel is open and balance updates happen entirely off-chain via signed commitment transactions exchanged peer-to-peer. The on-chain footprint of a channel is exactly two transactions: the funding transaction at open, and either a mutual close or a unilateral commitment-broadcast at close."
+    },
+    {
+      "label": "Mastering Lightning Network — Chapter 7: Payment Channels",
+      "url": "https://github.com/lnbook/lnbook/blob/develop/07_payment_channels.asciidoc",
+      "excerpt": "Each commitment transaction is asymmetric and revocable. The party who broadcasts an old, revoked state is punished: their counterparty can use the revocation secret to sweep both outputs as a justice transaction within the to_self_delay window. This is what makes off-chain state updates safe — the worst case is always settling on chain with the most recent state."
+    },
+    {
+      "label": "Bitcoin Optech — Topics on Lightning Network",
+      "url": "https://bitcoinops.org/en/topics/lightning-network/",
+      "excerpt": "Cooperative close is one on-chain transaction with mutually-signed outputs and no timelocks. Force close is one commitment transaction plus, depending on the channel state at the time, additional HTLC-timeout or HTLC-success transactions. Cooperative close is faster, cheaper, and the default path when both parties are responsive."
+    }
+  ],
+  "relatedLeafIds": ["htlc-routing", "channel-management", "watchtowers"]
+}

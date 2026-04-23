@@ -1,0 +1,49 @@
+{
+  "id": "wallets-keys",
+  "title": "Wallets, keys, and self-custody",
+  "summary": "HD wallets, seed phrases, descriptors, hardware signers, multisig, inheritance planning. The mechanics behind self-custody, not vendor recommendations.",
+  "edges": [
+    {
+      "id": "hd-wallets-bip32",
+      "label": "HD wallets and BIP32 derivation",
+      "summary": "How a single seed produces an unbounded tree of keys, why that lets a wallet hand out fresh addresses without backing anything up, and what the derivation path on every wallet screen actually means.",
+      "kind": "leaf",
+      "searchTerms": ["hd wallet", "hd wallets", "bip32", "bip-32", "bip 32", "bip44", "bip-44", "bip84", "bip-84", "bip86", "bip-86", "derivation path", "xpub", "xprv", "extended key", "hardened derivation", "child key"]
+    },
+    {
+      "id": "seed-phrases-bip39",
+      "label": "Seed phrases (BIP39)",
+      "summary": "Twelve or twenty-four words encode the entropy your whole wallet derives from. The wordlist, the optional passphrase, and the failure modes worth knowing before you write anything down on paper.",
+      "kind": "leaf",
+      "searchTerms": ["seed phrase", "seed phrases", "mnemonic", "12 words", "24 words", "twelve words", "twenty-four words", "bip39", "bip-39", "bip 39", "passphrase", "25th word", "wordlist", "metal seed"]
+    },
+    {
+      "id": "descriptors",
+      "label": "Output descriptors",
+      "summary": "The format that finally lets wallets describe their own watch-only setup unambiguously — script type, derivation path, key origin — instead of every wallet inventing its own export blob.",
+      "kind": "leaf",
+      "searchTerms": ["output descriptor", "output descriptors", "descriptor", "descriptors", "bip380", "bip-380", "miniscript", "tapscript descriptor", "wpkh", "wsh", "tr descriptor", "watch only export", "watch-only", "key origin"]
+    },
+    {
+      "id": "hardware-signers",
+      "label": "Hardware signers and the air-gap",
+      "summary": "Why moving the signing key off the internet-connected machine is the single biggest improvement to a custody setup, what an air-gapped signer actually defends against, and the open-source vs proprietary question.",
+      "kind": "leaf",
+      "searchTerms": ["hardware signer", "hardware signers", "hardware wallet", "hardware wallets", "air gap", "air-gap", "air-gapped", "psbt signer", "verifying display", "open firmware", "reproducible build", "qr signer", "microsd signer"]
+    },
+    {
+      "id": "multisig",
+      "label": "Multisig and key separation",
+      "summary": "k-of-n setups remove single-point-of-failure for both theft and loss. The sane configurations, the geographic and vendor diversity that actually matter, and the operational complexity tax.",
+      "kind": "leaf",
+      "searchTerms": ["multisig", "multi-sig", "multi sig", "multisignature", "2-of-3", "3-of-5", "k-of-n", "key separation", "vendor diversity", "geographic distribution", "collaborative custody", "p2wsh multisig"]
+    },
+    {
+      "id": "inheritance",
+      "label": "Inheritance and recovery planning",
+      "summary": "How to make sure your coins are recoverable by your heirs without making them stealable by your enemies. The two main design patterns and the legal-versus-cryptographic tradeoffs.",
+      "kind": "leaf",
+      "searchTerms": ["inheritance", "inheritance planning", "estate planning", "heirs", "death", "legacy", "recovery letter", "timelocked recovery", "csv inheritance", "dead man switch", "dead-man switch", "succession"]
+    }
+  ]
+}

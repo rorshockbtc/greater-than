@@ -1,0 +1,23 @@
+{
+  "id": "hardware-signers",
+  "label": "Hardware signers and the air-gap",
+  "brief": "A hardware signer is a small device whose only job is to hold private keys and sign transactions you hand it. It never holds funds, never connects to the network, and ideally never speaks to anything except a microSD card or a QR code reader. The threat model it defends against is malware on your everyday computer: a laptop that's been compromised can spy on your screen, swap clipboard addresses, and watch you type, but it cannot sign a transaction without the signer's keys, and the signer's screen shows you the actual address and amount it's about to authorize [1].\n\n\"Air-gapped\" means the signer has no network interface — no USB data, no Bluetooth, no Wi-Fi. Communication is via QR code or removable storage, with a partially-signed bitcoin transaction (PSBT) carried in and a signed PSBT carried out. The threat-model improvement over USB-connected signers is real but bounded: USB attacks against widely-used signers do exist in the literature, but most successful key-extraction events have been physical (chip decap, voltage glitching), not remote. The bigger practical win is workflow: you sign on a machine that has no general-purpose code execution, so phishing and malicious browser extensions cannot sneak transactions past your verification step [2].\n\nThe one structural choice that matters more than vendor selection is whether the signer's firmware and (where applicable) its hardware design are open and reproducible. Open firmware lets independent reviewers audit the signing logic, the entropy sources, and the PSBT-handling code; reproducible builds let you verify the binary on the device matches the published source [3]. This is the relevant axis to evaluate signers on. Concrete vendor advice — \"buy this brand, avoid that one\" — is exactly the kind of thing the project doesn't go into; for that, read independent reviews from people who do this full-time and pay attention to who has had vulnerabilities disclosed and how they handled them.",
+  "sources": [
+    {
+      "label": "Bitcoin Optech — Topic: PSBT",
+      "url": "https://bitcoinops.org/en/topics/psbt/",
+      "excerpt": "Partially Signed Bitcoin Transactions (BIP174) are the standard format for moving an unsigned or partially-signed transaction between an online coordinator and an offline signer. PSBT enables clean separation of duties: a watch-only wallet constructs the transaction, the signer verifies and signs, and no key material crosses the air gap."
+    },
+    {
+      "label": "Mastering Bitcoin — Chapter 5: Hardware wallets",
+      "url": "https://github.com/bitcoinbook/bitcoinbook/blob/develop/ch05_wallets.adoc",
+      "excerpt": "A hardware signer reduces the trusted computing base for key custody from a general-purpose operating system to a small, single-purpose device with a verifying display. The display is the load-bearing security feature: the user must verify destination address and amount on the signer's screen, not on the host computer."
+    },
+    {
+      "label": "Bitcoin Wiki — Hardware wallets",
+      "url": "https://en.bitcoin.it/wiki/Hardware_wallet",
+      "excerpt": "The most important properties of a hardware signer are: open and auditable firmware, a verifying display, no general-purpose execution environment, and a clear vulnerability-disclosure track record. Air-gap (QR or microSD only) further reduces the attack surface relative to USB-connected designs but is not strictly required for a sound security model."
+    }
+  ],
+  "relatedLeafIds": ["seed-phrases-bip39", "multisig"]
+}

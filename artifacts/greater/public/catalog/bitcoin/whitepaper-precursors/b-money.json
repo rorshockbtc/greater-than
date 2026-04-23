@@ -1,0 +1,23 @@
+{
+  "id": "b-money",
+  "label": "b-money (Wei Dai, 1998)",
+  "brief": "Wei Dai posted b-money to the cypherpunks mailing list in November 1998 — an informal sketch, not a working system. The proposal describes a distributed monetary system in which participants maintain a shared ledger, money creation is gated by solving a previously-agreed computational problem, and transactions are signed with public-key cryptography and broadcast to all participants for inclusion in the ledger [1]. The design has two protocol variants: one in which everyone keeps a copy of the ledger, and one in which a separate set of \"servers\" keep the ledger and post bonds against misbehavior.\n\nThe pieces b-money got right and Bitcoin uses: money creation tied to computational work whose value can be agreed on by the protocol; pseudonymous identities that are just public keys; broadcast-and-include as the consensus model; the explicit acknowledgment that a fully-distributed ledger is impractical without some kind of incentive for participation. The pieces that are missing or under-specified: there is no concrete consensus mechanism — Dai notes the difficulty of getting all participants to agree on the ledger but doesn't solve it; the money-creation step requires participants to first agree on a problem and a cost, which is itself a consensus requirement; the server-bonded variant is a Byzantine-agreement design without the algorithm filled in [2].\n\nb-money is reference [1] in the Bitcoin whitepaper. Dai has said in correspondence that Satoshi reached out to him before publishing the whitepaper to ask about the proposal, and that Dai pointed Satoshi at Hal Finney's RPOW work as a more-developed line of inquiry [3]. The b-money writeup is two pages of forum text; its influence on Bitcoin is structural rather than technical, providing the basic framing of \"distributed digital money issued via proof-of-work\" that the engineering work of the next decade tried to make actually work.",
+  "sources": [
+    {
+      "label": "Wei Dai — b-money (1998)",
+      "url": "http://www.weidai.com/bmoney.txt",
+      "excerpt": "I am fascinated by Tim May's crypto-anarchy. Unlike the communities traditionally associated with the word 'anarchy,' in a crypto-anarchy the government is not temporarily destroyed but permanently forbidden and permanently unnecessary. It's a community where the threat of violence is impotent because violence is impossible, and violence is impossible because its participants cannot be linked to their true names or physical locations."
+    },
+    {
+      "label": "Nakamoto Institute — b-money page",
+      "url": "https://nakamotoinstitute.org/b-money/",
+      "excerpt": "b-money was an informal proposal for a distributed digital currency. It described two protocol variants but did not specify a working consensus mechanism; the notion that participants might disagree on the ledger and the question of how to reconcile such disagreements was acknowledged but left unresolved."
+    },
+    {
+      "label": "Wei Dai — emails with Satoshi (excerpt, 2008)",
+      "url": "https://www.gwern.net/docs/bitcoin/2008-nakamoto",
+      "excerpt": "Satoshi wrote to me in August 2008 to introduce himself. He said he had been working on a paper that 'expands on your ideas into a complete working system,' and asked if I'd written anything since. I pointed him at Hal Finney's RPOW work as a more-developed line of inquiry and wished him luck."
+    }
+  ],
+  "relatedLeafIds": ["the-whitepaper", "bit-gold", "rpow"]
+}

@@ -1,0 +1,49 @@
+{
+  "id": "whitepaper-precursors",
+  "title": "The whitepaper and its precursors",
+  "summary": "Satoshi's 2008 paper and what came before — Hashcash, b-money, Bit Gold, RPOW, the Cypherpunks. Where each piece of Bitcoin's design came from and what made the assembly novel.",
+  "edges": [
+    {
+      "id": "the-whitepaper",
+      "label": "The 2008 whitepaper",
+      "summary": "Nine pages, eight references, no surprises if you'd been reading the right mailing lists for fifteen years. What the paper claims to solve, and what it actually adds on top of the prior art.",
+      "kind": "leaf",
+      "searchTerms": ["whitepaper", "white paper", "satoshi paper", "bitcoin paper", "october 2008", "2008 paper", "satoshi nakamoto paper", "peer to peer electronic cash", "p2p electronic cash"]
+    },
+    {
+      "id": "hashcash",
+      "label": "Hashcash (Adam Back, 1997)",
+      "summary": "The proof-of-work primitive Bitcoin's mining is built on. Originally proposed as anti-spam: make sending email cost a small amount of CPU, make sending a million emails cost a lot of CPU.",
+      "kind": "leaf",
+      "searchTerms": ["hashcash", "hash cash", "adam back", "anti-spam", "antispam", "1997", "partial hash collision", "email proof of work", "cpu cost token"]
+    },
+    {
+      "id": "b-money",
+      "label": "b-money (Wei Dai, 1998)",
+      "summary": "An informal 1998 sketch of a distributed digital currency where money creation is gated by computation and the ledger is maintained by participants. Cited as reference [1] in the Bitcoin whitepaper.",
+      "kind": "leaf",
+      "searchTerms": ["b-money", "bmoney", "b money", "wei dai", "1998", "cypherpunk currency", "distributed digital currency", "early digital cash", "satoshi reference 1"]
+    },
+    {
+      "id": "bit-gold",
+      "label": "Bit Gold (Nick Szabo, 2005)",
+      "summary": "Szabo's proposal for a decentralized digital scarcity built on chained proof-of-work, with the explicit goal of producing 'unforgeably costly bits' that don't depend on a trusted issuer.",
+      "kind": "leaf",
+      "searchTerms": ["bit gold", "bitgold", "bit-gold", "nick szabo", "szabo", "unforgeable bits", "unforgeably costly", "chained proof of work", "digital scarcity", "shelling out"]
+    },
+    {
+      "id": "rpow",
+      "label": "RPOW (Hal Finney, 2004)",
+      "summary": "Reusable Proofs of Work — Finney's working implementation of Hashcash-tokens that could be transferred and redeemed, running on a transparent server. The most-engineered direct precursor.",
+      "kind": "leaf",
+      "searchTerms": ["rpow", "reusable proof of work", "reusable proofs of work", "hal finney", "finney", "ibm 4758", "secure coprocessor", "first bitcoin transaction", "transferable token"]
+    },
+    {
+      "id": "cypherpunks",
+      "label": "The Cypherpunks",
+      "summary": "The mailing list, the manifesto, and the political project of putting strong cryptography in the hands of individuals. Where the people who built each precursor — and Satoshi — published, argued, and corresponded.",
+      "kind": "leaf",
+      "searchTerms": ["cypherpunk", "cypherpunks", "cypherpunk manifesto", "eric hughes", "tim may", "john gilmore", "cryptography mailing list", "crypto anarchy", "crypto-anarchy", "cypherpunks write code"]
+    }
+  ]
+}

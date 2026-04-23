@@ -1,0 +1,138 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-19",
+  "documents": [
+    {
+      "source_url": "https://mutualhealth.example/about",
+      "source_label": "MutualHealth — About",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "MutualHealth is a member-funded health-share community, not insurance. Members pay a monthly share that goes toward other members' eligible medical needs. We are not a regulated insurance product; we are a Health Care Sharing Ministry under federal definition, exempt from the ACA individual mandate where applicable. This distinction matters and we make it explicitly: do not assume insurance-style behavior — read the Member Guidelines."
+        },
+        {
+          "chunk_index": 1,
+          "text": "MutualHealth was founded in 2018 and serves approximately 28,000 households across all 50 states. We do not have networks, plans, deductibles, or copays in the insurance sense. We have shares, sharing windows, personal responsibility amounts, and a Member Guidelines document that defines what is eligible and what is not. The Guidelines are publicly available and are the controlling document for any sharing decision."
+        }
+      ]
+    },
+    {
+      "source_url": "https://mutualhealth.example/how-needs-processed",
+      "source_label": "MutualHealth — How a need is processed",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Submit eligible needs through the member portal at portal.mutualhealth.example. Required attachments: itemized provider bill (CMS-1500 or UB-04), proof of payment if any, and a brief description of the underlying condition. The need is reviewed against the published Member Guidelines for eligibility, assigned a sharing window, and matched to other members' shares as they come in."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Most clean submissions are processed within 30 days from the date of complete submission. 'Complete' means all required attachments are present and legible. Submissions missing the itemized bill or with illegible attachments are returned to the member with a request for additional information; the 30-day window restarts when the resubmission is complete."
+        },
+        {
+          "chunk_index": 2,
+          "text": "After review, eligible needs are placed in the sharing queue and matched to incoming shares. Members are notified by email when matching begins and when each disbursement is made. Sharing windows for typical eligible needs are 60–120 days from approval. Large needs (above $50,000) are handled under the Catastrophic Need protocol with extended sharing windows of up to 12 months."
+        }
+      ]
+    },
+    {
+      "source_url": "https://mutualhealth.example/coverage",
+      "source_label": "MutualHealth — What we cover and what we don't",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "We cover most acute, unexpected medical needs above the personal responsibility amount (currently $500 per incident for the standard membership tier). Eligible categories include: hospitalization, surgery, emergency room visits leading to admission, diagnostic imaging directly tied to an eligible incident, prescription medications during an inpatient stay, and follow-up care within 90 days of an eligible incident."
+        },
+        {
+          "chunk_index": 1,
+          "text": "We do not cover: routine preventive care (annual physicals, screenings, vaccinations), lifestyle-related conditions explicitly listed in the Guidelines (including but not limited to elective cosmetic procedures, fertility treatments, gender-transition procedures, and abortion), any need predating membership unless the pre-existing-condition phase-in has been met, mental health (covered separately under the optional Wellness add-on), or routine prescriptions outside of an inpatient stay (covered separately under the optional Prescription add-on)."
+        },
+        {
+          "chunk_index": 2,
+          "text": "Pre-existing conditions are subject to a phase-in: in the first year of membership, no sharing for the condition; in year two, up to $25,000 sharing; in year three, up to $50,000; in year four and beyond, treated as any other eligible need. The condition must have been declared at enrollment; an undeclared pre-existing condition discovered later is not eligible at any phase."
+        }
+      ]
+    },
+    {
+      "source_url": "https://mutualhealth.example/providers",
+      "source_label": "MutualHealth — Provider relationships",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "MutualHealth is not a PPO, HMO, EPO, or any kind of network. Members may see any licensed provider in the United States. We do not maintain a 'preferred provider directory.' If a member asks for a specific specialist by location — say, a knee surgeon in Raleigh, NC — we do not have that data and the assistant will tell you so plainly. The member is responsible for finding their own provider; we recommend asking your primary care provider, your county medical society, or your existing network of trusted providers."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Because MutualHealth is not insurance, providers do not 'accept' or 'reject' MutualHealth. The member pays the provider directly (typically with a self-pay discount, which most providers will offer when no insurance is involved), then submits the itemized bill to MutualHealth for sharing. Many of our members have negotiated 30–50% off list price by paying as a self-pay patient up front."
+        },
+        {
+          "chunk_index": 2,
+          "text": "Some providers misunderstand health-shares as insurance and try to bill us directly. This will not work; we have no provider billing relationship. The member should request an itemized bill in their own name, pay the provider, and submit the bill to MutualHealth themselves. The member portal has a downloadable explainer for providers if needed."
+        }
+      ]
+    },
+    {
+      "source_url": "https://mutualhealth.example/membership-tiers",
+      "source_label": "MutualHealth — Membership tiers and shares",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Standard membership: $179/month single, $329/month couple, $479/month family. Personal responsibility amount: $500 per incident. Catastrophic Need maximum sharing: $1,000,000 per incident. Wellness add-on (mental health, preventive screenings): +$45/month per adult. Prescription add-on (routine, non-inpatient): +$32/month per adult."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Membership begins on the first of the month following completed enrollment, which includes payment of the first month's share, signed Statement of Beliefs, and submission of the medical history questionnaire. Pre-existing conditions phase-in starts from the membership effective date; pre-membership medical events are not eligible at any phase."
+        }
+      ]
+    },
+    {
+      "source_url": "https://mutualhealth.example/escalation",
+      "source_label": "MutualHealth — Escalation paths",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "For a need that has been pending more than 45 days, contact the member services team at members@mutualhealth.example or call the number on the back of your membership card. For a denied need that the member believes was incorrectly denied, the appeals process is documented in the Member Guidelines section 9 and begins with a written appeal submitted through the member portal within 60 days of the denial notice."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Catastrophic Need (any single eligible incident expected to exceed $50,000) should be flagged early through the dedicated catastrophic-need intake at catastrophic@mutualhealth.example. Early flagging gets a case manager assigned within 48 hours and unlocks the extended sharing window. The case manager does not provide medical advice; they coordinate sharing logistics with the member, the providers, and the sharing pool."
+        }
+      ]
+    },
+    {
+      "source_url": "https://mutualhealth.example/privacy",
+      "source_label": "MutualHealth — Privacy and data handling",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Member medical information is treated as confidential and stored under HIPAA-equivalent controls, even though MutualHealth as a health-share is not a covered entity under HIPAA. We do not sell or share member data with third parties for marketing or analytics. We do share de-identified aggregate statistics in our annual transparency report. Member data is retained for seven years after membership ends, then permanently deleted."
+        },
+        {
+          "chunk_index": 1,
+          "text": "The assistant on this page runs entirely in the member's browser. Nothing typed into the chat is sent to MutualHealth servers, to any third-party LLM provider, or to any analytics tool unless the member explicitly taps the escalation button. This is the only chat surface our compliance team would approve; it is the same architecture we use for the member portal's in-app help."
+        }
+      ]
+    },
+    {
+      "source_url": "https://mutualhealth.example/limits",
+      "source_label": "MutualHealth — What this assistant will not do",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "This assistant will not improvise medical advice, will not recommend specific treatments, drugs, or dosages, and will not diagnose conditions. For any medical question — what is wrong, what to do, whether to go to the ER — please contact a licensed medical professional. The assistant will tell you when a question is outside what it can answer and offer to connect you with member services or, in an emergency, to call 911."
+        },
+        {
+          "chunk_index": 1,
+          "text": "This assistant does not have a provider directory, does not have access to your specific submitted needs (it cannot see your portal account), and does not have access to billing details for an individual member. For account-specific questions, log into the member portal or contact member services. For provider recommendations, ask your primary care provider or your existing network of trusted providers."
+        }
+      ]
+    }
+  ]
+}

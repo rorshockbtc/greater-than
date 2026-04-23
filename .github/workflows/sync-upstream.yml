@@ -1,0 +1,44 @@
+name: Sync fork from upstream
+
+# Runs once a week and brings your fork in line with the upstream
+# Greater repository (rorshockbtc/greater-than). The workflow uses
+# GitHub's built-in `gh repo sync` command — exactly what the "Sync
+# fork" button on github.com does, automated.
+#
+# Anyone running a static deployment (Cloudflare Pages, Vercel,
+# Netlify) connected to their fork will see the host rebuild and
+# redeploy automatically when this workflow pushes a sync commit.
+# That makes upstream updates effectively zero-touch.
+#
+# This workflow is a no-op on the upstream repo itself; it only does
+# work on forks.
+
+on:
+  schedule:
+    # Mondays at 14:00 UTC (~10:00 ET, ~07:00 PT). Pick whatever
+    # cadence you want — daily is also fine; weekly is enough for
+    # most operators.
+    - cron: "0 14 * * 1"
+  # Also let the operator run it on demand from the Actions tab.
+  workflow_dispatch:
+
+permissions:
+  # gh repo sync needs write access to the default branch on your
+  # fork. It does not need anything else.
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    # Skip on the upstream repo itself; the workflow is only
+    # meaningful on forks.
+    if: github.repository != 'rorshockbtc/greater-than'
+    steps:
+      - name: Sync fork with upstream default branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "Syncing ${{ github.repository }} from upstream..."
+          gh repo sync "${{ github.repository }}" --source rorshockbtc/greater-than
+          echo "Sync complete."

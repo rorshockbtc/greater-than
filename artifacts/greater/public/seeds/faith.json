@@ -1,0 +1,122 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-19",
+  "documents": [
+    {
+      "source_url": "https://cornerstone.example/about",
+      "source_label": "Cornerstone — About this church",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Cornerstone Reformed Baptist Church is a confessional congregation in the Reformed Baptist tradition, holding to the 1689 London Baptist Confession of Faith. We were planted in 2014 by a group of seven families and three vocational elders. We are congregationally governed and elder-led. Membership is meaningful: members are expected to know one another, to pursue the means of grace together, and to walk under the oversight of the elders."
+        },
+        {
+          "chunk_index": 1,
+          "text": "We meet at 10 AM on the Lord's Day for the public worship service and at 6 PM for a second gathering of preaching and prayer. Children sit with their families during the morning service. Lord's Supper is observed on the first Sunday of each month and is open to baptized believers in good standing in any gospel-preaching church."
+        }
+      ]
+    },
+    {
+      "source_url": "https://cornerstone.example/believe",
+      "source_label": "Cornerstone — What we believe",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "We confess the 66 books of the Old and New Testaments to be the inspired, inerrant, sufficient, and final authority for faith and practice. We believe the Bible interprets itself: clearer passages illuminate less clear ones, and no doctrine should be built on an isolated verse abstracted from its context. We preach expositionally — book by book, verse by verse — because we believe the text shapes the church, not the other way around."
+        },
+        {
+          "chunk_index": 1,
+          "text": "We confess that salvation is by grace alone, through faith alone, in Christ alone, to the glory of God alone. The gospel is not advice or a strategy; it is the news that Christ has accomplished, in his life, death, and resurrection, what sinners could not accomplish for themselves. Faith is the empty hand that receives this gift; repentance is the turning that follows naturally from a heart that has seen Christ for who he is."
+        },
+        {
+          "chunk_index": 2,
+          "text": "We confess the doctrines historically called 'the doctrines of grace' — sometimes summarized as the five points: the radical corruption of the human heart by sin, God's unconditional choice of a people for himself, Christ's effectual redemption of that people, the Spirit's irresistible call, and the perseverance of the saints. We hold these as the gospel itself, not as cold abstractions."
+        }
+      ]
+    },
+    {
+      "source_url": "https://cornerstone.example/sermons/hope-after-death-2025-11-09",
+      "source_label": "Sermon — 'The hope of the believer in death' (1 Thess 4:13–18, Pastor John Calvert, Nov 9 2025)",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Paul writes to the Thessalonians, 'we do not want you to be uninformed about those who are asleep, that you may not grieve as others do who have no hope.' Note that Paul does not say the believer does not grieve. He says the believer does not grieve as those who have no hope. There is room — wide room — at the foot of the cross for tears. The Christian funeral is honest about death. It is also honest about resurrection."
+        },
+        {
+          "chunk_index": 1,
+          "text": "The hope of the believer in death rests on three immovable things. First, that Christ himself rose from the dead — a historical, bodily event attested by eyewitnesses. Second, that the believer is united to Christ by faith, so that what is true of the head will be true of every member of his body. Third, that the Spirit of God indwells the believer as a deposit guaranteeing what is to come. None of these three rests on the believer's strength."
+        },
+        {
+          "chunk_index": 2,
+          "text": "When a believer dies, the soul is at once in the presence of Christ (Phil 1:23, 'to depart and be with Christ, which is far better'). The body sleeps in the dust until the resurrection, when at the last trumpet the dead in Christ are raised imperishable, and we who are alive and remain are caught up together with them to meet the Lord. The reunion is not metaphorical. It is bodily and it is forever."
+        }
+      ]
+    },
+    {
+      "source_url": "https://cornerstone.example/sermons/baptism-2024-03-17",
+      "source_label": "Sermon — 'Why we baptize believers' (Pastor John Calvert, Mar 17 2024)",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "We are credobaptists — we baptize professing believers, not infants. We hold this not because we are reacting against our paedobaptist brothers, but because the New Testament pattern is consistent: baptism follows credible profession of faith. Every recorded baptism in Acts is of one who has heard, believed, and confessed. Baptism is the public sign of an inward reality, not a sacrament that confers the reality."
+        },
+        {
+          "chunk_index": 1,
+          "text": "We baptize by immersion because the Greek word baptizo means to immerse or plunge, and because the imagery of Romans 6 — buried with Christ, raised with Christ — is preserved in the mode. We do not unchurch our paedobaptist brothers; we recognize them as fellow Christians who have read the same texts and arrived at a different conclusion. But for our own practice, we follow what we believe to be the apostolic pattern."
+        }
+      ]
+    },
+    {
+      "source_url": "https://cornerstone.example/sermons/lords-day-2024-09-08",
+      "source_label": "Sermon — 'The Lord's Day as gift' (Pastor John Calvert, Sep 8 2024)",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "We confess the Christian Sabbath — the Lord's Day — as a creation ordinance carried forward into the new covenant on the first day of the week, the day of resurrection. We do not hold this as a heavy yoke; we hold it as the gift of one day in seven set apart for worship, rest, and works of necessity and mercy. The Puritans called it the market day of the soul. We agree."
+        }
+      ]
+    },
+    {
+      "source_url": "https://cornerstone.example/visit",
+      "source_label": "Cornerstone — Visiting for the first time",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "First-time visitors are welcome. The morning service runs about 75 minutes and includes congregational singing, public reading of Scripture, pastoral prayer, and an expository sermon of about 35 minutes. Dress is unfussy — most members come in business casual, but you will see jeans and you will see suits. Children sit with their families; we have a quiet room with a live audio feed for nursing mothers and restless infants."
+        },
+        {
+          "chunk_index": 1,
+          "text": "If you would like to speak with a pastor or elder before or after the service, the easiest way is to email the church office or to introduce yourself to anyone at the welcome table in the foyer. We do not require visitors to fill out a card or stand to be recognized. We are glad you came."
+        }
+      ]
+    },
+    {
+      "source_url": "https://cornerstone.example/membership",
+      "source_label": "Cornerstone — Membership process",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Membership at Cornerstone is offered after attending consistently for at least three months, completing the membership class (a four-week Sunday evening course covering the gospel, the 1689, and our church covenant), and meeting individually with one of the elders. Membership is received by the congregation upon recommendation of the elders. We do not pressure visitors toward membership; we wait for the visitor to ask."
+        }
+      ]
+    },
+    {
+      "source_url": "https://cornerstone.example/leadership",
+      "source_label": "Cornerstone — Elders, deacons, and counsel",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "The church is led by a plurality of elders — currently three — who are responsible for teaching, oversight, and the spiritual care of the congregation. Deacons handle the church's mercy ministry and practical matters. For pastoral counsel — grief, marriage, suffering, the question of what God may be doing in your life — please contact the elders directly. The assistant on this site cannot do that work; only a real human can."
+        }
+      ]
+    }
+  ]
+}

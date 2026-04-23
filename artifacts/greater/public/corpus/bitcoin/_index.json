@@ -1,0 +1,715 @@
+{
+  "version": "v1",
+  "pack": "bitcoin",
+  "generated_by": "build-catalog-corpus",
+  "documents": [
+    {
+      "slug": "arxiv-org-abs-2107-05322-dd722d92",
+      "source_url": "https://arxiv.org/abs/2107.05322",
+      "source_label": "Pickhardt & Richter — Optimally Reliable & Cheap Payment Flows on the Lightning Network",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "batcoinz-com-about-d26957e8",
+      "source_url": "https://batcoinz.com/about/",
+      "source_label": "Daniel Batten — Bitcoin Mining Sustainability Reports",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoin-org-bitcoin-pdf-78963c29",
+      "source_url": "https://bitcoin.org/bitcoin.pdf",
+      "source_label": "Bitcoin whitepaper — Section 4: Proof-of-Work",
+      "cited_by_count": 3
+    },
+    {
+      "slug": "bitcoin-org-en-choose-your-wallet-3bdfecd4",
+      "source_url": "https://bitcoin.org/en/choose-your-wallet",
+      "source_label": "Bitcoin.org — Choosing your wallet",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoin-org-en-full-node-6b99f005",
+      "source_url": "https://bitcoin.org/en/full-node",
+      "source_label": "Bitcoin Core docs — Full node",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoin-sipa-be-miniscript-7ad55ed2",
+      "source_url": "https://bitcoin.sipa.be/miniscript/",
+      "source_label": "Pieter Wuille et al. — Miniscript",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinmagazine-com-technical-taproot-coming-what-it-and-how-it-will-benefit-bit-5a007b8f",
+      "source_url": "https://bitcoinmagazine.com/technical/taproot-coming-what-it-and-how-it-will-benefit-bitcoin",
+      "source_label": "Aaron van Wirdum — Taproot, the next major Bitcoin upgrade (2021)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-newsletters-703b409a",
+      "source_url": "https://bitcoinops.org/en/newsletters/",
+      "source_label": "Bitcoin Optech — collected newsletters",
+      "cited_by_count": 5
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-backup-44ebff93",
+      "source_url": "https://bitcoinops.org/en/topics/backup/",
+      "source_label": "Bitcoin Optech — Topic: Backup",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-coinbase-transaction-b6ab7032",
+      "source_url": "https://bitcoinops.org/en/topics/coinbase-transaction/",
+      "source_label": "Bitcoin Optech — Topics on Coinbase",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-coinjoin-baf4aaaa",
+      "source_url": "https://bitcoinops.org/en/topics/coinjoin/",
+      "source_label": "Bitcoin Optech — CoinJoin topic",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-compact-block-filters-4e12cf98",
+      "source_url": "https://bitcoinops.org/en/topics/compact-block-filters/",
+      "source_label": "Bitcoin Optech — Topics on Pruning and Indexing",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-eclipse-attacks-a34630e2",
+      "source_url": "https://bitcoinops.org/en/topics/eclipse-attacks/",
+      "source_label": "Bitcoin Optech — Topics on Eclipse Attacks",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-fee-management-093e45c9",
+      "source_url": "https://bitcoinops.org/en/topics/fee-management/",
+      "source_label": "Bitcoin Optech — Topic: Fee management",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-initial-block-download-f9177f40",
+      "source_url": "https://bitcoinops.org/en/topics/initial-block-download/",
+      "source_label": "Bitcoin Optech — Topics on Initial Block Download",
+      "cited_by_count": 2
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-jit-channels-4f0119cf",
+      "source_url": "https://bitcoinops.org/en/topics/jit-channels/",
+      "source_label": "Bitcoin Optech — Topics on JIT Channels",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-lightning-network-b43c3116",
+      "source_url": "https://bitcoinops.org/en/topics/lightning-network/",
+      "source_label": "Bitcoin Optech — Topics on Lightning Network",
+      "cited_by_count": 3
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-mining-382b3c09",
+      "source_url": "https://bitcoinops.org/en/topics/mining/",
+      "source_label": "Bitcoin Optech — Topic: Mining and pools",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-multisignature-e8120436",
+      "source_url": "https://bitcoinops.org/en/topics/multisignature/",
+      "source_label": "Bitcoin Optech — Topic: Multisignature",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-output-script-descriptors-beb16fe1",
+      "source_url": "https://bitcoinops.org/en/topics/output-script-descriptors/",
+      "source_label": "Bitcoin Optech — Privacy topic",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-passphrase-f4313041",
+      "source_url": "https://bitcoinops.org/en/topics/passphrase/",
+      "source_label": "Bitcoin Optech — Topic: BIP39 passphrases",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-payjoin-8a780d6f",
+      "source_url": "https://bitcoinops.org/en/topics/payjoin/",
+      "source_label": "Bitcoin Optech — Payjoin topic",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-privacy-0c66266d",
+      "source_url": "https://bitcoinops.org/en/topics/privacy/",
+      "source_label": "Bitcoin Optech — Privacy improvements topic",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-psbt-268b96e0",
+      "source_url": "https://bitcoinops.org/en/topics/psbt/",
+      "source_label": "Bitcoin Optech — Topic: PSBT",
+      "cited_by_count": 2
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-replace-by-fee-7edc2324",
+      "source_url": "https://bitcoinops.org/en/topics/replace-by-fee/",
+      "source_label": "Bitcoin Optech — Topics on Replace-by-Fee",
+      "cited_by_count": 2
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-segregated-witness-7618badc",
+      "source_url": "https://bitcoinops.org/en/topics/segregated-witness/",
+      "source_label": "Bitcoin Optech — Topics on Segregated Witness",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-silent-payments-75c3bd74",
+      "source_url": "https://bitcoinops.org/en/topics/silent-payments/",
+      "source_label": "Optech — Silent payments topic",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-soft-fork-activation-7f58284f",
+      "source_url": "https://bitcoinops.org/en/topics/soft-fork-activation/",
+      "source_label": "Bitcoin Optech — Topics on Soft Fork Activation",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-splicing-b43f59cc",
+      "source_url": "https://bitcoinops.org/en/topics/splicing/",
+      "source_label": "Bitcoin Optech — Topics on Splicing",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-taproot-5004428e",
+      "source_url": "https://bitcoinops.org/en/topics/taproot/",
+      "source_label": "Bitcoin Optech — Taproot topic",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-timelock-baa478fb",
+      "source_url": "https://bitcoinops.org/en/topics/timelock/",
+      "source_label": "Bitcoin Optech — Topic: Inheritance and timelocks",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-timewarp-8f50588c",
+      "source_url": "https://bitcoinops.org/en/topics/timewarp/",
+      "source_label": "Bitcoin Optech — Topic: Timewarp attack",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-wallet-recovery-4c304380",
+      "source_url": "https://bitcoinops.org/en/topics/wallet-recovery/",
+      "source_label": "Bitcoin Optech — Topic: Recovery",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcointalk-org-index-php-topic-155054-0-7d04462a",
+      "source_url": "https://bitcointalk.org/index.php?topic=155054.0",
+      "source_label": "Hal Finney — Bitcoin and me (2013)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcointalk-org-index-php-topic-279249-0-ebd9bce3",
+      "source_url": "https://bitcointalk.org/index.php?topic=279249.0",
+      "source_label": "Greg Maxwell — CoinJoin: Bitcoin privacy for the real world (2013)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "blog-casa-io-bitcoin-inheritance-planning-22155471",
+      "source_url": "https://blog.casa.io/bitcoin-inheritance-planning/",
+      "source_label": "Casa — Bitcoin Inheritance Planning Guide",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "blog-lopp-net-an-evaluation-of-bitcoin-wallets-67c92ac0",
+      "source_url": "https://blog.lopp.net/an-evaluation-of-bitcoin-wallets/",
+      "source_label": "Jameson Lopp — Bitcoin Hardware Wallet Vulnerabilities (running list)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "blog-lopp-net-metal-bitcoin-seed-storage-stress-test-round-iv-ec599e85",
+      "source_url": "https://blog.lopp.net/metal-bitcoin-seed-storage-stress-test-round-iv/",
+      "source_label": "Jameson Lopp — Metal Bitcoin Seed Storage Stress Test",
+      "cited_by_count": 2
+    },
+    {
+      "slug": "ccaf-io-cbnsi-cbeci-a4233cfe",
+      "source_url": "https://ccaf.io/cbnsi/cbeci",
+      "source_label": "Cambridge Centre for Alternative Finance — Bitcoin Electricity Consumption Index",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "ccaf-io-cbnsi-cbeci-mining-map-199a1182",
+      "source_url": "https://ccaf.io/cbnsi/cbeci/mining_map",
+      "source_label": "Cambridge Centre for Alternative Finance — Bitcoin Mining Map",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "cseweb-ucsd-edu-smeiklejohn-files-imc13-pdf-6c45d30c",
+      "source_url": "https://cseweb.ucsd.edu/~smeiklejohn/files/imc13.pdf",
+      "source_label": "Sarah Meiklejohn et al. — A Fistful of Bitcoins (2013)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "docs-btcpayserver-org-dc668172",
+      "source_url": "https://docs.btcpayserver.org/",
+      "source_label": "BTCPayServer documentation — Self-hosted payment processor",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "en-bitcoin-it-wiki-address-reuse-2ba19af9",
+      "source_url": "https://en.bitcoin.it/wiki/Address_reuse",
+      "source_label": "Bitcoin Wiki — Address reuse",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "en-bitcoin-it-wiki-bech32-263db88d",
+      "source_url": "https://en.bitcoin.it/wiki/Bech32",
+      "source_label": "Bitcoin Wiki — Address validation and bech32",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "en-bitcoin-it-wiki-bitcoin-white-paper-2c9dd06b",
+      "source_url": "https://en.bitcoin.it/wiki/Bitcoin_white_paper",
+      "source_label": "Bitcoin Wiki — The Bitcoin whitepaper",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "en-bitcoin-it-wiki-controlled-supply-96309ba6",
+      "source_url": "https://en.bitcoin.it/wiki/Controlled_supply",
+      "source_label": "Bitcoin Wiki — Controlled supply",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "en-bitcoin-it-wiki-difficulty-1c95bdff",
+      "source_url": "https://en.bitcoin.it/wiki/Difficulty",
+      "source_label": "Bitcoin Wiki — Difficulty",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "en-bitcoin-it-wiki-hal-finney-201a16f3",
+      "source_url": "https://en.bitcoin.it/wiki/Hal_Finney",
+      "source_label": "Bitcoin Wiki — Hal Finney",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "en-bitcoin-it-wiki-hardware-wallet-3b96c626",
+      "source_url": "https://en.bitcoin.it/wiki/Hardware_wallet",
+      "source_label": "Bitcoin Wiki — Hardware wallet",
+      "cited_by_count": 2
+    },
+    {
+      "slug": "en-bitcoin-it-wiki-hashcash-aa685281",
+      "source_url": "https://en.bitcoin.it/wiki/Hashcash",
+      "source_label": "Adam Back — Bitcoin StackExchange: Hashcash and Bitcoin",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "en-bitcoin-it-wiki-multisignature-7d07bd5f",
+      "source_url": "https://en.bitcoin.it/wiki/Multisignature",
+      "source_label": "Bitcoin Wiki — Multisignature",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "en-bitcoin-it-wiki-wallet-recovery-a19fe9cb",
+      "source_url": "https://en.bitcoin.it/wiki/Wallet_recovery",
+      "source_label": "Bitcoin Wiki — Recovery best practices",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "eprint-iacr-org-2021-206-d4825752",
+      "source_url": "https://eprint.iacr.org/2021/206",
+      "source_label": "WabiSabi — Centrally Coordinated CoinJoins with Variable Amounts (2021)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-bitcoin-bips-blob-master-bip-0032-mediawiki-d8c983e7",
+      "source_url": "https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki",
+      "source_label": "BIP32 — Hierarchical Deterministic Wallets",
+      "cited_by_count": 2
+    },
+    {
+      "slug": "github-com-bitcoin-bips-blob-master-bip-0039-mediawiki-3bbbf09e",
+      "source_url": "https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki",
+      "source_label": "BIP39 — Mnemonic code for generating deterministic keys",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-bitcoin-bips-blob-master-bip-0044-mediawiki-742153a6",
+      "source_url": "https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki",
+      "source_label": "BIP44 — Multi-Account Hierarchy for Deterministic Wallets",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-bitcoin-bips-blob-master-bip-0078-mediawiki-2b4ba6d9",
+      "source_url": "https://github.com/bitcoin/bips/blob/master/bip-0078.mediawiki",
+      "source_label": "BIP78 — A Simple Payjoin Proposal",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-bitcoin-bips-blob-master-bip-0341-mediawiki-e4d2c924",
+      "source_url": "https://github.com/bitcoin/bips/blob/master/bip-0341.mediawiki",
+      "source_label": "BIP341 — Taproot: SegWit version 1 spending rules",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-bitcoin-bips-blob-master-bip-0352-mediawiki-6ec70e74",
+      "source_url": "https://github.com/bitcoin/bips/blob/master/bip-0352.mediawiki",
+      "source_label": "BIP352 — Silent Payments",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-bitcoin-bips-blob-master-bip-0380-mediawiki-df80ebdf",
+      "source_url": "https://github.com/bitcoin/bips/blob/master/bip-0380.mediawiki",
+      "source_label": "BIP380 — Output Script Descriptors General Operation",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-bitcoin-bitcoin-blob-master-doc-descriptors-md-def9da4a",
+      "source_url": "https://github.com/bitcoin/bitcoin/blob/master/doc/descriptors.md",
+      "source_label": "Bitcoin Core docs — Output descriptors",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-bitcoin-bitcoin-blob-master-doc-readme-md-2fd37320",
+      "source_url": "https://github.com/bitcoin/bitcoin/blob/master/doc/README.md",
+      "source_label": "Bitcoin Core — Running A Full Node",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-bitcoinandlightninglayerspecs-lsp-ef694d1d",
+      "source_url": "https://github.com/BitcoinAndLightningLayerSpecs/lsp",
+      "source_label": "BLIP-51 / LSPS specifications",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-bitcoinbook-bitcoinbook-blob-develop-ch05-wallets-adoc-0d6b2ddf",
+      "source_url": "https://github.com/bitcoinbook/bitcoinbook/blob/develop/ch05_wallets.adoc",
+      "source_label": "Mastering Bitcoin — Chapter 5: Hardware wallets",
+      "cited_by_count": 2
+    },
+    {
+      "slug": "github-com-bitcoinbook-bitcoinbook-blob-develop-ch12-mining-adoc-a32ac3c5",
+      "source_url": "https://github.com/bitcoinbook/bitcoinbook/blob/develop/ch12_mining.adoc",
+      "source_label": "Mastering Bitcoin — Chapter 12: Mining hardware",
+      "cited_by_count": 3
+    },
+    {
+      "slug": "github-com-lightning-bolts-blob-master-02-peer-protocol-md-795bd5fd",
+      "source_url": "https://github.com/lightning/bolts/blob/master/02-peer-protocol.md",
+      "source_label": "BOLT-2: Peer Protocol for Channel Management (incl. splicing)",
+      "cited_by_count": 2
+    },
+    {
+      "slug": "github-com-lightning-bolts-blob-master-04-onion-routing-protocol-md-1b043243",
+      "source_url": "https://github.com/lightning/bolts/blob/master/04-onion-routing-protocol.md",
+      "source_label": "BOLT-4: Onion Routing Protocol",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-lightning-bolts-blob-master-07-routing-gossip-md-99259e21",
+      "source_url": "https://github.com/lightning/bolts/blob/master/07-routing-gossip.md",
+      "source_label": "BOLT-7: P2P Node and Channel Discovery",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-lnbook-lnbook-blob-develop-07-payment-channels-asciidoc-42b6d879",
+      "source_url": "https://github.com/lnbook/lnbook/blob/develop/07_payment_channels.asciidoc",
+      "source_label": "Mastering Lightning Network — Chapter 7: Payment Channels",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-lnbook-lnbook-blob-develop-08-routing-htlcs-asciidoc-1f5d78f4",
+      "source_url": "https://github.com/lnbook/lnbook/blob/develop/08_routing_htlcs.asciidoc",
+      "source_label": "Mastering Lightning Network — Chapter 8: Routing on a Network of Payment Channels",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-lnbook-lnbook-blob-develop-09-channel-operation-asciidoc-dc23e57f",
+      "source_url": "https://github.com/lnbook/lnbook/blob/develop/09_channel_operation.asciidoc",
+      "source_label": "Mastering Lightning Network — Chapter 9: Channel Operation and Payment Forwarding",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-lnbook-lnbook-blob-develop-10-onchain-anatomy-asciidoc-6723c42e",
+      "source_url": "https://github.com/lnbook/lnbook/blob/develop/10_onchain_anatomy.asciidoc",
+      "source_label": "Mastering Lightning Network — Chapter 10: Onchain Transaction Anatomy",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-lnbook-lnbook-blob-develop-11-gossip-asciidoc-4c2315bc",
+      "source_url": "https://github.com/lnbook/lnbook/blob/develop/11_gossip.asciidoc",
+      "source_label": "Mastering Lightning Network — Chapter 11: Gossip and the Channel Graph",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-sr-gi-bolt13-2151a2f1",
+      "source_url": "https://github.com/sr-gi/bolt13",
+      "source_label": "BOLT-13 (draft): Watchtowers",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "github-com-talaia-labs-rust-teos-41939233",
+      "source_url": "https://github.com/talaia-labs/rust-teos",
+      "source_label": "Sergi Delgado — The Eye of Satoshi: Lightning Watchtower Implementation",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "glacierprotocol-org-02306230",
+      "source_url": "https://glacierprotocol.org/",
+      "source_label": "Glacier Protocol — Self-custody for high-value Bitcoin",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "gnusha-org-url-https-3a-2f-2flists-linuxfoundation-org-2fpipermail-2fbitcoin-dev-1702806c",
+      "source_url": "https://gnusha.org/url/https%3A%2F%2Flists.linuxfoundation.org%2Fpipermail%2Fbitcoin-dev%2F2021-July%2F019249.html",
+      "source_label": "Matt Corallo — On chain surveillance and what it can and can't do (bitcoin-dev list)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "hashrateindex-com-blog-bitcoin-mining-hardware-buyers-guide-6feb5910",
+      "source_url": "https://hashrateindex.com/blog/bitcoin-mining-hardware-buyers-guide/",
+      "source_label": "Hashrate Index — Bitcoin Mining Hardware Guide",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "hbr-org-2021-05-how-much-energy-does-bitcoin-actually-consume-4d8577e8",
+      "source_url": "https://hbr.org/2021/05/how-much-energy-does-bitcoin-actually-consume",
+      "source_label": "Nic Carter — How Much Energy Does Bitcoin Actually Consume? (Harvard Business Review)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "lightning-engineering-posts-2020-11-02-pool-launch-685a283c",
+      "source_url": "https://lightning.engineering/posts/2020-11-02-pool-launch/",
+      "source_label": "Lightning Labs — Pool / Liquidity Ads technical overview",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "medium-com-hugonguyen-anatomy-of-proof-of-work-98c85ae5f06b-1f3934ac",
+      "source_url": "https://medium.com/@hugonguyen/anatomy-of-proof-of-work-98c85ae5f06b",
+      "source_label": "Hugo Nguyen — Anatomy of Proof-of-Work (2018)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mempool-space-docs-bd474799",
+      "source_url": "https://mempool.space/docs",
+      "source_label": "mempool.space — Documentation",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-library-austrian-theory-trade-cycle-and-other-essays-c9f91b79",
+      "source_url": "https://mises.org/library/austrian-theory-trade-cycle-and-other-essays",
+      "source_label": "Mises, Hayek, Rothbard, Haberler — The Austrian Theory of the Trade Cycle",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-library-case-against-fed-7a172d56",
+      "source_url": "https://mises.org/library/case-against-fed",
+      "source_label": "Murray N. Rothbard — The Case Against the Fed",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-library-economics-one-lesson-f9c42588",
+      "source_url": "https://mises.org/library/economics-one-lesson",
+      "source_label": "Henry Hazlitt — Economics in One Lesson",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-library-ethics-money-production-c89fb739",
+      "source_url": "https://mises.org/library/ethics-money-production",
+      "source_label": "Jörg Guido Hülsmann — The Ethics of Money Production",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-library-man-economy-and-state-power-and-market-b1eb227e",
+      "source_url": "https://mises.org/library/man-economy-and-state-power-and-market",
+      "source_label": "Murray N. Rothbard — Man, Economy, and State",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-library-mystery-banking-38ba3a6c",
+      "source_url": "https://mises.org/library/mystery-banking",
+      "source_label": "Murray N. Rothbard — The Mystery of Banking",
+      "cited_by_count": 2
+    },
+    {
+      "slug": "mises-org-library-theory-money-and-credit-3d855bb0",
+      "source_url": "https://mises.org/library/theory-money-and-credit",
+      "source_label": "Ludwig von Mises — The Theory of Money and Credit",
+      "cited_by_count": 3
+    },
+    {
+      "slug": "mises-org-library-what-has-government-done-our-money-daaf5a04",
+      "source_url": "https://mises.org/library/what-has-government-done-our-money",
+      "source_label": "Murray N. Rothbard — What Has Government Done to Our Money?",
+      "cited_by_count": 2
+    },
+    {
+      "slug": "mises-org-wire-bitcoin-and-austrian-economics-2aff5d29",
+      "source_url": "https://mises.org/wire/bitcoin-and-austrian-economics",
+      "source_label": "Mises Institute Wire — Bitcoin and Austrian Economics",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-wire-sound-money-bitcoin-and-end-fiat-044d1dc0",
+      "source_url": "https://mises.org/wire/sound-money-bitcoin-and-end-fiat",
+      "source_label": "Mises Institute Wire — Sound Money, Bitcoin, and the End of Fiat",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-wire-why-bitcoin-revolutionary-85a21743",
+      "source_url": "https://mises.org/wire/why-bitcoin-revolutionary",
+      "source_label": "Mises Institute Wire — Why Bitcoin Is Revolutionary",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "nakamotoinstitute-org-b-money-4af59586",
+      "source_url": "https://nakamotoinstitute.org/b-money/",
+      "source_label": "Nakamoto Institute — b-money page",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "nakamotoinstitute-org-bit-gold-01b6d79b",
+      "source_url": "https://nakamotoinstitute.org/bit-gold/",
+      "source_label": "Nick Szabo — Bit Gold (2005)",
+      "cited_by_count": 2
+    },
+    {
+      "slug": "nakamotoinstitute-org-finney-rpow-dfe82197",
+      "source_url": "https://nakamotoinstitute.org/finney/rpow/",
+      "source_label": "Hal Finney — RPOW: Reusable Proofs of Work (2004)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "nakamotoinstitute-org-library-6431393e",
+      "source_url": "https://nakamotoinstitute.org/library/",
+      "source_label": "Nakamoto Institute — Cypherpunk Library",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "nakamotoinstitute-org-library-bitcoin-and-the-rhetoric-of-anarchy-bee654c1",
+      "source_url": "https://nakamotoinstitute.org/library/bitcoin-and-the-rhetoric-of-anarchy/",
+      "source_label": "Daniel Krawisz — Bitcoin and the Rhetoric of Anarchy",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "nakamotoinstitute-org-library-bitcoin-f3c682cd",
+      "source_url": "https://nakamotoinstitute.org/library/bitcoin/",
+      "source_label": "Satoshi Nakamoto — Bitcoin: A Peer-to-Peer Electronic Cash System",
+      "cited_by_count": 3
+    },
+    {
+      "slug": "nakamotoinstitute-org-library-hyperbitcoinization-d54f295b",
+      "source_url": "https://nakamotoinstitute.org/library/hyperbitcoinization/",
+      "source_label": "Daniel Krawisz — Hyperbitcoinization",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "nakamotoinstitute-org-library-satoshi-posts-9212fc4c",
+      "source_url": "https://nakamotoinstitute.org/library/satoshi/posts/",
+      "source_label": "Satoshi Nakamoto — collected forum posts",
+      "cited_by_count": 2
+    },
+    {
+      "slug": "nakamotoinstitute-org-library-the-mises-regression-theorem-aaf2e44b",
+      "source_url": "https://nakamotoinstitute.org/library/the-mises-regression-theorem/",
+      "source_label": "Konrad S. Graf — The Mises Regression Theorem and Bitcoin",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "nakamotoinstitute-org-library-trusted-third-parties-d53ffdb1",
+      "source_url": "https://nakamotoinstitute.org/library/trusted-third-parties/",
+      "source_label": "Nick Szabo — Trusted Third Parties Are Security Holes",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "nakamotoinstitute-org-shelling-out-edf22356",
+      "source_url": "https://nakamotoinstitute.org/shelling-out/",
+      "source_label": "Nick Szabo — Shelling Out: The Origins of Money (2002)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "queue-acm-org-detail-cfm-id-3136559-ff7bac6d",
+      "source_url": "https://queue.acm.org/detail.cfm?id=3136559",
+      "source_label": "Nakamoto Institute — Bitcoin's Academic Pedigree (Arvind Narayanan & Jeremy Clark, 2017)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "research-paradigm-xyz-bitcoins-security-model-f4a97610",
+      "source_url": "https://research.paradigm.xyz/bitcoins-security-model",
+      "source_label": "Hasu & James Prestwich — A Model for Bitcoin's Security and the Declining Block Subsidy (2020)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "reyify-com-blog-payjoin-adoption-31ece934",
+      "source_url": "https://reyify.com/blog/payjoin-adoption",
+      "source_label": "Adam Gibson — Payjoin Adoption (2020)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "spiral-xyz-blog-silent-payments-3cb0b9e0",
+      "source_url": "https://spiral.xyz/blog/silent-payments/",
+      "source_label": "Josibake — Silent Payments BIP352 explainer (Spiral)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "stratumprotocol-org-specification-cf691465",
+      "source_url": "https://stratumprotocol.org/specification/",
+      "source_label": "Stratum V2 specification",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "thirdkey-solutions-services-inheritance-planning-ddbe8819",
+      "source_url": "https://thirdkey.solutions/services/inheritance-planning/",
+      "source_label": "Pamela Morgan — Cryptoasset Inheritance Planning (excerpt)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "www-activism-net-cypherpunk-manifesto-html-3bf45a78",
+      "source_url": "https://www.activism.net/cypherpunk/manifesto.html",
+      "source_label": "Eric Hughes — A Cypherpunk's Manifesto (1993)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "www-gwern-net-docs-bitcoin-2008-nakamoto-58a6a920",
+      "source_url": "https://www.gwern.net/docs/bitcoin/2008-nakamoto",
+      "source_label": "Wei Dai — emails with Satoshi (excerpt, 2008)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "www-hashcash-org-papers-hashcash-pdf-4e2b5eeb",
+      "source_url": "http://www.hashcash.org/papers/hashcash.pdf",
+      "source_label": "Adam Back — Hashcash: A Denial of Service Counter-Measure (2002)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "www-lopp-net-bitcoin-information-recovery-services-html-d45067e1",
+      "source_url": "https://www.lopp.net/bitcoin-information/recovery-services.html",
+      "source_label": "Jameson Lopp — Bitcoin recovery resources",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "www-lynalden-com-bitcoins-security-model-67e84061",
+      "source_url": "https://www.lynalden.com/bitcoins-security-model/",
+      "source_label": "Lyn Alden — Bitcoin's Security and the Future of Mining",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "www-nytimes-com-2015-05-17-business-decoding-the-enigma-of-satoshi-nakamoto-and--72da248b",
+      "source_url": "https://www.nytimes.com/2015/05/17/business/decoding-the-enigma-of-satoshi-nakamoto-and-the-birth-of-bitcoin.html",
+      "source_label": "Nathaniel Popper — Decoding the Enigma of Satoshi Nakamoto (NYT, 2015)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "www-weidai-com-bmoney-txt-6ac2594d",
+      "source_url": "http://www.weidai.com/bmoney.txt",
+      "source_label": "Wei Dai — b-money (1998)",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "www-wired-com-1993-02-crypto-rebels-de9850e8",
+      "source_url": "https://www.wired.com/1993/02/crypto-rebels/",
+      "source_label": "Steven Levy — Crypto Rebels (Wired, 1993)",
+      "cited_by_count": 1
+    }
+  ]
+}

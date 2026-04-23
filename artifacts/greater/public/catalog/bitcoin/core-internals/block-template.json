@@ -1,0 +1,23 @@
+{
+  "id": "block-template",
+  "label": "Block templates, the coinbase, and witness commitments",
+  "brief": "A *block template* is the candidate block a miner assembles from the contents of its mempool. Bitcoin Core's `getblocktemplate` RPC returns one on demand: the previous block hash, the timestamp, the set of transactions to include, the total fees they pay, and the coinbase value the miner is allowed to claim [1]. The miner then iterates the nonce (and, when the nonce space is exhausted, the coinbase's extranonce field) until the block's hash falls below the current proof-of-work target.\n\nThe *coinbase* transaction is the first transaction in every block and is special in several ways. It has no inputs (its single input field is symbolic, holding the block height and an extranonce); it can claim the block subsidy plus the fees from every other transaction in the block; and the resulting outputs are subject to a 100-block maturity rule before they can be spent. This last rule prevents a reorg from invalidating coins that have already been spent further down the chain, which would create a denial-of-service vector against downstream wallets [2].\n\nSegwit added the *witness commitment*: a hash of the witness data for every transaction in the block, committed via a special `OP_RETURN` output in the coinbase. This is what lets the witness data be omitted from the legacy block-hash calculation (preserving backward compatibility for old nodes) while still being cryptographically anchored to the block (so segwit-aware nodes can verify it). The commitment lives in the coinbase because the coinbase is the one transaction the miner can freely modify before mining begins [3].\n\nTransaction selection inside the template is a knapsack problem: the miner wants the highest total fee subject to the block-weight limit (4 million weight units). Bitcoin Core sorts candidate transactions by ancestor fee rate (so a low-fee parent with a high-fee child gets included as a package), then greedily fills the block. This is not optimal, but it is fast and approximates the optimum closely enough that more sophisticated algorithms have not displaced it in practice [1].\n\nVersion-bits signaling — BIP-9 and BIP-8 — uses the block header's version field to let miners advertise readiness for proposed soft forks. A bit's activation requires a threshold of recent blocks signaling for it within a window. This is the mechanism by which Segwit and Taproot were activated.",
+  "sources": [
+    {
+      "label": "Bitcoin Optech — collected newsletters",
+      "url": "https://bitcoinops.org/en/newsletters/",
+      "excerpt": "getblocktemplate returns a candidate block with all transactions selected, fees totaled, and the coinbase value computed. The miner then iterates the nonce (and the coinbase extranonce on rollover) to find a hash that meets the target."
+    },
+    {
+      "label": "Bitcoin Optech — Topics on Coinbase",
+      "url": "https://bitcoinops.org/en/topics/coinbase-transaction/",
+      "excerpt": "The 100-block coinbase maturity rule is the protocol's defence against shallow reorgs invalidating coinbase outputs that have already been spent downstream. It is not a consensus optimisation but a safety property."
+    },
+    {
+      "label": "Bitcoin Optech — Topics on Segregated Witness",
+      "url": "https://bitcoinops.org/en/topics/segregated-witness/",
+      "excerpt": "The witness commitment is a hash of all witness data, placed in a special OP_RETURN in the coinbase. This anchors the witness data cryptographically to the block while keeping the legacy block hash unchanged."
+    }
+  ],
+  "relatedLeafIds": ["mempool", "consensus-rules"]
+}

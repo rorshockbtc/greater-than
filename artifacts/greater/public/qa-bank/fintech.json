@@ -1,0 +1,127 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-20",
+  "persona": "fintech",
+  "items": [
+    {
+      "q": "How do I recover my hardware wallet seed?",
+      "a": "Your seed phrase is the only recovery path — Blockstream cannot recover it for you, and you should never share it with anyone, including support. To restore: power on a fresh Jade or Green-compatible wallet, choose 'Restore wallet,' and enter your 12 or 24 word recovery phrase in the original order. Verify the first deposit address matches what you expected before sending funds. If your phrase is lost, your funds are not recoverable. If you suspect it's been exposed, move funds immediately to a wallet generated from a new seed."
+    },
+    {
+      "q": "What is the difference between Bitcoin Core and Knots?",
+      "a": "Bitcoin Core is the reference implementation of the Bitcoin protocol. Bitcoin Knots is a downstream client maintained by Luke Dashjr that includes Core's consensus rules plus additional policy and mempool refinements (notably more aggressive spam filtering and stricter relay policy). Both follow the same consensus rules, so they remain in agreement on the chain. Operators choose Knots when they want stricter mempool defaults; Core remains the most widely run implementation. The bias toggle on this demo lets you see answers leaning either way."
+    },
+    {
+      "q": "Why are my fees so high right now?",
+      "a": "Bitcoin transaction fees are set by mempool demand and the block-space market, not by Blockstream or any wallet. When the mempool is congested, miners prioritize the highest-fee transactions per virtual byte. To lower the cost: use a SegWit (bech32) address if you aren't already, batch transactions, or wait for a quieter window. Most Blockstream wallets offer fee estimation tied to confirmation targets — pick a longer target (e.g. 6+ blocks) to pay less. For technical detail on fee markets, see the Bitcoin Optech newsletter."
+    },
+    {
+      "q": "Is self-custody really worth the hassle?",
+      "a": "It depends on how much you hold and how much you trust your custodian. The case for self-custody is that no third party can freeze, lose, or be compelled to surrender your funds. The case against is that you bear the full operational burden — losing your seed phrase or making a signing mistake is irreversible. The pragmatic middle ground for most people is a small operational hot wallet (custodial or non-custodial) plus a hardware wallet for long-term holdings. Blockstream Jade is built for that long-term role."
+    },
+    {
+      "q": "Does my message get sent to OpenAI?",
+      "a": "No. The bot you're talking to runs entirely in your browser. The model is downloaded once and runs locally — your messages are not sent to OpenAI, Anthropic, or any third-party LLM provider. The only outbound network calls happen if you explicitly escalate to a human or if the in-browser model isn't ready yet, in which case a strictly capped fallback is used (and the message badge tells you which path served the answer)."
+    },
+    {
+      "q": "What is Blockstream Jade?",
+      "a": "Jade is Blockstream's air-gapped hardware wallet, designed to keep your private keys isolated from any networked device. It supports Bitcoin and Liquid, can be used with Blockstream Green or other compatible wallets, and the firmware is open source and reproducibly built. Jade has no fingerprint sensor or wireless radio by design — its security model is 'do less, verify more.'"
+    },
+    {
+      "q": "I think my wallet was compromised. What do I do?",
+      "a": "If you suspect your seed phrase or signing device is compromised: (1) Stop using the affected wallet immediately. (2) Generate a fresh wallet on a known-clean device with a brand-new seed phrase. (3) Move your funds to the new wallet. (4) Do NOT type your old seed phrase into anything — including this chat — to 'verify' it; that's a common scam pattern. If funds have already moved without your authorization, a recovery is unfortunately not possible — Bitcoin transactions are final. File a report with your local authorities and consider engaging a forensics firm if the amount warrants it."
+    },
+    {
+      "q": "Why doesn't this bot just answer everything?",
+      "a": "Because answers that are 'almost right' about Bitcoin can lose people money. The bot answers from a curated corpus — Blockstream's own help articles, Bitcoin Core and Knots commit history, the Bitcoin Optech newsletter, and high-signal community sources. When the corpus doesn't cover your question, the bot says so and offers an escalation path Blockstream controls, instead of guessing. That's the correct failure mode for a fintech support surface."
+    },
+    {
+      "q": "How do I know my wallet is secure?",
+      "a": "Security is a process, not a product. Regularly review your wallet's and device's software and firmware for updates, use strong passwords, and keep your seed phrase safe. If you're using a hardware wallet like Blockstream Jade, its air-gapped design provides strong protection. Always verify the authenticity of any software or firmware before installing."
+    },
+    {
+      "q": "Can I use my wallet on multiple devices?",
+      "a": "It's generally not recommended to use your wallet on multiple devices, as this can increase the risk of your seed phrase being compromised. If you need to access your wallet from multiple devices, consider using a hardware wallet with a limited number of authorized devices."
+    },
+    {
+      "q": "What's the best way to store my seed phrase?",
+      "a": "Your seed phrase should be stored in a safe and secure location, such as a fireproof safe or a hardware security module. Never store your seed phrase digitally or online, as this can put your funds at risk. Consider using a seed phrase storage device specifically designed for this purpose."
+    },
+    {
+      "q": "How do I protect my wallet from malware?",
+      "a": "To protect your wallet from malware, ensure your device and wallet software are up-to-date, use antivirus software, and avoid suspicious links or downloads. Regularly scan your device for malware and consider using a device specifically designed for wallet use."
+    },
+    {
+      "q": "Can you predict the price of Bitcoin?",
+      "a": "I'm not capable of providing price predictions or investment advice. My purpose is to assist with self-custody, wallet, and node-related topics. If you're interested in learning more about Bitcoin, I can provide information on its technology and usage."
+    },
+    {
+      "q": "What's the difference between a hot wallet and a cold wallet?",
+      "a": "A hot wallet is connected to the internet and used for frequent transactions, while a cold wallet is offline and used for long-term storage. Cold wallets, like hardware wallets, provide stronger security but may be less convenient for everyday use."
+    },
+    {
+      "q": "How do I set up a Bitcoin node?",
+      "a": "Setting up a Bitcoin node requires a device with sufficient storage and bandwidth. You can use a pre-configured node device or set up a node on a computer or server. Ensure you follow best practices for node setup and maintenance to ensure the security and integrity of the network."
+    },
+    {
+      "q": "Can I use my wallet with a VPN?",
+      "a": "Using a VPN with your wallet can provide additional privacy and security, but ensure the VPN is reputable and doesn't compromise your wallet's functionality. Some wallets may have specific VPN settings or recommendations, so check your wallet's documentation before using a VPN."
+    },
+    {
+      "q": "What's the benefit of using a hardware wallet?",
+      "a": "Hardware wallets provide strong protection for your private keys and seed phrase, reducing the risk of compromise. They're designed to be air-gapped, meaning they're not connected to the internet, and often have additional security features like PIN protection and seed phrase verification."
+    },
+    {
+      "q": "How do I know if my wallet is compatible with my device?",
+      "a": "Check your wallet's documentation or manufacturer's website to ensure compatibility with your device. Some wallets may have specific requirements or recommendations for device setup and configuration."
+    },
+    {
+      "q": "Can you recommend a good cryptocurrency to invest in?",
+      "a": "I'm not capable of providing investment advice or recommending specific cryptocurrencies. My purpose is to assist with self-custody, wallet, and node-related topics. If you're interested in learning more about Bitcoin, I can provide information on its technology and usage."
+    },
+    {
+      "q": "What's the difference between a full node and a lightweight node?",
+      "a": "A full node stores the entire Bitcoin blockchain, while a lightweight node only stores a portion of it. Full nodes provide stronger security and verification, but require more storage and bandwidth. Lightweight nodes are more convenient but may be less secure."
+    },
+    {
+      "q": "How do I update my wallet's firmware?",
+      "a": "Check your wallet's documentation or manufacturer's website for firmware update instructions. Ensure you only download firmware from trusted sources and follow the recommended update process to avoid compromising your wallet's security."
+    },
+    {
+      "q": "Can I use my wallet with a Trezor?",
+      "a": "Trezor is a different hardware wallet manufacturer. If you're using a Trezor, refer to their documentation and support resources for assistance. I can provide general information on hardware wallets and self-custody, but for specific Trezor-related questions, please contact their support team."
+    },
+    {
+      "q": "What's the benefit of using a seed phrase?",
+      "a": "A seed phrase allows you to restore your wallet and access your funds in case your device is lost, stolen, or compromised. It's essential to keep your seed phrase safe and secure, as losing it can result in losing your funds."
+    },
+    {
+      "q": "How do I set up a watch-only wallet?",
+      "a": "A watch-only wallet allows you to monitor your funds without having access to the private keys. To set up a watch-only wallet, refer to your wallet's documentation or manufacturer's website for instructions. Ensure you understand the limitations and security implications of using a watch-only wallet."
+    },
+    {
+      "q": "Can I use my wallet with a Ledger?",
+      "a": "Ledger is a different hardware wallet manufacturer. If you're using a Ledger, refer to their documentation and support resources for assistance. I can provide general information on hardware wallets and self-custody, but for specific Ledger-related questions, please contact their support team."
+    },
+    {
+      "q": "What's the difference between a Bitcoin wallet and a cryptocurrency exchange?",
+      "a": "A Bitcoin wallet is a software or hardware program that allows you to store, send, and receive Bitcoin. A cryptocurrency exchange is a platform that allows you to buy, sell, and trade various cryptocurrencies. Exchanges often hold your private keys, which can put your funds at risk. Self-custody wallets, on the other hand, give you full control over your private keys and funds."
+    },
+    {
+      "q": "How do I protect my privacy when using Bitcoin?",
+      "a": "To protect your privacy when using Bitcoin, consider using a wallet that supports CoinJoin or other privacy-enhancing technologies. Additionally, use a VPN, avoid reusing addresses, and keep your wallet and device software up-to-date. For more information on Bitcoin privacy, refer to the Bitcoin Optech newsletter and other reputable sources."
+    },
+    {
+      "q": "Can you explain the concept of CoinJoin?",
+      "a": "CoinJoin is a privacy-enhancing technology that allows multiple users to combine their transactions, making it more difficult to identify the origin and destination of funds. This can help improve anonymity and reduce the risk of transaction tracking."
+    },
+    {
+      "q": "How do I know if my wallet is vulnerable to a specific attack?",
+      "a": "Regularly review your wallet's and device's software and firmware for updates, and check for any known vulnerabilities. Ensure you're using a reputable and well-maintained wallet, and consider using additional security measures like a hardware security module or a wallet with built-in security features."
+    },
+    {
+      "q": "What's the benefit of using a Bitcoin node?",
+      "a": "Running a Bitcoin node allows you to verify transactions and blocks, providing stronger security and validation of the network. It also allows you to contribute to the decentralization and integrity of the Bitcoin network."
+    }
+  ]
+}

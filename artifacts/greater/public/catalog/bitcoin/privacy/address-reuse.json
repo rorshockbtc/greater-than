@@ -1,0 +1,23 @@
+{
+  "id": "address-reuse",
+  "label": "Address reuse and the default privacy floor",
+  "brief": "If two payments arrive at the same Bitcoin address, anyone watching the chain can permanently link them — same recipient, same balance, same spending history once those coins move. There is no cryptographic step required; it's just public data joined on a string match. This is the single biggest privacy leak in everyday Bitcoin use, and it's the one the protocol gives you the most help avoiding [1].\n\nHD wallets (BIP32) were designed around this. From a single seed, a wallet derives a fresh receiving address for every incoming payment along a deterministic path, so the user never has to manage keys by hand or copy old addresses [2]. Modern wallets default to this — you tap \"receive\" and get a new address each time. The leak shows up when people paste a static address into a bio, a donation page, or a shop checkout, or when an exchange withdrawal gets reused as an inbound for the next deposit.\n\nThe other half of the same problem is the common-input-ownership heuristic: when a transaction spends multiple inputs, the surveillance assumption is that one wallet controls all of them [3]. Combine that with one reused address and a chain analyst can usually walk a substantial portion of someone's UTXO set in a few hops. Coinjoin, payjoin, and silent payments all exist to break some piece of this default linkage; the cheapest defense, however, is just not reusing addresses in the first place.",
+  "sources": [
+    {
+      "label": "Bitcoin Wiki — Address reuse",
+      "url": "https://en.bitcoin.it/wiki/Address_reuse",
+      "excerpt": "Address reuse harms the privacy of not just yourself but also other people, sometimes even people who do not use Bitcoin. Reusing an address links transactions together in the blockchain, allowing anyone to see how much Bitcoin you've received in total and connecting your past and future spending to that history."
+    },
+    {
+      "label": "BIP32 — Hierarchical Deterministic Wallets",
+      "url": "https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki",
+      "excerpt": "Defines a tree of keypairs derived from a single seed via parent-to-child derivation. The motivation includes giving wallets the ability to generate a fresh receiving address for every payment without having to back up new key material, which makes default-non-reuse the path of least resistance."
+    },
+    {
+      "label": "Bitcoin Optech — Privacy topic",
+      "url": "https://bitcoinops.org/en/topics/output-script-descriptors/",
+      "excerpt": "The common-input-ownership heuristic assumes that all inputs to a transaction are controlled by the same entity. It is the workhorse assumption of most surveillance heuristics, and it is broken intentionally by coinjoin and payjoin constructions."
+    }
+  ],
+  "relatedLeafIds": ["coinjoin", "payjoin", "silent-payments"]
+}

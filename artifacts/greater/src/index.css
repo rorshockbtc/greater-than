@@ -1,0 +1,696 @@
+@import url('https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap');
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-serif: 'Fraunces', ui-serif, Georgia, 'Times New Roman', serif;
+  --font-display: 'Major Mono Display', monospace;
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card-border: hsl(var(--card-border));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --radius-sm: 0.1875rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5625rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+
+  --shadow-xs: 0 0 0 0 transparent;
+  --shadow-sm: 0 0 0 0 transparent;
+  --shadow-md: 0 0 0 0 transparent;
+  --shadow-lg: 0 0 0 0 transparent;
+  --shadow-xl: 0 0 0 0 transparent;
+  --shadow-2xl: 0 0 0 0 transparent;
+}
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 7%;
+
+  --card: 0 0% 99%;
+  --card-foreground: 0 0% 7%;
+  --card-border: 0 0% 92%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 7%;
+
+  /* CHB Pink #FE299E ≈ HSL(328, 99%, 58%) — kept as semantic primary */
+  --primary: 328 99% 58%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 7%;
+
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 35%;
+
+  --accent: 328 99% 58%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --warning: 35 100% 55%;
+  --warning-foreground: 0 0% 7%;
+
+  --border: 0 0% 92%;
+  --input: 0 0% 96%;
+  --ring: 328 99% 58%;
+
+  /* Chat widget overrides — preserved dark surface for the chat dialog */
+  --widget-bg: 0 0% 7%;
+  --widget-fg: 0 0% 98%;
+  --widget-card: 0 0% 11%;
+  --widget-border: 0 0% 18%;
+  --widget-muted: 0 0% 55%;
+  --widget-input: 0 0% 14%;
+}
+
+.dark {
+  --background: 0 0% 7%;
+  --foreground: 0 0% 98%;
+
+  --card: 0 0% 9%;
+  --card-foreground: 0 0% 98%;
+  --card-border: 0 0% 15%;
+
+  --popover: 0 0% 9%;
+  --popover-foreground: 0 0% 98%;
+
+  --primary: 328 99% 58%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 0 0% 13%;
+  --secondary-foreground: 0 0% 98%;
+
+  --muted: 0 0% 13%;
+  --muted-foreground: 0 0% 65%;
+
+  --accent: 328 99% 58%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --warning: 35 100% 55%;
+  --warning-foreground: 0 0% 7%;
+
+  --border: 0 0% 18%;
+  --input: 0 0% 14%;
+  --ring: 328 99% 58%;
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Elevation system — overlays only, no box-shadows.
+   Apply on interactive cards/containers to provide hover/active feedback. */
+.hover-elevate {
+  position: relative;
+  isolation: isolate;
+}
+.hover-elevate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: rgba(0, 0, 0, 0);
+  transition: background-color 150ms ease;
+  z-index: 0;
+}
+.hover-elevate > * { position: relative; z-index: 1; }
+.hover-elevate:hover::after { background: rgba(0, 0, 0, 0.03); }
+.dark .hover-elevate:hover::after { background: rgba(255, 255, 255, 0.04); }
+
+.hover-elevate-2 {
+  position: relative;
+  isolation: isolate;
+}
+.hover-elevate-2::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: rgba(0, 0, 0, 0);
+  transition: background-color 150ms ease;
+  z-index: 0;
+}
+.hover-elevate-2 > * { position: relative; z-index: 1; }
+.hover-elevate-2:hover::after { background: rgba(0, 0, 0, 0.08); }
+.dark .hover-elevate-2:hover::after { background: rgba(255, 255, 255, 0.09); }
+
+.active-elevate {
+  position: relative;
+  isolation: isolate;
+}
+.active-elevate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: rgba(0, 0, 0, 0);
+  transition: background-color 100ms ease;
+  z-index: 0;
+}
+.active-elevate > * { position: relative; z-index: 1; }
+.active-elevate:active::after { background: rgba(0, 0, 0, 0.08); }
+.dark .active-elevate:active::after { background: rgba(255, 255, 255, 0.09); }
+
+.toggle-elevate {
+  position: relative;
+  isolation: isolate;
+}
+.toggle-elevate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: rgba(0, 0, 0, 0);
+  transition: background-color 150ms ease;
+  z-index: 0;
+}
+.toggle-elevate > * { position: relative; z-index: 1; }
+.toggle-elevate.toggle-elevated::before { background: rgba(0, 0, 0, 0.06); }
+.dark .toggle-elevate.toggle-elevated::before { background: rgba(255, 255, 255, 0.07); }
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Chat widget surface — semantic-token overrides scoped to the widget.
+   Light/dark variant is selected via data-theme on the widget root,
+   driven by the in-widget theme toggle (persisted to localStorage). */
+.chat-widget {
+  --background: var(--widget-bg);
+  --foreground: var(--widget-fg);
+  --card: var(--widget-card);
+  --card-foreground: var(--widget-fg);
+  --popover: var(--widget-card);
+  --popover-foreground: var(--widget-fg);
+  --secondary: 0 0% 14%;
+  --secondary-foreground: var(--widget-fg);
+  --muted: 0 0% 12%;
+  --muted-foreground: var(--widget-muted);
+  --border: var(--widget-border);
+  --input: var(--widget-input);
+  color: hsl(var(--widget-fg));
+}
+
+/* Light variant — magazine-paper surface that reads as a sibling of
+   the marketing site rather than a pop-in dark tech-app overlay.
+   Kept inside .chat-widget so it never leaks to the surrounding page
+   chrome. Slightly warm off-white card on a near-white bg so the
+   message column visibly lifts off the surrounding panel; hairline
+   borders pulled darker than the previous 88% so they actually read
+   on the pale surface. */
+.chat-widget[data-theme="light"] {
+  --widget-bg: 0 0% 99%;
+  --widget-fg: 0 0% 12%;
+  --widget-card: 41 22% 96%;
+  --widget-border: 0 0% 82%;
+  --widget-muted: 0 0% 38%;
+  --widget-input: 0 0% 100%;
+  --secondary: 41 18% 94%;
+  --muted: 41 14% 92%;
+}
+
+.chat-widget ::-webkit-scrollbar-thumb {
+  background: hsl(var(--widget-muted) / 0.3);
+}
+
+.callout-note {
+  border-left: 3px solid hsl(var(--warning));
+  background: hsl(var(--warning) / 0.06);
+  padding: 1rem 1.25rem;
+  border-radius: 0 0.375rem 0.375rem 0;
+}
+
+/* CHB-aligned utility for nav/label microtype.
+   Friend-review feedback: the previous all-caps + wide letter-spacing
+   treatment was hard to read and overflowed pill containers. Now the
+   mono font carries the brand cue at sentence/title case with a gentle
+   tracking bump. */
+.chb-mono-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+/**
+ * Section eyebrow / small label. The previous treatment was the
+ * default tech-template uppercase-mono-gray that shows up on every
+ * AI-generated marketing site. Now: small serif italic, sentence
+ * case, normal contrast — closer to a magazine attribution line
+ * than a CSS-framework eyebrow. Single CSS change ripples to every
+ * page that uses the class.
+ *
+ * Specifically NOT all-caps and NOT light-gray, by design.
+ */
+.chb-mono-eyebrow {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  color: hsl(var(--foreground) / 0.72);
+  text-transform: none;
+}
+
+.chb-display {
+  font-family: var(--font-display);
+}
+
+/**
+ * Editorial chat-pill. Replaces the legacy
+ *   text-[10px] uppercase tracking-wider font-medium px-2 py-0.5
+ *   rounded-md bg-X/10 border border-X/30
+ * chat-pill chrome — five copies of which were stacking under every
+ * bot reply and reading as the standard AI-template badge soup. The
+ * editorial replacement is a small italic-serif label preceded by a
+ * coloured leading dot. The dot inherits the consumer's text colour
+ * via currentColor, so callers just set `text-emerald-400` (or
+ * whatever hue) and drop every background/border/padding/uppercase
+ * class.
+ */
+.chb-chat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.78rem;
+  letter-spacing: -0.005em;
+  text-transform: none;
+  line-height: 1.2;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.chb-chat-pill::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+/**
+ * Editorial chat-metadata text — timestamps, "thanks for the upvote",
+ * trace-toggle button, "internal note" filemark. Sentence-case italic
+ * serif at low contrast. Replaces the uppercase-tracking-wider
+ * muted-foreground pattern that was stamped on every secondary chrome
+ * element in the widget.
+ */
+.chb-chat-meta {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.2;
+}
+
+/**
+ * Light-theme contrast overrides for the editorial chat utilities.
+ * The `text-{hue}-300/400` tints chosen for legibility on the slate
+ * dark widget background read as washed-out pastel on the pale light
+ * widget surface — failing WCAG AA. Inside the light-themed widget
+ * pull each *-300/-400 tint down to the matching *-700 which passes
+ * AA on white. Scoped to the two new chat utilities and to
+ * `[data-theme="light"]` so this does not leak out into the rest of
+ * the marketing site.
+ */
+[data-theme="light"] .chb-chat-pill.text-pink-300,
+[data-theme="light"] .chb-chat-pill.text-pink-400,
+[data-theme="light"] .chb-chat-meta.text-pink-300,
+[data-theme="light"] .chb-chat-meta.text-pink-400 { color: rgb(190 24 93); }
+
+[data-theme="light"] .chb-chat-pill.text-amber-300,
+[data-theme="light"] .chb-chat-pill.text-amber-400,
+[data-theme="light"] .chb-chat-meta.text-amber-300,
+[data-theme="light"] .chb-chat-meta.text-amber-400 { color: rgb(180 83 9); }
+
+[data-theme="light"] .chb-chat-pill.text-emerald-300,
+[data-theme="light"] .chb-chat-pill.text-emerald-400,
+[data-theme="light"] .chb-chat-meta.text-emerald-300,
+[data-theme="light"] .chb-chat-meta.text-emerald-400 { color: rgb(4 120 87); }
+
+[data-theme="light"] .chb-chat-pill.text-violet-300,
+[data-theme="light"] .chb-chat-pill.text-violet-400,
+[data-theme="light"] .chb-chat-meta.text-violet-300,
+[data-theme="light"] .chb-chat-meta.text-violet-400 { color: rgb(109 40 217); }
+
+[data-theme="light"] .chb-chat-pill.text-sky-300,
+[data-theme="light"] .chb-chat-pill.text-sky-400,
+[data-theme="light"] .chb-chat-meta.text-sky-300,
+[data-theme="light"] .chb-chat-meta.text-sky-400 { color: rgb(3 105 161); }
+
+[data-theme="light"] .chb-chat-pill.text-rose-300,
+[data-theme="light"] .chb-chat-pill.text-rose-400,
+[data-theme="light"] .chb-chat-meta.text-rose-300,
+[data-theme="light"] .chb-chat-meta.text-rose-400 { color: rgb(190 18 60); }
+
+/**
+ * Financial-advice warning bubble. The default `text-warning` token
+ * is HSL 35 100% 55% — a vivid amber that pops on dark surfaces but
+ * sits at ~3.1:1 against white, just under WCAG AA. Inside the
+ * light-themed widget bump it to the same amber-700 the chat-pill
+ * uses so the warning stays legible on the pale surface.
+ */
+[data-theme="light"] .chb-chat-pill.text-warning { color: rgb(180 83 9); }
+
+/**
+ * Editorial suggested-prompt chip. Replaces the previous
+ *   text-xs px-3 py-1.5 rounded-full border border-emerald-500/40
+ *   bg-emerald-500/10 text-emerald-700 dark:text-emerald-200
+ * "rounded-full green pill" pattern that read as the standard
+ * AI-template suggestion strip and failed WCAG AA on the pale
+ * widget surface. The new chip is a hairline-bordered card with a
+ * small leading "→" mark and serif-italic prompt text — closer to
+ * a magazine reader-prompt than a chat-app quick-reply button.
+ * Brand-pink accent on hover instead of emerald saturation.
+ */
+.chb-suggestion-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.82rem;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  text-align: left;
+  color: hsl(var(--widget-fg) / 0.86);
+  background: transparent;
+  border: 1px solid hsl(var(--widget-border));
+  border-radius: 4px;
+  padding: 0.45rem 0.7rem 0.5rem;
+  transition: color 120ms ease, border-color 120ms ease, background-color 120ms ease;
+  cursor: pointer;
+}
+.chb-suggestion-chip:hover:not(:disabled) {
+  color: hsl(328 99% 38%);
+  border-color: hsl(328 99% 58% / 0.55);
+  background: hsl(328 99% 58% / 0.04);
+}
+.chb-suggestion-chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.chb-suggestion-chip-mark {
+  font-style: normal;
+  font-family: var(--font-sans);
+  color: hsl(328 99% 58%);
+  font-size: 0.85em;
+  line-height: 1;
+  flex-shrink: 0;
+}
+[data-theme="dark"] .chb-suggestion-chip {
+  color: hsl(var(--widget-fg) / 0.78);
+}
+[data-theme="dark"] .chb-suggestion-chip:hover:not(:disabled) {
+  color: hsl(328 99% 75%);
+  border-color: hsl(328 99% 58% / 0.55);
+  background: hsl(328 99% 58% / 0.08);
+}
+
+/**
+ * Serif headline utility — Fraunces with optical-size + tighter
+ * tracking. Applied selectively to hero H1s to break up the
+ * uniform Inter look that reads as AI-generated. Editorial
+ * typography without committing the whole site to a serif.
+ */
+.chb-serif-headline {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-feature-settings: "ss01", "ss02";
+  letter-spacing: -0.022em;
+}
+
+/**
+ * Accessibility — WCAG 2.2 AA pass.
+ *
+ * 1. Visible focus ring on every interactive element. Browser default
+ *    focus rings vary; we paint a consistent pink ring with a 2px
+ *    offset against the page background so it survives both light
+ *    and dark surfaces without requiring per-component overrides.
+ * 2. Respect `prefers-reduced-motion`. Framer Motion already honors
+ *    the OS preference for its motion components, but we also
+ *    neutralize raw CSS transitions and any `animate-*` utilities
+ *    that ship with Tailwind so the entire site goes still.
+ */
+:where(a, button, [role="button"], input, textarea, select, summary, [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/**
+ * Editorial section sigil — small mono cap-and-numeral with a 24px
+ * pink hairline rule beside it. Replaces the all-caps mono eyebrow
+ * on marketing-page section headers so each section reads like a
+ * numbered chapter in a print magazine instead of a CMS template.
+ * Pair with a serif H2 (`chb-section-headline`) for the full effect.
+ */
+.chb-section-sigil {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  letter-spacing: -0.005em;
+  text-transform: none;
+  color: hsl(var(--foreground) / 0.72);
+}
+.chb-section-sigil::before {
+  content: "";
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: #FE299E;
+  flex-shrink: 0;
+}
+
+/**
+ * Serif section headline — Fraunces with optical sizing turned on,
+ * mid-weight, slightly tighter tracking than the Inter default.
+ * Specifically tuned for H2-scale (28-36px) marketing copy where
+ * the goal is "editorial," not "shouty hero." Use sparingly; the
+ * point is contrast against the surrounding sans body text.
+ */
+.chb-section-headline {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.018em;
+  line-height: 1.12;
+  font-feature-settings: "ss01", "ss02";
+}
+
+/**
+ * Inline serif italic accent — for one-or-two-word callouts inside
+ * an otherwise sans headline. The mixed-typeface trick is the cheap
+ * way to get an Atlantic-style headline rhythm without committing
+ * the whole site to a serif-first design.
+ */
+.chb-serif-accent {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.012em;
+}
+
+/**
+ * Build / file stamp — the tiny mono mark you see in the corner of
+ * a magazine layout, repurposed here as an anti-AI cue: a real
+ * person actually filed this on a real date.
+ */
+.chb-filemark {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: hsl(var(--muted-foreground) / 0.7);
+}
+
+/**
+ * Editorial entry — the magazine-grade replacement for the boxed
+ * "rounded-xl border bg-card p-5" card pattern that was making every
+ * section feel like a generic CMS template. An entry has no box; it
+ * sits on the page separated only by a hairline top rule and tight
+ * whitespace, with a big serif numeral hanging in the gutter as
+ * design furniture. Use inside `.chb-editorial-grid`.
+ *
+ * On screens narrower than `sm` the numeral collapses to a small
+ * mono label inline with the eyebrow, so the layout still reads as
+ * a list rather than a wall of huge digits on a phone.
+ */
+.chb-editorial-grid {
+  display: grid;
+  /* Hairline column dividers via background, not borders, so the
+     number of columns can change without re-pluming each item. */
+  position: relative;
+}
+.chb-editorial-entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 1rem;
+  padding-top: 1.25rem;
+  padding-right: 1rem;
+  border-top: 1px solid hsl(var(--border));
+}
+.chb-editorial-entry > .chb-numeral {
+  font-family: var(--font-serif);
+  font-feature-settings: "lnum", "ss01";
+  font-weight: 400;
+  font-size: 2.4rem;
+  line-height: 0.95;
+  color: hsl(var(--foreground) / 0.18);
+  letter-spacing: -0.02em;
+  margin-top: -0.18rem;
+  user-select: none;
+}
+.chb-editorial-entry > .chb-numeral em {
+  font-style: italic;
+  color: #FE299E;
+  opacity: 0.55;
+}
+@media (max-width: 640px) {
+  .chb-editorial-entry {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+  .chb-editorial-entry > .chb-numeral {
+    /* On phones the numeral collapses to a small inline italic
+       serif label rather than the loud uppercase-mono treatment
+       it had previously, which read as the standard "data-table
+       column header" template tile. */
+    font-size: 0.95rem;
+    font-family: var(--font-serif);
+    font-style: italic;
+    letter-spacing: -0.005em;
+    text-transform: none;
+    color: hsl(var(--foreground) / 0.55);
+    margin: 0 0 0.4rem;
+  }
+}
+
+/**
+ * Vertical hairline dividers between editorial entries laid out as
+ * a 2x2 or 4x1 grid. Drawn via a pseudo-element so it never affects
+ * grid sizing and disappears cleanly at the column boundaries.
+ */
+.chb-editorial-divided > * + * {
+  position: relative;
+}
+@media (min-width: 1024px) {
+  .chb-editorial-divided.chb-cols-4 > *:nth-child(n+2)::before,
+  .chb-editorial-divided.chb-cols-2 > *:nth-child(n+2)::before {
+    content: "";
+    position: absolute;
+    top: 1.25rem;
+    bottom: 0.5rem;
+    left: -1rem;
+    width: 1px;
+    background: hsl(var(--border));
+  }
+}
+
+/**
+ * Pull-quote — large serif italic, hanging quote, used at most once
+ * per page. Borrows the print convention of breaking the body grid
+ * with a single large piece of voice.
+ */
+.chb-pullquote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+  color: hsl(var(--foreground) / 0.88);
+  border-left: 2px solid #FE299E;
+  padding-left: 1.25rem;
+}
+
+/**
+ * `prose-styles` — light typographic defaults for the Compliance and
+ * case-study bodies. Intentionally minimal; we don't load `@tailwind/
+ * typography` for one page.
+ */
+.prose-styles p {
+  margin-block: 0;
+}
+.prose-styles strong {
+  color: hsl(var(--foreground));
+}

@@ -1,0 +1,127 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-20",
+  "persona": "small-business",
+  "items": [
+    {
+      "q": "Is the house at 892 Hawthorne Drive in the Riverside Elementary district?",
+      "a": "No — and this is the most common boundary confusion in the area. 892 Hawthorne Drive is in the Pinecrest Middle district, not Riverside Elementary, despite being closer to Riverside on the map [1]. If Riverside Elementary matters to you, please verify the address with us before making an offer — the August 2025 redraw moved approximately 40 homes on the south side of Maple Avenue from Riverside Elementary to Pinecrest Middle, and properties that closed before the redraw may still be marketed inaccurately on third-party sites [2]."
+    },
+    {
+      "q": "What homes do you have listed right now?",
+      "a": "Three current listings: 47 Birch Lane, Riverside ($369,500, 3/2, 1,640 sqft, Riverside Elementary district, listed Mar 18); 892 Hawthorne Drive, Pinecrest ($412,000, 4/2.5, 2,210 sqft, Pinecrest Middle district, listed Mar 22); and 12 Sycamore Ridge, Oak Hollow ($445,000, 3/2, 1,950 sqft on 1.4 acres, Oak Hollow High district, listed Mar 28) [1]. Showings are by appointment — call or use the Contact page to schedule."
+    },
+    {
+      "q": "Who are your local lenders for pre-approval?",
+      "a": "Three local lenders we work with: First Pinecrest Bank (most competitive on jumbo loans above $766,550), Oak Hollow Credit Union (most flexible underwriting for self-employed buyers, fastest to close), and Mountain Mortgage Co. (the only one of the three that does USDA rural development loans, which matter for some Oak Hollow properties) [1]. We don't take referral fees from any of them — we'll introduce you to all three on request and let you choose."
+    },
+    {
+      "q": "What does a first-time buyer typically budget?",
+      "a": "Most first-time buyers in our market budget for 3.5–10% down depending on loan type, plus 2–3% for closing costs. The seller typically pays the buyer's agent commission as part of the listing agreement. The full process — pre-approval, search, offer, inspection, appraisal, close — typically takes 35–60 days from accepted offer to keys [1]."
+    },
+    {
+      "q": "Tell me about Pinecrest Realty.",
+      "a": "Pinecrest Realty is a small independent brokerage serving Pinecrest, Riverside, and Oak Hollow. Founded in 2003 by a husband-and-wife team, currently nine licensed agents. We focus on residential resale and small-acreage rural properties; we don't handle large commercial deals or new-construction subdivisions [1]."
+    },
+    {
+      "q": "Do you handle commercial real estate?",
+      "a": "No — we focus on residential resale and small-acreage rural properties. For commercial deals or new-construction subdivisions, we'll happily refer you to brokers in the area who specialize there [1]."
+    },
+    {
+      "q": "How do showings work?",
+      "a": "Showings are by appointment. For most listings we ask for at least 24 hours' notice; some (like 12 Sycamore Ridge) explicitly require 24-hour notice in writing [1]. The fastest path is to call the listing agent directly or use the Contact page — we usually confirm within a few hours during business hours."
+    },
+    {
+      "q": "What changed with school district boundaries last year?",
+      "a": "The August 2025 redraw moved approximately 40 homes on the south side of Maple Avenue from the Riverside Elementary district to the Pinecrest Middle district [1]. Properties that closed before the redraw may still be marketed under the old district on third-party sites. Always verify through the school board's published map or through us [1]."
+    },
+    {
+      "q": "Are you accepting new clients?",
+      "a": "Yes. The fastest path is to use the Contact page or call the office. We'll start with a no-pressure conversation about what you're looking for, your timeline, and your financing situation — and if we're not the right fit (e.g. you need commercial), we'll say so and refer you somewhere that is."
+    },
+    {
+      "q": "How long does it take to close on a house?",
+      "a": "The full process, from accepted offer to keys, typically takes 35-60 days. This includes time for inspections, appraisals, and financing. We'll guide you through the process and keep you updated on the status."
+    },
+    {
+      "q": "Do you have any homes with a pool?",
+      "a": "Yes, we have a few listings with pools. For example, 12 Sycamore Ridge in Oak Hollow has a beautiful pool and outdoor entertaining area. Let us know if you're looking for a specific feature like a pool, and we'll do our best to find a match."
+    },
+    {
+      "q": "Can you help me with a short sale?",
+      "a": "We can provide general information about the short sale process, but we're not equipped to handle short sales directly. For specific guidance, we recommend consulting with a licensed agent or attorney who specializes in short sales."
+    },
+    {
+      "q": "What's the difference between a townhouse and a condo?",
+      "a": "In our area, townhouses are typically multi-level homes with individual exterior entrances, while condos are often single-level units within a larger building. Both can be great options, depending on your lifestyle and preferences. Let us know if you have specific questions about a particular property type."
+    },
+    {
+      "q": "How do I know if a neighborhood is safe?",
+      "a": "We can provide general information about local crime rates and neighborhood characteristics. However, for the most accurate and up-to-date information, we recommend visiting the neighborhood in person and talking to local residents or law enforcement."
+    },
+    {
+      "q": "Can you recommend a home inspector?",
+      "a": "We work with several reputable home inspectors in the area. We can provide you with a list of recommendations, but ultimately the choice of inspector is up to you. We recommend doing your own research and interviewing potential inspectors to find the best fit for your needs."
+    },
+    {
+      "q": "What's the process for making an offer on a house?",
+      "a": "When you're ready to make an offer, we'll guide you through the process. This typically involves submitting a written offer that includes the price, contingencies, and other terms. We'll help you navigate the negotiation process and ensure that your offer is presented in the best possible light."
+    },
+    {
+      "q": "Do you have any experience with VA loans?",
+      "a": "Yes, we've worked with several veterans and VA loan specialists in the area. We can provide general information about the VA loan process and help you get started with the application. However, for specific guidance, we recommend consulting with a licensed lender who specializes in VA loans."
+    },
+    {
+      "q": "Can you help me find a rental property?",
+      "a": "We specialize in residential sales, but we can provide some general information about rental properties in the area. For a more comprehensive search, we recommend contacting a local property management company or rental agent."
+    },
+    {
+      "q": "How do I get pre-approved for a mortgage?",
+      "a": "We work with several local lenders who can help you get pre-approved for a mortgage. The process typically involves providing financial information and credit history, and the lender will provide a pre-approval letter stating the amount you're eligible to borrow. We can introduce you to our lender partners and help you get started with the application."
+    },
+    {
+      "q": "What's the average cost of homeowners insurance in the area?",
+      "a": "Homeowners insurance costs can vary widely depending on factors like the property value, location, and risk level. We recommend shopping around and comparing quotes from multiple insurance providers to find the best rate for your specific situation."
+    },
+    {
+      "q": "Can you help me with a 1031 exchange?",
+      "a": "We're not equipped to handle 1031 exchanges directly, but we can provide some general information about the process. For specific guidance, we recommend consulting with a qualified tax professional or attorney who specializes in 1031 exchanges."
+    },
+    {
+      "q": "How do I know if a property is in a flood zone?",
+      "a": "We can provide general information about flood zones and flood insurance requirements in the area. However, for the most accurate and up-to-date information, we recommend visiting the FEMA website or consulting with a local insurance expert."
+    },
+    {
+      "q": "Can you recommend a moving company?",
+      "a": "We've worked with several reputable moving companies in the area, and we can provide you with a list of recommendations. However, we recommend doing your own research and interviewing potential movers to find the best fit for your needs and budget."
+    },
+    {
+      "q": "What's the process for appealing a property tax assessment?",
+      "a": "We're not equipped to handle property tax appeals directly, but we can provide some general information about the process. For specific guidance, we recommend consulting with a local tax professional or attorney who specializes in property tax appeals."
+    },
+    {
+      "q": "Can you help me find a property with a specific architectural style?",
+      "a": "We can definitely try to help you find a property that fits your style preferences. Let us know what you're looking for, and we'll do our best to find a match in our current listings or through our network of local agents."
+    },
+    {
+      "q": "How do I get a copy of my credit report?",
+      "a": "You can request a free copy of your credit report from each of the three major credit reporting agencies (Experian, TransUnion, and Equifax) once a year. We recommend reviewing your credit report carefully and disputing any errors or inaccuracies before applying for a mortgage."
+    },
+    {
+      "q": "Can you explain the difference between a real estate agent and a realtor?",
+      "a": "A real estate agent is a licensed professional who represents buyers or sellers in real estate transactions. A Realtor is a member of the National Association of Realtors (NAR) and adheres to a strict code of ethics. All of our agents are licensed and many are also Realtors."
+    },
+    {
+      "q": "What's the best way to stage a home for sale?",
+      "a": "Staging a home can make a big difference in attracting potential buyers. We recommend decluttering, depersonalizing, and highlighting the home's best features. We can also provide referrals to professional home stagers who can help you prepare your home for sale."
+    },
+    {
+      "q": "Can you help me with a divorce and the division of property?",
+      "a": "We're not equipped to handle divorce or property division directly, but we can provide some general information about the process. For specific guidance, we recommend consulting with a qualified attorney who specializes in family law."
+    },
+    {
+      "q": "How do I know if a neighborhood is zoned for horses?",
+      "a": "We can provide general information about zoning regulations and horse-friendly neighborhoods in the area. However, for the most accurate and up-to-date information, we recommend visiting the local government website or consulting with a local zoning expert."
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "_comment": "Skeleton for the Greater meta-bot public seed bundle. The runtime loader fetches /seeds/greater.json (gitignored). Run `pnpm --filter @workspace/scripts run build-greater-seed` to generate the real bundle from the .pink properties + the public repo README. To extend the source list, append URLs in scripts/src/build-greater-seed.ts (SEED_URLS) or pass GREATER_EXTRA_URLS as a comma-separated env var.",
+  "_private_overlay": "For operator-only notes that must not be committed (pricing for hire engagements, internal roadmap, app data not yet on the public web), hand-author a sibling file at artifacts/greater/public/seeds/greater-private.json with the same shape but `private: true` on each document. The runtime loader merges it on top of the public bundle, stamps each chunk with an internal:// page_url, and the citation UI renders those chunks as 'internal note' with no outbound link.",
+  "version": "v1",
+  "generated_at": "1970-01-01T00:00:00.000Z",
+  "documents": [
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/",
+      "source_label": "Greater — sovereign support bots, FOSS by default",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Replace this skeleton text with the actual extracted body of the page. The build script handles this for you; you only edit this .example file when documenting the schema."
+        }
+      ]
+    },
+    {
+      "source_url": "https://example.invalid/private-overlay-format",
+      "source_label": "Example: shape of a private-overlay document (NOT included in the public bundle)",
+      "bias": "neutral",
+      "private": true,
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "When `private: true`, the runtime loader stores this chunk under job_id `seed-bundle:greater:private` and rewrites its page_url to `internal://greater-private/<source_label>#<chunk_index>` so the chat UI shows 'internal note' instead of an outbound link. Bump the bundle's `version` field after editing to force a re-index."
+        }
+      ]
+    }
+  ]
+}

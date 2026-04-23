@@ -1,0 +1,337 @@
+{
+  "_comment": "Hand-curated baseline knowledge for the Greater meta-bot. Committed to the repo so forks work out of the box and so every suggested-prompt question has at least one good answer to retrieve. The optional `greater-private.json` overlay (gitignored) layers operator-only notes on top. The build-greater-seed script is for augmenting this with scraped pages, but the baseline below is the source of truth.",
+  "version": "v4",
+  "generated_at": "2026-04-20",
+  "documents": [
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/how-it-works",
+      "source_label": "Greater — How it works in plain English",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Greater is a free, open-source platform for support chatbots that run inside the visitor's browser. The shell is MIT-licensed. When you open a Greater-powered chat, your browser downloads a small language model and an embedding model the first time, caches them, and then every question you type is answered locally on your device. There is no per-message API call to a vendor and no chat-content telemetry sent to a server. The site you're talking to ships a knowledge bundle (a small JSON file of curated text snippets) for the chatbot to retrieve from; the model reads the most relevant snippets and writes a grounded answer with inline citations like [1] [2]."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Architecturally, Greater has three layers. First, the FOSS shell: the chat UI, the WebGPU model loader, the retrieval engine, and the persona scaffolding. That's the public repository. Second, persona templates: six industry-shaped starting points (FinTech, Faith, Schools, Small Business, HealthTech, Startups) with hand-written knowledge bundles and tone prompts you can fork and adapt. Third, Pipes: a separate, proprietary extension layer that sits on top of the shell to add curated knowledge bundles, persona-tuned weights, and operator integrations. The shell works without Pipes — Pipes is what fractional engagements deliver on top."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/how-it-works#privacy",
+      "source_label": "Greater — Where your chat data goes (and doesn't)",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "By default, your chat content stays on your device. Greater runs the language model in WebGPU, in your browser. The text you type, the retrieved snippets, and the model's answer all live inside your tab — not on a server. There is no per-message round trip to OpenAI, Anthropic, or anyone else, and there is no signup wall in front of the demo. The 'LOCAL · PRIVATE' badge in the chat header is a literal claim about that round trip: while it's green, your messages are not leaving the browser."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Two things DO leave the browser, and the shell is honest about both. (a) The first time you open a Greater chat, your browser downloads the language model and embedding model from a public CDN — that's a normal HTTPS file fetch, not message content, and the file is then cached. (b) If you choose to escalate to a human via the contact form, your name, email, and message body are POSTed to a Web3Forms endpoint so the operator can email you back. That escalation is opt-in and it's the only path that ever sends your message to a server."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/openclaw",
+      "source_label": "OpenClaw — bring your own local LLM",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "OpenClaw is the bring-your-own-LLM mode. Out of the box, Greater downloads a small open-weights model into your browser via WebGPU. If you'd rather route the chat through a local model you're already running on your own machine — Ollama, LM Studio, llama.cpp's server, anything OpenAI-API-compatible — you can switch the chat into OpenClaw mode and point it at that endpoint. The shell stops downloading the in-browser model and instead sends each prompt to your local server, then renders the streamed response in the same chat UI. Your messages still don't leave your local network, because the endpoint you point at is yours."
+        },
+        {
+          "chunk_index": 1,
+          "text": "OpenClaw exists because the in-browser default has real tradeoffs: small models, slow first load, and limited reasoning. Operators or visitors who already have a 7B-or-bigger local model running can get dramatically better answers by routing through it, without giving up the privacy story — the data still doesn't leave the LAN. OpenClaw is opt-in per session and configured in the chat's settings panel. The FOSS shell ships with the OpenClaw client; no proprietary code is required."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/#personas",
+      "source_label": "Greater — The six bots that ship out of the box",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Greater ships with six industry persona templates so you can see the same engine adapted to very different contexts. (1) FinTech — the launch demo, answering real Bitcoin questions in your browser, no API key, no signup. (2) Faith — a confessional church support bot demonstrating explicit doctrinal posture. (3) Schools — an admissions and parent-questions bot for a small private school. (4) Small Business — a real-estate office front desk. (5) HealthTech — a member-services bot for a health-share community, including the explicit medical-advice refusal. (6) Startups — a product-support bot for an early-stage SaaS. Each persona ships with its own knowledge bundle, its own tone prompt, and its own bias options."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Every persona's knowledge is scoped: the FinTech bot only retrieves from the FinTech corpus, the Faith bot only retrieves from the Faith corpus, and so on. They don't bleed into each other. This is enforced at the retrieval layer by a `persona_slug` stamped on every chunk in the index. The meta-bot you're talking to right now uses the same mechanism — it's scoped to the 'greater' persona and only sees these documents about the platform itself."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/about#fork",
+      "source_label": "Greater — Forking and running it on your own domain",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Yes, you can run Greater on your own domain. The whole shell is MIT-licensed and lives at github.com/rorshockbtc/greater-than. Clone it, install with pnpm, replace the persona content under `artifacts/greater/src/data/personas.ts` and the knowledge bundles under `artifacts/greater/public/seeds/`, and deploy the static build to any host (Cloudflare Pages, Netlify, Vercel, your own NGINX). There is no proprietary backend you have to license to ship. The only optional server piece is the API server, which handles the human-escalation contact form and the admin feedback inbox; that's also in the repo."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Forks get the FOSS shell + the six persona scaffolds (with their committed knowledge bundles and tone prompts) for free. What forks do NOT get is Pipes — the proprietary extension layer with curated, persona-tuned knowledge bundles and operator integrations. Pipes is sold as a fractional engagement: I build the bundle, tune the persona, and integrate it into your stack. If you want to do that work yourself, the FOSS shell hands you every API surface you need. If you want me to do it, that's what hire.colonhyphenbracket.pink is for."
+        }
+      ]
+    },
+    {
+      "source_url": "https://github.com/rorshockbtc/greater-than",
+      "source_label": "github.com/rorshockbtc/greater-than — the public repo",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "The Greater source code lives at https://github.com/rorshockbtc/greater-than under the MIT license. The repository is a pnpm monorepo: `artifacts/greater` is the marketing site + chat shell (React + Vite + TypeScript), `artifacts/api-server` is the optional Express server for contact-form escalation and the admin feedback inbox, `lib/pipes` is the manifest schema for the proprietary Pipes layer, and `scripts/` holds the seed-bundle build scripts. The README explains the FOSS-vs-proprietary split and how to bring up a local development environment."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/about",
+      "source_label": "Greater — Who built this",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Greater is built by colonhyphenbracket — a fractional architect and engineer working in public, in pink. The author publishes long-form notes at https://colonhyphenbracket.pink, short-form at https://semi.pink, Bitcoin-flavored writing at https://hash.pink, and the Pipes proprietary extension layer at https://pipes.pink. The launch demo for the platform is the FinTech bot, which answers real Bitcoin questions in the browser with no API key and no signup, citing the Optech newsletter and the bitcoin-core / bitcoin-knots commit history."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/how-it-works#bias",
+      "source_label": "Greater — Why bias is explicit, not hidden",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Greater treats bias as unavoidable. A general-purpose chatbot that claims to be neutral is doing damage by pretending — every retrieval engine has a corpus, every corpus has a perspective, and pretending otherwise leaves the user with no way to evaluate the answer. So Greater takes the opposite stance: every persona declares its perspective up front, and personas with multiple legitimate stances (the FinTech bot's Bitcoin Core vs Bitcoin Knots options are the canonical example) expose a bias toggle so the user can pick which lens they want the answer through. The toggle changes which subset of the corpus is privileged, and the answer's tone, but the underlying citations are always shown."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/how-it-works#retrieval",
+      "source_label": "Greater — How retrieval and citations work",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "When you ask Greater a question, the shell embeds your message into a vector, scores it against the in-browser vector store of indexed chunks (cosine similarity), pulls the top few chunks, and feeds them to the language model along with a strict instruction: answer ONLY from the provided snippets, cite every factual claim inline as [N], and say so plainly when the snippets don't contain the answer. That's why every answer you see comes with a 'Sources' block underneath — those are the actual chunks the model was given. If a question has no good match in the corpus, you'll get a short 'I don't know from these sources' response instead of a confident hallucination. That refusal is the feature."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/compliance",
+      "source_label": "Greater — Compliance posture",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Greater is a support-bot platform, not a regulated product. The HealthTech persona will not give medical advice — it answers member-services questions and refuses anything that crosses into clinical territory, with an explicit refusal message and a route to a human. The FinTech persona answers questions about Bitcoin protocol and software but does not give investment advice. The Faith persona is confessional, not pastoral. Operators forking Greater for regulated industries are responsible for the legal posture of their own deployment; the shell gives you the refusal scaffolding and the explicit-bias UI to make that posture honest."
+        }
+      ]
+    },
+    {
+      "source_url": "https://colonhyphenbracket.pink",
+      "source_label": "colonhyphenbracket.pink — long-form architecture notes",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "colonhyphenbracket.pink is the developer's long-form notes site. It's where architecture decisions, postmortems, build logs, and design memos live — the 'how I think about this problem' surface. The author is the same person who builds Greater: a solo fractional architect and engineer working in public, in pink. The handle 'colonhyphenbracket' is the typed-out form of the :-] emoticon, sometimes shortened to CHB. Reading the long-form notes is the deliberately-cheap way to evaluate the architect's posture before deciding whether to hire — the engagements live at hire.colonhyphenbracket.pink."
+        }
+      ]
+    },
+    {
+      "source_url": "https://semi.pink",
+      "source_label": "semi.pink — short-form companion",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "semi.pink is the short-form companion to colonhyphenbracket.pink. Where colonhyphenbracket.pink hosts long-form architecture notes and design memos, semi.pink hosts snippets, status updates, micro-essays, and work-in-progress notes. The split is intentional: each surface has its own rhythm and audience, so 'a quick take on Bitcoin Knots policy' doesn't have to share a feed with a 4000-word architecture postmortem. Both belong to the same one-person operation behind Greater."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hash.pink",
+      "source_label": "hash.pink — Bitcoin-flavored writing",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "hash.pink is the developer's Bitcoin-specific writing — protocol notes, mempool and relay-policy commentary, observations on the Bitcoin Core vs. Bitcoin Knots split, and longer essays about the surrounding ecosystem. It's the source for much of the FinTech persona's tone and for many of the bias-aware citations the FinTech bot serves: when the bot offers you a Core view vs. a Knots view of a question, the underlying writing often comes from hash.pink. Same author as the rest of the .pink properties."
+        }
+      ]
+    },
+    {
+      "source_url": "https://pipes.pink",
+      "source_label": "pipes.pink — the proprietary Pipes layer",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "pipes.pink is the home of the proprietary Pipes extension layer that sits on top of the FOSS Greater shell. A Pipe is a curated knowledge bundle, plus persona tuning, plus optional operator integrations, authored for a specific deployment. The Vite plugin in the FOSS shell reads any Pipe manifests in `data/pipes/` (gitignored) and inlines them into the bundle at build time. When no Pipe is mounted, the shell visibly says 'Generic mode' so visitors aren't misled. Pipes is what fractional engagements with colonhyphenbracket deliver; the FOSS shell still works honestly without one."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/about#proof-its-local",
+      "source_label": "Greater — How to prove the bot is running locally",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "The 'LOCAL · PRIVATE' badge in the chat header is a literal claim about network behavior, and there are two concrete ways to verify it. (1) Open your browser's developer tools, switch to the Network tab, clear it, and ask the bot a question. You should see no outbound request that carries your message text — only static page assets, and (on first visit) the model file downloads from a public CDN. After the first visit those files are cached, so subsequent answers produce essentially no network activity. (2) After the first model download finishes, disconnect from the internet entirely. The bot will still answer, because the model is running in your browser via WebGPU. The only outbound network call that ever carries your message body is the explicit human-escalation contact form, which the visitor triggers by hand."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/about#scope",
+      "source_label": "Greater — What this bot will and won't answer",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "The Greater meta-bot is scoped tightly on purpose. It answers questions about Greater itself: how the platform works, what ships in the FOSS repo vs. the proprietary Pipes layer, what OpenClaw is, the six industry persona templates, the privacy posture and how to verify it, the explicit-bias philosophy, the .pink properties (colonhyphenbracket.pink, semi.pink, hash.pink, pipes.pink), and how to hire colonhyphenbracket. It refuses politely on everything else — no science or trivia answers, no general coding help, no medical/legal/financial advice, no questions about other companies. The refusal is the feature: a chatbot that pretends to be competent at everything is doing damage. When the bot doesn't have a cited snippet to ground an answer in, it says so plainly and offers the contact form as the escape hatch."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/contact",
+      "source_label": "Greater — How to contact the developer",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "The single contact channel is the form on this page (scroll down on the home page, or click the contact link in the header). Submissions are relayed via Web3Forms, which means the developer's actual email address stays off the public page but every message lands in the inbox directly. Use it for hire conversations (typically: a fractional engagement to author a Pipe for your Greater deployment, build a custom persona, or integrate Greater into an existing product), questions about the platform, bug reports on the FOSS shell, or feedback. There is deliberately no chat-with-a-human-now widget and no calendar-booking link — every engagement starts with a real email exchange so the fit gets sanity-checked before anyone commits."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/about#domains",
+      "source_label": "Greater — Domain naming (greater.pink vs hire.colonhyphenbracket.pink)",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "This site has two known front doors: hire.colonhyphenbracket.pink (the canonical name used in the codebase, because the site IS the hire-the-architect front door) and greater.pink (a friendlier shorthand alias). When a visitor reaches the site at greater.pink, they're on the same content as hire.colonhyphenbracket.pink — the alias is configured at the hosting layer, outside the application code. The other four .pink properties belong to the same one-person operation but are distinct sites: colonhyphenbracket.pink (long-form architecture notes), semi.pink (short-form snippets and status), hash.pink (Bitcoin-flavored writing), pipes.pink (the proprietary Pipes extension layer). The naming is deliberate: the platform is called 'Greater' and the architect is colonhyphenbracket — the hire site bridges both names."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/about#bot-depth",
+      "source_label": "Greater — Which industry bot has the deepest corpus?",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Of the six industry persona templates (FinTech, Faith, Schools, Small Business, HealthTech, Startups), the FinTech / Blockstream / Bitcoin self-custody bot is the launch demo and ships with the full curated corpus. It's the one the developer dogfoods, ships with explicit-bias toggles between Bitcoin Core and Bitcoin Knots perspectives, and is fed by the writing at hash.pink. The other five are real-but-light demos in the same architecture: real persona, real prompts, real refusal behaviour, but a small seed corpus until a pilot client commissions the full build-out. Every persona card on the homepage shows its status honestly — 'Live · Full corpus' for FinTech, 'Light demo · See case study' for the other five — so visitors aren't promised a depth that hasn't been authored yet."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/bots/fintech",
+      "source_label": "Greater — FinTech & Bitcoin persona case study",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "FinTech is the launch persona — sovereign support for an industry that takes 'do not trust, verify' seriously. Bitcoin and fintech users are paranoid about where their queries go, for good reason: most chat AI sends every keystroke to a third party. The Greater FinTech bot answers locally in your browser, refuses to ask for seed phrases or account credentials, and ships a full curated multi-thousand-snippet corpus on Bitcoin self-custody, fee markets, hardware wallet recovery, and incident playbooks. Three bias variants are togglable mid-conversation: customer (end-user / wallet holder), company (internal staff with KYC/AML constraints), and general (press / partners / outside inquiry)."
+        },
+        {
+          "chunk_index": 1,
+          "text": "The live FinTech demo is mounted as a Blockstream-branded support shell at /demo/fintech, demonstrating how the same Greater engine adapts to a regulated-vertical brand without leaking customer data to a vendor. It is the only one of the six personas with the full curated corpus shipped today; the case-study page at /bots/fintech walks through the architectural choices (in-browser inference, refusal behaviour around credentials, the Bitcoin Core vs Knots bias split). A regulated production deployment would still own KYC/AML plumbing, jurisdiction-specific record retention, and consumer-protection disclosures — Greater is the support-bot layer, not the regulated entity."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/bots/healthtech",
+      "source_label": "Greater — HealthTech persona case study",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "HealthTech is a support bot that respects HIPAA, says what it knows, and shuts up about what it does not. Generic AI chat in a healthcare context is a compliance liability; vendor-locked AI chat is a per-seat tax on a margin-thin business. The Greater HealthTech demo is a member-services bot for a health-share community that demonstrates the explicit medical-advice refusal: when a visitor asks for a diagnosis or a dose, the bot routes to a clinician instead of guessing. The FOSS shell makes no certification claims — a HIPAA-grade production deployment owns the BAA, the audit logging, encryption at rest, and access controls. Greater is a navigation aid, not a clinical decision-maker."
+        },
+        {
+          "chunk_index": 1,
+          "text": "The HealthTech demo is a real-but-light demo today: real persona, real refusal behaviour, real Q&A bank, but the curated corpus is small and the case study at /bots/healthtech is where the substantive narrative lives. A pilot deployment commissions the full build-out — typically: ingest the operator's clinical-policy library, wire the escalation path to the actual triage queue, and integrate with the member portal's auth so the bot can answer member-specific questions inside an authenticated session."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/bots/faith",
+      "source_label": "Greater — Faith-Based Organizations persona case study",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Faith is a confessional church support bot demonstrating explicit doctrinal posture. Years of YouTube and Rumble sermons, distinctive doctrine, and almost no way for a curious visitor to find a five-minute answer — that's the conversion problem most churches don't name. The Greater Faith demo shows the engine adapted to a Reformed Baptist church website: tone is warm but unambiguous, the bot speaks from the church's actual stated doctrine instead of an AI-vendor's fuzzy 'spiritual but not religious' default, and it routes pastoral-care questions to a real human via the escalation path. Christ-first by the author's conviction; the architecture itself is faith-agnostic."
+        },
+        {
+          "chunk_index": 1,
+          "text": "The two bias options on the Faith demo are 'visitor / member' (someone discerning whether to attend or join) and 'pastoral staff' (internal-process and doctrine-research lens). Same question, different answer — exactly the explicit-bias commitment the Greater architecture is built around. The Faith persona is a real-but-light demo today; the case study at /bots/faith walks through how a real church deployment would replace the seed corpus with a sermon-transcription pipeline plus the church's position papers, and integrate the escalation path into the existing pastoral-care intake."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/bots/schools",
+      "source_label": "Greater — Private Schools & Families persona case study",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Schools & Families is curated knowledge for institutions and families that care about what their kids learn. Private schools want granular control over the curriculum a chatbot speaks from. Families want certainty that the AI in the room won't drift into territory that violates their values. The Greater Schools demo is a classical-school admissions and parent-questions bot: tone is plain, the curriculum framing matches the school's stated philosophy, and the corpus is bounded by what the head of school approved instead of whatever the model's pretraining absorbed."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Two bias options on the Schools demo: 'parent / admin' (policy, schedule, enrollment) and 'student' (age-appropriate, plain language). Heads of school, deans of academic affairs, and curriculum directors are the audience for the case study at /bots/schools — also: families who run their household with the same intentionality and want the same control over what the AI in the room speaks from. The default Greater shell is free and open-source; the curated corpora and the integration into a specific school information system are the work that gets hired."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/bots/small-business",
+      "source_label": "Greater — Small Businesses persona case study",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Small Business is the chatbot a $50k-revenue local business could never afford until now. Generic mass-market chatbots are tuned for nothing; private AI is priced for the Fortune 500. There is no middle. The Greater Small Business demo is a real-estate office front desk: it answers listings questions, schedules viewings via the escalation path, and refuses to invent inventory it doesn't have access to. The case study at /bots/small-business names the market gap small businesses fall into — too small for a custom AI build, too distinctive to be served by a generic widget — and how the FOSS shell + a small Pipe closes it."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Two bias options on the Small Business demo: 'customer' (the prospective buyer / tenant) and 'staff' (the office's internal workflow lens). Like the other five non-FinTech personas, this is a real-but-light demo today; a real deployment commissions a Pipe that ingests the office's MLS feed, hours, agent contact info, and refusal scope (don't make legal claims, don't quote prices the agent hasn't approved). The point of the demo is not the corpus depth — it's that the architecture works at the small-business price point at all."
+        }
+      ]
+    },
+    {
+      "source_url": "https://hire.colonhyphenbracket.pink/bots/startups",
+      "source_label": "Greater — Startups persona case study",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Startups is for founders who are watching qualified leads bleed out of a 2023-grade chatbot. Customer acquisition costs are high, attention windows are short, and a generic chatbot can lose a $400-CAC visitor in eight seconds. The Greater Startups demo is a product-support bot for an early-stage SaaS — tone matches the brand, the corpus is the actual product docs and pricing page, and the bot refuses to invent features the product doesn't have. The case study at /bots/startups walks through why startups lose customers in the chat window and what the explicit-bias toggle (customer view vs founder view) does for retention versus visitor experience."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Two bias options on the Startups demo: 'customer view' (prospective buyer evaluating pricing, fit, friction) and 'founder view' (the founder's lens — retention, cost-to-serve, contract terms, which docs need to change to remove visitor friction). The deliberate flip of those two perspectives on the same question is the most direct demonstration of why 'pretending to be neutral' is the worse failure mode for a product chatbot. Real-but-light demo today; a pilot deployment commissions a Pipe that ingests the actual product docs, pricing, and support history, and integrates with the existing helpdesk so escalations land in the same queue the human team is already watching."
+        }
+      ]
+    },
+    {
+      "source_url": "https://pipes.pink/what-is-a-pipe",
+      "source_label": "Pipes — What's actually in a Pipe (the format, not the contents)",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "A Pipe is a JSON manifest plus optional asset files describing three things: (1) the knowledge corpus to embed and serve — a list of source URLs and texts the engine should ingest at build time, optionally tagged with bias labels for explicit-bias UIs; (2) persona tuning — system prompt, brand label, tone guide, refusal scope, suggested prompts, welcome message, audience-bias options; (3) optional operator integrations — ticketing, CRM, search, observability. The Vite plugin in the FOSS shell reads any Pipe manifests in `data/pipes/` (gitignored) and inlines them at build time. At runtime the chat UI shows the active Pipe name in place of 'Generic mode.' The Pipe FORMAT is open and documented; individual Pipe CONTENTS authored under paid engagements live in private repos so the curated knowledge stays the operator's IP."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "payjoin",
+  "label": "Payjoin (BIP78)",
+  "brief": "Payjoin is a pay-to-merchant transaction where the recipient secretly contributes one of their own inputs alongside the sender's, then signs the whole thing back. To anyone watching the chain it looks like a normal transaction with two-or-more inputs and two outputs — exactly the shape that the common-input-ownership heuristic assumes belongs to a single wallet [1]. That assumption is now wrong, and there is no on-chain tag indicating it's wrong.\n\nBIP78 standardizes the protocol: the receiver publishes a payjoin endpoint URL alongside the BIP21 payment URI, the sender posts a partially-signed transaction (PSBT) to that endpoint, and the receiver returns an updated PSBT with their input added and the output amounts adjusted [2]. If the receiver is offline or the negotiation fails, the original transaction is broadcast as-is — a payjoin attempt is never worse than a regular send.\n\nThe payoff is large per-transaction and the cost is low. Unlike coinjoin it doesn't require coordinating with strangers, and unlike silent payments it works today with existing address formats. The honest catch is adoption: the receiver has to run software that can hold a hot UTXO and respond on demand, which is a higher bar for a casual donation page than printing an address. Where it has been adopted, every payjoin transaction also poisons the heuristic for everyone else's transactions, because the surveillance industry can no longer assume \"two inputs = one wallet\" [3].",
+  "sources": [
+    {
+      "label": "BIP78 — A Simple Payjoin Proposal",
+      "url": "https://github.com/bitcoin/bips/blob/master/bip-0078.mediawiki",
+      "excerpt": "The receiver participates in the payment by adding one of their own UTXOs as an input. The sender's wallet sends a PSBT to the receiver's endpoint; the receiver returns a modified PSBT with the additional input and adjusted output amounts. The sender verifies the modifications match the original payment intent, signs, and broadcasts."
+    },
+    {
+      "label": "Bitcoin Optech — Payjoin topic",
+      "url": "https://bitcoinops.org/en/topics/payjoin/",
+      "excerpt": "Payjoin breaks the common-input-ownership heuristic for the specific transaction without producing any on-chain marker that a payjoin took place. Even partial adoption degrades the reliability of the heuristic across the whole chain because surveillance firms can no longer assume any given multi-input transaction belongs to a single party."
+    },
+    {
+      "label": "Adam Gibson — Payjoin Adoption (2020)",
+      "url": "https://reyify.com/blog/payjoin-adoption",
+      "excerpt": "The negotiation is opportunistic: if the receiver's endpoint fails, the original non-payjoin transaction is broadcast unchanged and the payment still completes. Failure is cheap, success is private, and there is no on-chain artifact distinguishing the two cases."
+    }
+  ],
+  "relatedLeafIds": ["address-reuse", "coinjoin", "silent-payments"]
+}

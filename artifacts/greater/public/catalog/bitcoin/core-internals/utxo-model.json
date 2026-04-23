@@ -1,0 +1,23 @@
+{
+  "id": "utxo-model",
+  "label": "UTXO model versus account model",
+  "brief": "Bitcoin tracks money as a set of *unspent transaction outputs* (UTXOs), not as account balances. Every transaction takes one or more existing UTXOs as inputs, destroys them, and creates one or more new UTXOs as outputs. There is no global ledger of 'who owns what' — there is only the chainstate database, which is the set of UTXOs that currently exist. A wallet's 'balance' is just the sum of the UTXOs it can spend [1].\n\nThis is the most important architectural choice in the protocol after proof of work, and it has consequences in every direction. *Validation* parallelises naturally: two transactions that don't touch the same UTXOs can be validated independently, with no shared state to lock around. *Privacy* improves because there is no canonical 'account' identity attached to a UTXO — addresses are reused only by convention, and well-behaved wallets generate a fresh address per receipt [2]. *Replay protection* is automatic: once a UTXO is spent, the same transaction cannot be replayed because its inputs no longer exist.\n\nThe alternative — the account model used by Ethereum and most legacy banking systems — keeps a balance per address. Transactions debit one balance and credit another. This is intuitively familiar and makes some smart-contract patterns easier to express. It also serialises validation (every transaction touches the global account state), creates implicit replay risk (the same nonce-less transaction could be re-broadcast), and produces stronger linkability (every transaction from an address contributes to a single canonical history) [3].\n\nIn the chainstate, each UTXO is keyed by `(txid, output_index)` and stores the `scriptPubKey` (the cryptographic puzzle that locks it) and the value in satoshis. The chainstate is what every full node maintains as its authoritative view of the current state of the world; the historical block data is interesting but not necessary for validating new blocks beyond the chainstate. This is what makes pruning possible: a node can discard old blocks once their effects on the chainstate have been applied, and continue validating new blocks indefinitely with a few gigabytes of working state.",
+  "sources": [
+    {
+      "label": "Satoshi Nakamoto — Bitcoin: A Peer-to-Peer Electronic Cash System",
+      "url": "https://nakamotoinstitute.org/library/bitcoin/",
+      "excerpt": "We define an electronic coin as a chain of digital signatures. Each owner transfers the coin to the next by digitally signing a hash of the previous transaction and the public key of the next owner."
+    },
+    {
+      "label": "Satoshi Nakamoto — collected forum posts",
+      "url": "https://nakamotoinstitute.org/library/satoshi/posts/",
+      "excerpt": "The system is based on transaction outputs, not account balances. There is no concept of an 'account'; there are only outputs and the transactions that consume them. This is what makes the validation rules so simple."
+    },
+    {
+      "label": "Nick Szabo — Trusted Third Parties Are Security Holes",
+      "url": "https://nakamotoinstitute.org/library/trusted-third-parties/",
+      "excerpt": "An accounting system based on shared state requires trust in whoever maintains that state. A system based on owners signing over discrete tokens to other owners requires no such trust."
+    }
+  ],
+  "relatedLeafIds": ["mempool", "consensus-rules", "node-architecture"]
+}

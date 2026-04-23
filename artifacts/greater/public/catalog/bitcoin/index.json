@@ -1,0 +1,133 @@
+{
+  "version": "v1",
+  "packSlug": "bitcoin",
+  "title": "Bitcoin",
+  "topicalAnchor": "Bitcoin — the monetary thesis, the protocol's actual mechanics, and the self-custody stack",
+  "suggestedPaths": [
+    "Interest rates and the cost of money",
+    "Central banks and monetary policy",
+    "Financial engineering — derivatives, custody, settlement"
+  ],
+  "edges": [
+    {
+      "id": "austrian-monetary",
+      "label": "Austrian monetary thought",
+      "summary": "Sound money, hard money, the regression theorem, inflation and malinvestment, why a fixed supply matters. The intellectual heritage that the monetary case for Bitcoin draws on — Mises, Rothbard, Hayek, Hülsmann.",
+      "kind": "branch",
+      "searchTerms": [
+        "fiat", "fiat money", "fiat currency", "fiat dilution", "currency", "currencies", "debasement", "debase",
+        "21 million", "twenty-one million", "supply cap", "fixed supply",
+        "halving", "halvening", "halvings",
+        "inflation", "inflate", "inflated", "deflation",
+        "cantillon", "cantillon effect",
+        "store of value", "unit of account", "medium of exchange",
+        "gresham", "gresham's law",
+        "regression theorem", "mises regression",
+        "austrian", "austrian economics", "austrian theory", "business cycle",
+        "gold standard", "gold", "monetary thesis",
+        "sound money", "hard money", "hyperinflation",
+        "weimar", "venezuela", "zimbabwe", "denarius"
+      ]
+    },
+    {
+      "id": "core-internals",
+      "label": "Bitcoin Core internals",
+      "summary": "How the reference client actually works under the hood: UTXO set, transaction validation, mempool policy, the consensus rules, block templates, the P2P network, initial block download. What a node does on every block.",
+      "kind": "branch",
+      "searchTerms": [
+        "utxo", "utxos", "unspent", "unspent transaction output", "account model",
+        "mempool", "replace by fee", "rbf", "child pays for parent", "cpfp",
+        "consensus", "consensus rules", "soft fork", "hard fork", "soft forks", "hard forks",
+        "block template", "coinbase", "coinbase transaction", "witness commitment", "segwit", "version bits", "bip-9", "bip 9",
+        "p2p", "peer", "peer discovery", "addrman", "eclipse attack", "eclipse",
+        "ibd", "initial block download", "chainstate", "pruning", "prune", "txindex", "blockfilterindex", "assumeutxo", "assumevalid",
+        "node", "full node", "running a node",
+        "validation", "transaction validation", "script validation"
+      ]
+    },
+    {
+      "id": "lightning",
+      "label": "Lightning Network",
+      "summary": "Payment channels, HTLCs, routing across the channel graph, watchtowers, splicing, BOLT specifications. How off-chain settlement preserves Bitcoin's security model while moving billions of micropayments.",
+      "kind": "branch",
+      "searchTerms": [
+        "lightning", "lightning network", "ln",
+        "payment channel", "channels", "htlc", "htlcs",
+        "routing", "channel graph", "watchtower", "watchtowers",
+        "splicing", "splice", "bolt", "bolts",
+        "off-chain", "offchain", "micropayments", "micropayment"
+      ]
+    },
+    {
+      "id": "privacy",
+      "label": "On-chain privacy and chain analysis",
+      "summary": "Address reuse, coinjoin, payjoin, silent payments, what blockchain surveillance firms can and can't see, taproot's privacy implications. Practical and philosophical takes on financial privacy.",
+      "kind": "branch",
+      "searchTerms": [
+        "privacy", "private", "anonymous", "anonymity",
+        "coinjoin", "payjoin", "silent payments", "silent payment",
+        "address reuse", "chain analysis", "blockchain surveillance", "surveillance",
+        "taproot", "taproot privacy", "kyc", "fungibility"
+      ]
+    },
+    {
+      "id": "wallets-keys",
+      "label": "Wallets, keys, and self-custody",
+      "summary": "HD wallets, seed phrases, descriptors, hardware wallets, multisig, inheritance planning, how to actually hold your own keys without losing everything in a closet flood. Sovereignty in practice.",
+      "kind": "branch",
+      "searchTerms": [
+        "wallet", "wallets", "hd wallet", "seed phrase", "seed phrases", "seed", "mnemonic",
+        "descriptor", "descriptors", "hardware wallet", "hardware wallets", "cold storage",
+        "multisig", "multi-signature", "multi sig",
+        "inheritance", "inheritance planning",
+        "self-custody", "self custody", "sovereignty", "private key", "private keys", "key management",
+        "passphrase", "xpub", "xprv", "bip-39", "bip39", "bip-32", "bip32"
+      ]
+    },
+    {
+      "id": "mining-pow",
+      "label": "Mining and proof of work",
+      "summary": "Why proof of work, ASICs and the centralization debate, mining pool dynamics, difficulty adjustment, the security budget question, energy use in context. The economics and engineering of producing blocks.",
+      "kind": "branch",
+      "searchTerms": [
+        "mining", "miner", "miners", "proof of work", "proof-of-work", "pow",
+        "asic", "asics", "mining pool", "mining pools", "pool",
+        "difficulty", "difficulty adjustment", "retarget",
+        "security budget", "block subsidy", "block reward",
+        "energy", "energy use", "electricity", "carbon",
+        "hashrate", "hash rate", "hashing"
+      ]
+    },
+    {
+      "id": "whitepaper-precursors",
+      "label": "The whitepaper and its precursors",
+      "summary": "Satoshi's original 2008 paper and the intellectual lineage it pulls from — Hashcash, b-money, Szabo's Bit Gold, Hal Finney's RPOW. Where the ideas actually came from and what each predecessor got right. Also: the candidate-Satoshi shortlist (Adam Back, Nick Szabo, Hal Finney, Len Sassaman, Wei Dai).",
+      "kind": "branch",
+      "searchTerms": [
+        "whitepaper", "white paper", "satoshi", "satoshi nakamoto", "nakamoto",
+        "2008 paper", "original paper",
+        "hashcash", "b-money", "bmoney", "wei dai",
+        "bit gold", "bitgold", "szabo", "nick szabo",
+        "rpow", "hal finney", "finney",
+        "adam", "adam back", "back's hashcash",
+        "len sassaman", "sassaman",
+        "blockstream founder", "blockstream's founder", "blockstream ceo",
+        "satoshi candidate", "satoshi candidates", "satoshi suspect", "satoshi suspects", "who is satoshi",
+        "cypherpunk", "cypherpunks", "intellectual lineage", "predecessors", "origins of bitcoin"
+      ]
+    },
+    {
+      "id": "operational-questions",
+      "label": "Operational how-to",
+      "summary": "Real-world questions: setting up a node, choosing a hardware wallet, how to receive payments without a custodian, backup procedures, inheritance planning, what to do when something goes wrong. Practical, not philosophical.",
+      "kind": "branch",
+      "searchTerms": [
+        "how do i", "how to", "set up", "setting up",
+        "receive payment", "send payment",
+        "backup", "backups", "back up", "wallet backup", "back up wallet", "recover", "recovery", "restore wallet",
+        "custodian", "non-custodial", "noncustodial",
+        "operational", "practical", "step by step", "tutorial"
+      ]
+    }
+  ]
+}

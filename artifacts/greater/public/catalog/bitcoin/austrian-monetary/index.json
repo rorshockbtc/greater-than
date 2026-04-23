@@ -1,0 +1,49 @@
+{
+  "id": "austrian-monetary",
+  "title": "Austrian monetary thought",
+  "summary": "The intellectual heritage that the monetary case for Bitcoin draws on. Sound money, the regression theorem, the Cantillon effect, why a fixed supply matters, the long historical record of fiat dilution.",
+  "edges": [
+    {
+      "id": "sound-money",
+      "label": "What is sound money",
+      "summary": "The Austrian definition of sound money — money chosen by the market, not decreed by the state. Hard-to-produce, durable, divisible, scarce. Why this category exists and what it rules out.",
+      "kind": "leaf",
+      "searchTerms": ["sound money", "hard money", "menger", "market money", "commodity money", "definition of money"]
+    },
+    {
+      "id": "regression-theorem",
+      "label": "Mises's regression theorem and Bitcoin",
+      "summary": "Why Mises argued that any money must regress to a prior non-monetary use value, and the long-running argument over whether Bitcoin satisfies the theorem or refutes it.",
+      "kind": "leaf",
+      "searchTerms": ["regression theorem", "mises regression", "konrad graf", "non-monetary use", "prior use value", "bootstrap into money"]
+    },
+    {
+      "id": "inflation-malinvestment",
+      "label": "The Cantillon effect, inflation, and malinvestment",
+      "summary": "Cantillon's insight that new money helps whoever spends it first, the Austrian theory of the business cycle, why credit expansion produces malinvestment booms followed by busts.",
+      "kind": "leaf",
+      "searchTerms": ["cantillon", "cantillon effect", "malinvestment", "business cycle", "abct", "austrian business cycle", "credit expansion", "boom bust", "inflation tax", "hayek prices and production"]
+    },
+    {
+      "id": "fiat-end-game",
+      "label": "Fiat dilution and the historical record",
+      "summary": "The long historical record of debasement — denarii, livres, continentals, dollars. Why every fiat currency in history has eventually been inflated, and what that pattern implies.",
+      "kind": "leaf",
+      "searchTerms": ["fiat", "fiat money", "fiat currency", "debasement", "debase", "debased", "every fiat", "weimar", "venezuela", "zimbabwe", "denarius", "continental", "hülsmann", "hulsmann", "ethics of money", "purchasing power", "dilution", "rothbard", "mises debasement", "historical record", "hyperinflation"]
+    },
+    {
+      "id": "why-fixed-supply",
+      "label": "Why a fixed supply matters",
+      "summary": "The 21 million cap, halvings as a Schelling point, why the supply schedule was set in stone at genesis and what would have to be true for it to ever change.",
+      "kind": "leaf",
+      "searchTerms": ["21 million", "twenty-one million", "supply cap", "fixed supply", "halving", "halvings", "halvening", "schelling", "supply schedule", "issuance", "subsidy", "monetary policy"]
+    },
+    {
+      "id": "unit-of-account",
+      "label": "Bitcoin as a unit of account and Gresham's law",
+      "summary": "Why bitcoin is rarely used as a unit of account today, the role of Gresham's law in explaining that, and what the 'medium of exchange first or store of value first' debate is really about.",
+      "kind": "leaf",
+      "searchTerms": ["unit of account", "store of value", "medium of exchange", "gresham", "gresham's law", "hyperbitcoinization", "krawisz", "monetary functions", "money functions"]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "why-pow",
+  "label": "Why proof of work",
+  "brief": "Proof of work is the rule that says: to extend the chain, you must show evidence that a measurable amount of real-world energy was spent doing it. The work is finding a block header whose double-SHA256 hash is below the current difficulty target — there is no shortcut, you grind random nonces until one fits [1]. The output is cheap to verify (one hash) and expensive to produce (trillions of hashes per block at current difficulty), which is exactly the asymmetry Bitcoin uses to gate writes to its ledger.\n\nThe property this buys is unforgeable costliness, in Nick Szabo's phrase. An attacker who wants to rewrite the past has to redo all the work that produced it, faster than the honest network is producing new work — that's what \"51% attack\" means in practice [2]. The cost is external: it shows up as electricity bills and depreciating hardware, denominated in something the protocol doesn't control. Proof of stake, by contrast, secures the chain with the same asset the chain itself issues, which makes the security cost endogenous and the slashing rules a matter of social consensus rather than physics.\n\nThe other thing PoW gets you is permissionless Sybil resistance. There is no validator set, no whitelist, no minimum balance — anyone with a power outlet and an ASIC can start contributing hashrate, and their share of block production is exactly proportional to their share of the work. That property is what makes the network resistant to capture by entities whose names you'd recognize: even a state-level adversary has to outspend everyone else in the world combined, on hardware that is itself a competitive market [3].",
+  "sources": [
+    {
+      "label": "Bitcoin whitepaper — Section 4: Proof-of-Work",
+      "url": "https://bitcoin.org/bitcoin.pdf",
+      "excerpt": "The proof-of-work involves scanning for a value that when hashed begins with a number of zero bits. The average work required is exponential in the number of zero bits required and can be verified by executing a single hash. Once the CPU effort has been expended, the block cannot be changed without redoing the work."
+    },
+    {
+      "label": "Nick Szabo — Bit Gold (2005)",
+      "url": "https://nakamotoinstitute.org/bit-gold/",
+      "excerpt": "What we want is a protocol whereby unforgeably costly bits could be created online with minimal dependence on trusted third parties, and then securely stored, transferred, and assayed with similar minimal trust. The cost has to come from outside the system itself; otherwise the system can be captured by whoever controls cost-issuance inside it."
+    },
+    {
+      "label": "Hugo Nguyen — Anatomy of Proof-of-Work (2018)",
+      "url": "https://medium.com/@hugonguyen/anatomy-of-proof-of-work-98c85ae5f06b",
+      "excerpt": "Proof of work converts external energy into protocol-recognized work. This decoupling — security cost in joules, security reward in coin — is what allows Bitcoin to bootstrap value without needing a pre-existing trusted issuer to start the network or to gate participation."
+    }
+  ],
+  "relatedLeafIds": ["difficulty-adjustment", "security-budget", "asics-and-centralization"]
+}

@@ -1,0 +1,111 @@
+{
+  "version": "v1",
+  "generated_at": "2026-04-19",
+  "documents": [
+    {
+      "source_url": "https://pinecrest-realty.example/about",
+      "source_label": "Pinecrest Realty — About the brokerage",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Pinecrest Realty is a small independent brokerage serving the Pinecrest, Riverside, and Oak Hollow areas. We were founded in 2003 by a husband-and-wife team and currently have nine licensed agents. We focus on residential resale and small-acreage rural properties; we do not handle large commercial transactions or new-construction tract development. For those, we'll cheerfully refer you to a brokerage that does."
+        },
+        {
+          "chunk_index": 1,
+          "text": "Our office is located at 218 Magnolia Street in downtown Pinecrest. We are staffed Monday through Saturday, 9 AM to 6 PM. Showings can be requested 24/7 through the assistant on this site or by calling the on-call agent at the number in the footer. The on-call agent rotates weekly; if you have a relationship with a specific Pinecrest agent, you can request them by name."
+        }
+      ]
+    },
+    {
+      "source_url": "https://pinecrest-realty.example/listings",
+      "source_label": "Pinecrest Realty — Active listings (sample)",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "118 Linden Court, Pinecrest — $385,000 — 3 bed / 2 bath / 1,820 sqft, built 1998, on 0.34 acre. Riverside Elementary district. Updated kitchen (2023), new roof (2022), fenced backyard. Listed March 4 2026. Open house Saturday 1–3 PM. Listing agent: Sara Calhoun."
+        },
+        {
+          "chunk_index": 1,
+          "text": "47 Birch Lane, Riverside — $369,500 — 3 bed / 2 bath / 1,640 sqft, built 2005, on 0.21 acre. Riverside Elementary district. Original owner, well-maintained, screened porch. Listed March 18 2026. Showings by appointment. Listing agent: Mark Devlin."
+        },
+        {
+          "chunk_index": 2,
+          "text": "892 Hawthorne Drive, Pinecrest — $412,000 — 4 bed / 2.5 bath / 2,210 sqft, built 2010, on 0.28 acre. Pinecrest Middle district (NOT Riverside Elementary — this is the most common boundary confusion in the area). Listed March 22 2026. Listing agent: Sara Calhoun."
+        },
+        {
+          "chunk_index": 3,
+          "text": "12 Sycamore Ridge, Oak Hollow — $445,000 — 3 bed / 2 bath / 1,950 sqft, built 1989, on 1.4 acres. Oak Hollow High district. Detached workshop, mature trees. Listed March 28 2026. Showings by appointment with 24-hour notice. Listing agent: Eric Patel."
+        }
+      ]
+    },
+    {
+      "source_url": "https://pinecrest-realty.example/school-districts",
+      "source_label": "Pinecrest Realty — School-district overlays",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "We maintain school-district boundary overlays for Riverside Elementary, Pinecrest Middle, and Oak Hollow High. The boundaries were last redrawn by the school board in August 2025. The most common confusion: Hawthorne Drive feeds Pinecrest Middle, NOT Riverside Elementary, despite being closer to Riverside on the map. Buyers prioritizing Riverside Elementary should verify the address with us before making an offer."
+        },
+        {
+          "chunk_index": 1,
+          "text": "The August 2025 redraw moved approximately 40 homes on the south side of Maple Avenue from the Riverside Elementary district to the Pinecrest Middle district. Properties that closed before the redraw under the old district may still be marketed inaccurately on third-party sites. Always verify the district through the school board's published map or through us."
+        }
+      ]
+    },
+    {
+      "source_url": "https://pinecrest-realty.example/financing",
+      "source_label": "Pinecrest Realty — Local lenders for pre-approval",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "We work with three local lenders for pre-approval: First Pinecrest Bank, Oak Hollow Credit Union, and Mountain Mortgage Co. Each has a different rate profile depending on credit score and down payment. We do not receive referral fees from any of them; the relationship is informal and based on quality of service to past clients. We will introduce you to all three on request and let you choose."
+        },
+        {
+          "chunk_index": 1,
+          "text": "First Pinecrest Bank is the largest of the three and tends to be most competitive on jumbo loans (above $766,550 in our market). Oak Hollow Credit Union has the most flexible underwriting for self-employed buyers and tends to be fastest to close. Mountain Mortgage Co. is the only one of the three that does USDA rural development loans, which matter for some Oak Hollow properties."
+        }
+      ]
+    },
+    {
+      "source_url": "https://pinecrest-realty.example/buyers-guide",
+      "source_label": "Pinecrest Realty — First-time buyer guide",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Most first-time buyers in our market budget for 3.5–10% down depending on loan type, plus 2–3% for closing costs. The seller typically pays the buyer's agent commission as part of the listing agreement. The full process — pre-approval, search, offer, inspection, appraisal, close — typically takes 35–60 days from accepted offer to keys."
+        },
+        {
+          "chunk_index": 1,
+          "text": "We strongly recommend a home inspection on every purchase, even on new construction. Inspections in our market run $400–$700 and are paid by the buyer at the time of service. We have working relationships with three independent inspectors; we will share all three contact details and let you choose, or you can bring your own."
+        }
+      ]
+    },
+    {
+      "source_url": "https://pinecrest-realty.example/sellers-guide",
+      "source_label": "Pinecrest Realty — Seller guide",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "Our standard listing agreement is six months at a 5% commission, split 2.5% to the buyer's agent and 2.5% to Pinecrest. We will negotiate; the standard is the standard, not the only option. Listings include professional photography, MLS placement, and at minimum one open house in the first three weeks. We do not require sign-on bonuses or up-front fees."
+        }
+      ]
+    },
+    {
+      "source_url": "https://pinecrest-realty.example/limits",
+      "source_label": "Pinecrest Realty — What this assistant cannot do",
+      "bias": "neutral",
+      "chunks": [
+        {
+          "chunk_index": 0,
+          "text": "This assistant can pull active listings, filter by price, beds, and school district, and answer questions about our process and our partners. It cannot write an offer, schedule a closing, commit our agents to anything, or quote a rate from any of our lender partners. For pocket listings (off-MLS), it will hand you off to the agent who knows the property. For an open-house RSVP, it will route you to the listing agent. The assistant runs in your browser; nothing you type is sent anywhere unless you tap 'escalate to a human.'"
+        }
+      ]
+    }
+  ]
+}

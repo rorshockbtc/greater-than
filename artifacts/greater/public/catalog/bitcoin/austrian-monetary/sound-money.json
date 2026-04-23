@@ -1,0 +1,26 @@
+{
+  "id": "sound-money",
+  "label": "What is sound money",
+  "brief": "In the Austrian tradition, *sound money* is money that emerges from the market rather than being decreed by an authority. Carl Menger's account is the canonical one: people independently converge on whichever good has the best monetary properties — durability, divisibility, portability, recognisability, and above all difficulty of production — until that good becomes the medium of exchange [1]. Sound money is therefore a discovered institution, not a designed one.\n\nMises sharpens the definition in *The Theory of Money and Credit*: sound money is money whose supply is determined by the cost of producing it, not by the will of a central issuer [2]. Gold qualified historically because mining new gold to debase the stock was expensive enough that the supply grew slowly and predictably. A government IOU does not qualify, because the marginal cost of issuing one more unit is essentially zero — and what costs nothing to produce will eventually be produced in quantity [3].\n\nThe practical claim that follows is straightforward: when the issuer of money can create more of it without effort, they will, and the people closest to the spigot benefit at everyone else's expense. Rothbard argues at book length that every fiat regime in recorded history has followed this pattern — the temptation is structural, not personal [3]. Sound money removes the temptation by removing the discretion.\n\nBitcoin's claim to this category rests on a different mechanism: the supply schedule is enforced by every node, not by the cost of mining. New coins are produced by miners, but how many are produced and on what schedule is fixed in software that thousands of independent operators run and verify against. That is a stronger guarantee than gold's — gold's scarcity could in principle be overturned by an asteroid mining breakthrough; bitcoin's cannot be overturned without coordinated convincing of the operators themselves to change the rules. In Austrian terms, this places it firmly in the sound-money category that gold previously occupied alone.",
+  "sources": [
+    {
+      "label": "Ludwig von Mises — The Theory of Money and Credit",
+      "url": "https://mises.org/library/theory-money-and-credit",
+      "excerpt": "It is impossible to grasp the meaning of the idea of sound money if one does not realize that it was devised as an instrument for the protection of civil liberties against despotic inroads on the part of governments.",
+      "internalSlug": "mises-org-library-theory-money-and-credit-3d855bb0"
+    },
+    {
+      "label": "Murray N. Rothbard — What Has Government Done to Our Money?",
+      "url": "https://mises.org/library/what-has-government-done-our-money",
+      "excerpt": "Money does not enter the market as a money — it enters as a commodity that is then chosen by traders for monetary use because of its physical qualities. Government has not been the originator of money; markets have been.",
+      "internalSlug": "mises-org-library-what-has-government-done-our-money-daaf5a04"
+    },
+    {
+      "label": "Murray N. Rothbard — The Mystery of Banking",
+      "url": "https://mises.org/library/mystery-banking",
+      "excerpt": "Throughout history, government has displayed a remarkable consistency in finding ways to debase the money — clipping coins, lowering precious-metal content, suspending convertibility, printing notes.",
+      "internalSlug": "mises-org-library-mystery-banking-38ba3a6c"
+    }
+  ],
+  "relatedLeafIds": ["regression-theorem", "fiat-end-game", "why-fixed-supply"]
+}

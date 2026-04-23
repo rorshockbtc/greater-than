@@ -51,26 +51,33 @@ data/pipes/
 data/knowledge-base/
 data/weights/
 data/seeds/
-artifacts/emerald/data/pipes/
-artifacts/emerald/data/knowledge-base/
-artifacts/emerald/data/weights/
-artifacts/emerald/public/weights/
+artifacts/greater/data/pipes/
+artifacts/greater/data/knowledge-base/
+artifacts/greater/data/weights/
+artifacts/greater/public/weights/
 # public/seeds/ holds curated knowledge bundles. The 5 non-FinTech
 # persona seeds (faith, healthtech, schools, small-business, startups)
 # are hand-written, neutral-bias, FOSS-safe and SHIP with the repo so
 # forks can run those demos. Only `bitcoin.json` (built by
 # scripts/build-bitcoin-seed.ts from public sources, with bias tags)
 # is proprietary to the hosted deployment and is excluded.
-artifacts/emerald/public/seeds/bitcoin.json
+artifacts/greater/public/seeds/bitcoin.json
+# Greater meta-bot: the PUBLIC bundle (greater.json) IS committed
+# so that forks have a working meta-bot out of the box and every
+# suggested-prompt question has a real chunk to retrieve from.
+# The optional PRIVATE overlay (greater-private.json) is the
+# operator's local notes — pricing for hire engagements, internal
+# roadmap, work-in-progress — and MUST NOT be committed.
+artifacts/greater/public/seeds/greater-private.json
 *.private.md
 *.interview.md
 *.gguf
 *.onnx_data
 
-# Replit workspace files — dev environment only, not for external contributors
-replit.md
+# Workspace metadata — local dev environment only, not for external contributors
+project.md
 .replit
 .cache/
 
-# Attached assets — Replit chat uploads, screenshots, PDFs used during dev
+# Attached assets — local chat uploads, screenshots, PDFs used during dev
 attached_assets/

@@ -1,0 +1,49 @@
+{
+  "id": "mining-pow",
+  "title": "Mining and proof of work",
+  "summary": "Why PoW, ASICs and centralization, pool dynamics, difficulty adjustment, the security budget question, energy use in context.",
+  "edges": [
+    {
+      "id": "why-pow",
+      "label": "Why proof of work",
+      "summary": "What PoW actually buys that proof of stake doesn't: an external, unforgeable cost to writing history, and a Sybil resistance that doesn't depend on knowing who anyone is.",
+      "kind": "leaf",
+      "searchTerms": ["proof of work", "pow", "proof-of-work", "proof of stake", "pos", "proof-of-stake", "sybil resistance", "unforgeable cost", "unforgeably costly", "51% attack", "majority attack", "external cost"]
+    },
+    {
+      "id": "difficulty-adjustment",
+      "label": "The difficulty adjustment",
+      "summary": "Every 2,016 blocks the network retargets so blocks land roughly every ten minutes regardless of how much hashrate is online. The mechanism, the edge cases, and why it matters.",
+      "kind": "leaf",
+      "searchTerms": ["difficulty adjustment", "difficulty retarget", "retarget", "epoch", "2016 blocks", "two thousand sixteen", "ten minute target", "10 minute", "timewarp", "hashrate drop", "china ban hashrate"]
+    },
+    {
+      "id": "asics-and-centralization",
+      "label": "ASICs and the mining-hardware industry",
+      "summary": "Why specialized hardware was inevitable, what it concentrates and what it doesn't, and how the global manufacturer market has actually shaken out.",
+      "kind": "leaf",
+      "searchTerms": ["asic", "asics", "application specific integrated circuit", "bitmain", "microbt", "whatsminer", "canaan", "mining hardware", "mining centralization", "antminer", "asic resistance"]
+    },
+    {
+      "id": "pool-dynamics",
+      "label": "Pool dynamics and Stratum V2",
+      "summary": "Why miners join pools, how block-template construction has historically lived with the pool operator, and how Stratum V2 hands that decision back to individual miners.",
+      "kind": "leaf",
+      "searchTerms": ["mining pool", "mining pools", "pool operator", "stratum", "stratum v1", "stratum v2", "stratum protocol", "block template construction", "pool censorship", "ocean pool", "braiins"]
+    },
+    {
+      "id": "security-budget",
+      "label": "The security budget question",
+      "summary": "What pays for hashrate after the subsidy decays — fees, transaction demand, and the ongoing argument over whether that's enough.",
+      "kind": "leaf",
+      "searchTerms": ["security budget", "subsidy decay", "tail emission", "fee market security", "halving security", "long-run security", "fee revenue", "subsidy", "block reward decay", "demurrage"]
+    },
+    {
+      "id": "energy-use",
+      "label": "Energy use in context",
+      "summary": "Where the energy actually comes from in practice, why miners chase stranded and curtailed power, and how to read aggregate consumption numbers honestly.",
+      "kind": "leaf",
+      "searchTerms": ["energy use", "energy consumption", "electricity consumption", "twh", "stranded energy", "curtailed energy", "flared gas", "methane flaring", "demand response", "ercot", "renewable mining", "bitcoin energy"]
+    }
+  ]
+}
