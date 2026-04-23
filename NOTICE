@@ -1,0 +1,128 @@
+Greater
+Copyright (c) 2026 rorshockbtc / ColonHyphenBracket Studio
+
+This product includes software developed by the third parties listed
+below. The MIT licence at LICENSE applies to the Greater shell code in
+this repository; each third-party component is governed by the licence
+indicated next to it.
+
+For a machine-readable, full transitive list of dependency licences,
+run:
+
+    pnpm licenses ls --recursive
+
+The headline attributions below are the components most visible in the
+running product or most relevant to redistribution.
+
+================================================================
+Models and weights (loaded by the browser at runtime)
+================================================================
+
+* Llama-3.2-1B-Instruct (q4f16)
+  Copyright (c) Meta Platforms, Inc.
+  Licence: Llama 3.2 Community Licence Agreement
+  https://www.llama.com/llama3_2/license/
+  Used as the default browser-local generation model.
+
+* bge-small-en-v1.5
+  Copyright (c) Beijing Academy of Artificial Intelligence (BAAI)
+  Licence: MIT
+  https://huggingface.co/BAAI/bge-small-en-v1.5
+  Used as the default browser-local embedding model in flat-embed
+  packs.
+
+================================================================
+Curated corpus material (Bitcoin pack)
+================================================================
+
+* Bitcoin Optech newsletter content
+  Copyright (c) The Optech contributors
+  Licence: Creative Commons Attribution 4.0 (CC BY 4.0)
+  https://bitcoinops.org
+  Used as one of the source streams for the Bitcoin seed builder.
+
+* "Economics in One Lesson" and other Mises Institute material
+  Copyright (c) Ludwig von Mises Institute
+  Licence: Creative Commons Attribution 4.0 (CC BY 4.0)
+  https://mises.org
+  Used as one of the source streams for the Austrian-monetary branch
+  of the Bitcoin catalog.
+
+* Bitcoin: A Peer-to-Peer Electronic Cash System (Satoshi Nakamoto)
+  Copyright (c) Satoshi Nakamoto, 2008
+  Licence: MIT (per the project's own LICENSE in the original
+  bitcoin source distribution)
+  https://bitcoin.org/bitcoin.pdf
+  Used as the seed of the whitepaper/precursors branch.
+
+* BitcoinTalk threads (technical commentary by Satoshi and others)
+  Used as primary-source quotations under fair-use commentary; full
+  source URLs are preserved in every leaf's `sources[]` array.
+
+See `docs/SOURCES.md` for the full ingestion-source compliance table.
+
+================================================================
+JavaScript libraries (build-time and runtime)
+================================================================
+
+* React, React DOM
+  Copyright (c) Meta Platforms, Inc. and affiliates
+  Licence: MIT
+
+* Vite
+  Copyright (c) Yuxi (Evan) You and Vite contributors
+  Licence: MIT
+
+* TanStack Query
+  Copyright (c) Tanner Linsley
+  Licence: MIT
+
+* Tailwind CSS
+  Copyright (c) Tailwind Labs, Inc.
+  Licence: MIT
+
+* shadcn/ui (component patterns, copied into the codebase)
+  Copyright (c) shadcn
+  Licence: MIT
+
+* Lucide (icon set)
+  Copyright (c) Lucide Contributors
+  Licence: ISC
+
+* Framer Motion
+  Copyright (c) Framer
+  Licence: MIT
+
+* Wouter (routing)
+  Copyright (c) Alexey Taktarov
+  Licence: ISC
+
+* Express
+  Copyright (c) TJ Holowaychuk and Express contributors
+  Licence: MIT
+
+* Drizzle ORM
+  Copyright (c) Drizzle Team
+  Licence: Apache 2.0
+
+* @huggingface/transformers, @xenova/transformers
+  Copyright (c) Hugging Face, Xenova
+  Licence: Apache 2.0
+
+* @web-llm-chat / mlc-ai/web-llm
+  Copyright (c) MLC AI
+  Licence: Apache 2.0
+
+* Mozilla Readability
+  Copyright (c) Mozilla
+  Licence: Apache 2.0 (the @mozilla/readability npm package)
+
+* zod, clsx, tailwind-merge, class-variance-authority
+  Various authors. All licensed MIT.
+
+================================================================
+
+The Greater project author has made a good-faith effort to attribute
+all third-party material redistributed in or with this software. If
+you believe an attribution is missing or incorrect, please open a
+private security advisory or email contact@colonhyphenbracket.pink.
