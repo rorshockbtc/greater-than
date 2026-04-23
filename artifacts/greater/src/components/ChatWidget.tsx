@@ -317,7 +317,11 @@ export function ChatWidget({
       role: 'bot',
       content:
         welcomeMessage ??
-        "Hello! I'm Greater's Blockstream support bot. Ask me about Jade, Green, hardware-wallet recovery, fees, or self-custody.",
+        // Neutral fallback used only when no persona supplied a
+        // welcome of its own. Must NEVER reference a specific
+        // vendor product (the original "Blockstream support bot"
+        // copy was the canonical example of cross-persona leak).
+        "Hi — I'm a Greater demo bot. Answers come from a curated knowledge base, run locally in your browser when possible. I'm helpful, not authoritative.",
       timestamp: new Date(),
       trustScore: 0.99,
       ciBreakdown: "System initialization verified.",

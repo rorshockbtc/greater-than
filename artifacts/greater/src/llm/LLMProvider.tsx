@@ -1211,12 +1211,17 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
 
       const baseSystemPrompt =
         options?.systemPrompt ??
+        // Neutral default — used only when no persona supplied a
+        // system prompt. Stays vendor-agnostic on purpose; any
+        // commercial-vendor framing belongs in a per-persona
+        // override (see scenario.systemPrompt in personas.ts).
         [
-          "You are Greater, a support assistant for Blockstream products and",
-          "Bitcoin self-custody. Answer ONLY from the provided knowledge",
-          "snippets when they are present; otherwise answer from your",
-          "general knowledge but say so. Never ask for the user's seed",
-          "phrase, PIN, or password — refuse if requested.",
+          "You are a Greater demo bot — a portfolio piece for the",
+          "open-source Greater lead-generation chat platform. Answer ONLY",
+          "from the provided knowledge snippets when they are present;",
+          "otherwise answer from your general knowledge but say so.",
+          "Never ask for the user's seed phrase, PIN, password, or any",
+          "other credential — refuse if requested.",
         ].join("\n");
 
       // Local Harness charter: user-authored text injected first so it
@@ -1593,9 +1598,6 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
         throw new Error("Local model not ready");
       }
       options?.onTelemetry?.("[VectorStore]", `Retrieving top-5 chunks for query…`);
-      const queryVec = await callWorker<number[]>("embed", {
-        text: userMessage,
-      });
       // Pipe-aware retrieval: when the caller supplies a bias filter,
       // restrict scoring to chunks tagged with one of those biases.
       // Untagged ('neutral') chunks are always eligible — they are the
@@ -1603,19 +1605,35 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
       //
       // Hybrid retrieval: run semantic (cosine over embeddings) and
       // BM25-lite lexical retrieval in parallel, then fuse the two
-      // top-K lists. The lexical leg is a fallback for queries the
-      // embedder fumbles — keyword-rich paraphrases like "what coding
-      // language do I need?" or "is there a way to suggest things for
-      // the knowledge base?" that score below the WEAK_CONTEXT gate
-      // on semantic alone but match strong rare terms in the corpus.
+      // top-K lists. The lexical leg also doubles as a fallback for
+      // when the embedder is broken — historically a transient embedder
+      // failure (WebGPU init crash, model fetch hiccup, IndexedDB quota)
+      // would throw out of `callWorker("embed", …)` and the entire
+      // local pipeline would tip over to the cloud, even though the
+      // local LLM and the lexical index were both healthy. The fix:
+      // try the embed, but if it fails, run lexical-only and keep the
+      // local path alive. The model still answers; it just answers
+      // from BM25-grounded context instead of cosine-grounded context.
+      // The Faith persona was the canonical example — its WebGPU
+      // embedder init was failing on some browsers and the bot would
+      // silently flip the "Cloud mode (local AI failed)" badge.
       // See artifacts/greater/src/llm/lexicalIndex.ts for the BM25
       // implementation, normalization curve, and fusion math.
       const retrievalOptions = {
         biasFilter: options?.biasFilter,
         personaScope: options?.personaSlug,
       };
+      let queryVec: number[] | null = null;
+      try {
+        queryVec = await callWorker<number[]>("embed", { text: userMessage });
+      } catch (err) {
+        options?.onTelemetry?.(
+          "[VectorStore]",
+          `Embedder failed (${(err as Error).message}) — falling back to lexical-only retrieval`,
+        );
+      }
       const [semantic, lexical] = await Promise.all([
-        topK(queryVec, 5, retrievalOptions),
+        queryVec ? topK(queryVec, 5, retrievalOptions) : Promise.resolve([] as RetrievedChunk[]),
         lexicalTopK(userMessage, 5, retrievalOptions),
       ]);
       const retrieved = fuseRetrievals(semantic, lexical, 5);
@@ -1718,12 +1736,16 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
 
       const baseSystemPrompt =
         options?.systemPrompt ??
+        // Neutral default — see the matching comment in the
+        // OpenClaw branch above. Vendor-specific framing belongs
+        // in a per-persona scenario.systemPrompt override.
         [
-          "You are Greater, a support assistant for Blockstream products and",
-          "Bitcoin self-custody. Answer ONLY from the provided knowledge",
-          "snippets. If the snippets do not contain the answer, say so",
-          "plainly and suggest opening a support ticket. Never ask for the",
-          "user's seed phrase, PIN, or password — refuse if requested.",
+          "You are a Greater demo bot — a portfolio piece for the",
+          "open-source Greater lead-generation chat platform. Answer ONLY",
+          "from the provided knowledge snippets. If the snippets do not",
+          "contain the answer, say so plainly and offer the contact form.",
+          "Never ask for the user's seed phrase, PIN, password, or any",
+          "other credential — refuse if requested.",
         ].join("\n");
 
       // Local Harness charter: user-authored text injected first so it

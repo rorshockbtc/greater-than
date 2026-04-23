@@ -14,6 +14,7 @@
     "smoke-test": "tsx --import ./src/stub-sharp.cjs ./src/smoke-test.ts",
     "bitcoin-catalog-smoke": "tsx ./src/bitcoin-catalog-smoke.ts",
     "bitcoin-conversation-smoke": "tsx ./src/bitcoin-conversation-smoke.ts",
+    "persona-leak-smoke": "tsx ./src/persona-leak-smoke.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {

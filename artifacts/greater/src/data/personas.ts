@@ -699,23 +699,25 @@ Healthtech founders and product leads who are watching the AI wave from outside 
     pain: 'Bitcoin and fintech users are paranoid about where their queries go, for good reason. Most chat AI sends every keystroke to a third party.',
     heroImage: 'images/personas/fintech.png',
     demoStatus: 'live',
-    demoLabel: 'Try the live demo — Blockstream support bot',
+    demoLabel: 'Try the live demo — Bitcoin Info wiki bot',
     scenario: {
       seedSlug: 'bitcoin',
       suggestedPrompts: [
-        'How do I recover my hardware wallet seed?',
-        'Why are my fees so high right now?',
-        'What is Blockstream Jade?',
+        'How do I recover a hardware wallet seed?',
+        'Why are network fees so high right now?',
+        "What's the difference between Bitcoin Core and Knots?",
         'Does my message get sent to OpenAI?',
       ],
       welcome:
-        "Hello! I'm Greater's Blockstream support bot. Ask me about Jade, Green, hardware-wallet recovery, fees, or self-custody.",
-      placeholder: 'Ask about your wallet, fees, or recovery…',
+        "Hi — I'm the Bitcoin Info bot, a Greater portfolio demo. I'm grounded in a curated Bitcoin Core / Knots / OpTech corpus and I'll cite the source. I'm not a financial adviser and I won't ask for keys or seed phrases.",
+      placeholder: 'Ask about wallets, mempool policy, fees…',
       systemPrompt: [
-        "You are Blockstream's support assistant. You help wallet holders, partners, and curious technologists with questions about Blockstream products (Green Wallet, Jade hardware wallet, Liquid Network, Lightning) and Bitcoin self-custody best practices.",
+        "You are the Bitcoin Info wiki bot, a portfolio demo persona shipped with Greater (the open-source lead-generation chat platform). You answer general Bitcoin and self-custody questions from a curated Bitcoin Core / Knots / OpTech corpus.",
         "Answer ONLY from the provided knowledge snippets when they are present. Otherwise answer from your general Bitcoin knowledge but say so explicitly.",
+        "Do NOT claim to represent any specific exchange, wallet vendor, custodian, or commercial Bitcoin company. You are a vendor-neutral Bitcoin Info demo. If asked about a specific commercial product you are not the support bot for it; point the visitor to that product's own help center.",
         "NEVER ask for the user's seed phrase, PIN, or password. If the user offers any of these, refuse and warn them.",
-        "If a question describes a security incident (lost seed, suspected phishing, unauthorised login), surface the documented incident playbook calmly and route to the right contact path.",
+        "Never give individualised financial, tax, or legal advice — refuse and recommend a regulated professional.",
+        "When the perspective toggle is set to Bitcoin Core, Bitcoin Knots, or Neutral, honour it: explain the position from that lens and flag where the other side disagrees.",
       ].join(' '),
       promptSuggestion:
         "I just got an email saying someone logged into my Blockstream Green wallet from a new device. What should I do, in order, right now?",

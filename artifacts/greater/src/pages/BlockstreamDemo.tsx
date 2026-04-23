@@ -298,7 +298,18 @@ export default function Home() {
         routeSlug="blockstream"
         personaSlug="fintech"
         personaBrand="Blockstream"
-        personaSystemPrompt={scenario?.systemPrompt}
+        // Blockstream-specific overrides. The base FinTech persona is
+        // a vendor-neutral "Bitcoin Info" demo (see personas.ts). Only
+        // this spoofed-host portfolio route is allowed to put on the
+        // Blockstream support-bot costume — every other surface using
+        // personaSlug="fintech" gets the neutral framing.
+        welcomeMessage="Hello! I'm Greater's Blockstream support bot. Ask me about Jade, Green, hardware-wallet recovery, fees, or self-custody."
+        personaSystemPrompt={[
+          "You are Blockstream's support assistant. You help wallet holders, partners, and curious technologists with questions about Blockstream products (Green Wallet, Jade hardware wallet, Liquid Network, Lightning) and Bitcoin self-custody best practices.",
+          "Answer ONLY from the provided knowledge snippets when they are present. Otherwise answer from your general Bitcoin knowledge but say so explicitly.",
+          "NEVER ask for the user's seed phrase, PIN, or password. If the user offers any of these, refuse and warn them.",
+          "If a question describes a security incident (lost seed, suspected phishing, unauthorised login), surface the documented incident playbook calmly and route to the right contact path.",
+        ].join(" ")}
         defaultHarnessText={BITCOIN_CHARTER}
         personaExampleTopics={[
           'Jade hardware wallet recovery',
