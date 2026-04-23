@@ -48,7 +48,7 @@ The bot serves at `localhost` on the workflow's assigned port (see preview pane)
 The Bitcoin catalog lives in `artifacts/emerald/public/catalog/bitcoin/`. To extend it:
 
 1. Pick a branch (`austrian-monetary/`, `core-internals/`, `lightning/`, etc.)
-2. Add a leaf JSON file: `<branch>/<leaf-id>.json` with `id`, `label`, `summary`, `brief` (the canned answer), and `sources[]` (each with `url` and `title`).
+2. Add a leaf JSON file: `<branch>/<leaf-id>.json` with `id`, `label`, `brief` (the canned, citation-marked answer), and `sources[]` where each entry has `label`, `url`, `excerpt`, and optionally `internalSlug` (pointer to a per-doc copy under `public/corpus/bitcoin/<slug>.json` — when set, the chat trace renders a "local copy" badge so visitors can verify the citation against the static repo). Optional `relatedLeafIds: string[]` for suggested follow-ups.
 3. Register the leaf as an edge in `<branch>/index.json`.
 4. Bump the `version` field in `artifacts/emerald/public/catalog/bitcoin/index.json` (e.g. `"v1"` → `"v2"`). The browser caches the catalog by version; without a bump, returning visitors will keep the old tree.
 5. Re-run the smoke harness: `pnpm --filter @workspace/scripts run bitcoin-catalog-smoke`.
@@ -79,7 +79,7 @@ Greater's Bitcoin pack uses 8 L1 branches × ~6 leaves each. For a niche bot, st
 Each edge has:
 
 - `label` — the noun phrase a visitor would click ("Sound money")
-- `summary` — 1–3 sentences shown in clarification prompts
+- `summary` — 1–3 sentences shown in clarification prompts (branch/stub edges only; leaves carry their long-form text in the leaf file's `brief` field instead)
 - `searchTerms` — hidden ranking-only tokens for the BM25 ranker (e.g. populate `austrian-monetary`'s root edge with leaf-vocabulary like `"fiat"`, `"21 million"`, `"halving"` so root-level matches still route correctly)
 - `kind` — `branch`, `leaf`, or `stub`
 

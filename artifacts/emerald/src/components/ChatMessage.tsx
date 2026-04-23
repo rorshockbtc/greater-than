@@ -369,16 +369,40 @@ export function ChatMessage({
                             c.page_url.startsWith("https://") ||
                             c.page_url.startsWith("http://");
                           if (isHttpUrl) {
+                            // Catalog leaves can ship a per-doc local
+                            // copy under public/corpus/<pack>/<slug>.json
+                            // — surface it as a separate "local copy"
+                            // badge alongside the external link so the
+                            // sovereign visitor can verify the citation
+                            // against the static repo without trusting
+                            // the upstream host.
+                            const local = c.internalSlug
+                              ? `${import.meta.env.BASE_URL}corpus/bitcoin/${c.internalSlug}.json`
+                              : null;
                             return (
-                              <a
-                                href={c.page_url}
-                                target="_blank"
-                                rel="noreferrer noopener"
-                                className="inline-flex items-center gap-1 text-emerald-400 hover:underline"
-                              >
-                                {c.page_label}
-                                <ExternalLink className="w-3 h-3" />
-                              </a>
+                              <span className="inline-flex items-center gap-1.5 flex-wrap">
+                                <a
+                                  href={c.page_url}
+                                  target="_blank"
+                                  rel="noreferrer noopener"
+                                  className="inline-flex items-center gap-1 text-emerald-400 hover:underline"
+                                >
+                                  {c.page_label}
+                                  <ExternalLink className="w-3 h-3" />
+                                </a>
+                                {local && (
+                                  <a
+                                    href={local}
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                    title="Open the locally indexed copy of this source — bundled with the static site, no network call to the original host."
+                                    className="inline-flex items-center gap-1 px-1.5 py-px rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[10px] uppercase tracking-wider hover:bg-emerald-500/20"
+                                    data-testid={`citation-local-copy-${i + 1}`}
+                                  >
+                                    local copy
+                                  </a>
+                                )}
+                              </span>
                             );
                           }
                           return (

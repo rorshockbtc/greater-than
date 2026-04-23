@@ -6,17 +6,20 @@
     {
       "label": "Ludwig von Mises — The Theory of Money and Credit",
       "url": "https://mises.org/library/theory-money-and-credit",
-      "excerpt": "It is impossible to grasp the meaning of the idea of sound money if one does not realize that it was devised as an instrument for the protection of civil liberties against despotic inroads on the part of governments."
+      "excerpt": "It is impossible to grasp the meaning of the idea of sound money if one does not realize that it was devised as an instrument for the protection of civil liberties against despotic inroads on the part of governments.",
+      "internalSlug": "mises-org-library-theory-money-and-credit-3d855bb0"
     },
     {
       "label": "Murray N. Rothbard — What Has Government Done to Our Money?",
       "url": "https://mises.org/library/what-has-government-done-our-money",
-      "excerpt": "Money does not enter the market as a money — it enters as a commodity that is then chosen by traders for monetary use because of its physical qualities. Government has not been the originator of money; markets have been."
+      "excerpt": "Money does not enter the market as a money — it enters as a commodity that is then chosen by traders for monetary use because of its physical qualities. Government has not been the originator of money; markets have been.",
+      "internalSlug": "mises-org-library-what-has-government-done-our-money-daaf5a04"
     },
     {
       "label": "Murray N. Rothbard — The Mystery of Banking",
       "url": "https://mises.org/library/mystery-banking",
-      "excerpt": "Throughout history, government has displayed a remarkable consistency in finding ways to debase the money — clipping coins, lowering precious-metal content, suspending convertibility, printing notes."
+      "excerpt": "Throughout history, government has displayed a remarkable consistency in finding ways to debase the money — clipping coins, lowering precious-metal content, suspending convertibility, printing notes.",
+      "internalSlug": "mises-org-library-mystery-banking-38ba3a6c"
     }
   ],
   "relatedLeafIds": ["regression-theorem", "fiat-end-game", "why-fixed-supply"]

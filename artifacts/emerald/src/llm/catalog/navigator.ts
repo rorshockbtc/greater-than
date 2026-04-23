@@ -227,6 +227,11 @@ function sourceToChunk(
     text: source.excerpt,
     persona_slug: packSlug === "bitcoin" ? "fintech" : packSlug,
     score: confidence,
+    // Plumbed end-to-end: catalog source → synthetic chunk → trace UI.
+    // ChatMessage shows a "local copy" badge linking to
+    // /corpus/<packSlug>/<internalSlug>.json when present. Absent on
+    // leaves whose curator hasn't (yet) registered an internal copy.
+    internalSlug: source.internalSlug,
   };
 }
 

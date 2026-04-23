@@ -93,6 +93,17 @@ export interface KbChunk {
 
   /** Unix ms when the chunk was indexed. */
   indexed_at?: number;
+
+  /**
+   * Optional pointer to a locally indexed copy of this source under
+   * `public/corpus/<pack-slug>/<internalSlug>.json` (the per-document
+   * JIT layer emitted by `build-bitcoin-seed`). When set, the chat UI
+   * surfaces a "local copy" affordance next to the external link so a
+   * sovereign visitor can verify the citation against the static
+   * repo contents — no trust in the external host required. Currently
+   * populated only by catalog leaves; legacy chunks leave it absent.
+   */
+  internalSlug?: string;
 }
 
 /**
