@@ -1534,7 +1534,12 @@ export function ChatWidget({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#01a9f4] hover:bg-[#0394d8] text-white shadow-xl flex items-center justify-center transition-colors border border-white/15"
+            // Brand-pink launcher. Was previously hardcoded to a
+            // generic chatbot blue (#01a9f4) which broke the
+            // single-accent rule visitors hit on every page. Using
+            // bg-primary so the color stays in lock-step with the
+            // CSS variable if the brand pink ever shifts.
+            className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-primary hover:opacity-90 text-primary-foreground shadow-xl flex items-center justify-center transition-opacity ring-1 ring-white/20"
             aria-label="Open chat"
           >
             <MessageSquare className="w-6 h-6" />
@@ -1550,7 +1555,7 @@ export function ChatWidget({
               animate={{ scale: 1 }}
               exit={{ scale: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed bottom-6 right-6 z-[49] w-14 h-14 rounded-full bg-[#01a9f4] hover:bg-[#0394d8] text-white shadow-xl flex items-center justify-center transition-colors border border-white/15"
+              className="fixed bottom-6 right-6 z-[49] w-14 h-14 rounded-full bg-primary hover:opacity-90 text-primary-foreground shadow-xl flex items-center justify-center transition-opacity ring-1 ring-white/20"
               style={{ transform: 'translateY(580px)' }}
               aria-label="Close chat"
             >

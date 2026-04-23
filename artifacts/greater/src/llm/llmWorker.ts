@@ -3,7 +3,7 @@
 /**
  * In-browser LLM + embedder worker for Greater.
  *
- * - Embedder: Xenova/bge-small-en-v1.5 (small, fast, ~30MB).
+ * - Embedder: onnx-community/bge-small-en-v1.5 (small, fast, ~30MB).
  * - LLM:     onnx-community/Llama-3.2-1B-Instruct-q4f16 (~800MB,
  *            WebGPU-accelerated). Picked over Llama-3.2-3B because
  *            the 1B variant has the most stable WebGPU build at
@@ -60,15 +60,21 @@ function readProgress(p: ProgressInfo): {
 
 async function loadAll() {
   try {
-    // dtype: "fp32" is required on @huggingface/transformers v4.x for
-    // bge-small (and other BERT-family extractors). Without it the
-    // pipeline auto-selects a quantized variant whose ORT tensors come
-    // back with `data location: undefined`, and every embed call throws
-    // `invalid data location: undefined for input "input_ids"`. Catalog-
-    // first packs bypass the embedder entirely (so the live Bitcoin demo
-    // is unaffected), but contributor-shipped flat-embed packs need this
-    // to actually run. Keep this dtype pinned.
+    // device: "wasm" + dtype: "fp32" pinned for the embedder. With
+    // device unset the pipeline inherits whatever backend was
+    // initialised last (which would be the LLM's WebGPU below) and
+    // bge-small has no WebGPU-runnable file. With dtype unset it
+    // auto-picks a quantized variant. Both pins together keep the
+    // embedder on a CPU/wasm path it actually supports. Note: the
+    // embedder model was also moved from the legacy `Xenova/`
+    // namespace to `onnx-community/` (see config.ts) because the
+    // Xenova upload's ONNX metadata predates the v4 JSEP runtime
+    // and throws `invalid data location: undefined for input
+    // "input_ids"` regardless of these pins. This is the live path
+    // for the homepage meta-bot and any non-catalog-first persona,
+    // so it has to actually run.
     embedder = await pipeline("feature-extraction", EMBEDDER_MODEL_ID, {
+      device: "wasm",
       dtype: "fp32",
       progress_callback: (p: ProgressInfo) => {
         const { file, progress, status } = readProgress(p);
