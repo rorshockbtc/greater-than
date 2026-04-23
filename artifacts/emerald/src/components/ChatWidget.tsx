@@ -532,6 +532,19 @@ export function ChatWidget({
       return;
     }
 
+    // Catalog-mode personas (Task #68 — currently fintech/Bitcoin)
+    // don't depend on the WebGPU model for retrieval. The navigator
+    // returns a verbatim leaf brief in zero-LLM mode and only uses
+    // the model for an optional polish pass when it's ready. So the
+    // catalog path is safe — and required, per the <2s first-paint
+    // goal — to run BEFORE `llm.status === 'ready'`. Routing fintech
+    // to the cloud while the model loads would defeat the whole
+    // reason the catalog architecture exists.
+    if (personaSlug === 'fintech') {
+      await runLocal(userText);
+      return;
+    }
+
     // Local isn't ready yet — try cloud, but honor the per-session
     // cap. When the cap is hit we route through local even though
     // the model isn't ready (the call will surface a clear error in
