@@ -151,7 +151,7 @@ export function ChatMessage({
         animate={{ opacity: 1 }}
         className="flex justify-center my-3"
       >
-        <div className="text-[10px] uppercase tracking-wider font-medium text-[hsl(var(--muted-foreground))] bg-pink-500/10 border border-pink-500/30 text-pink-300 px-2.5 py-1 rounded-full">
+        <div className="chb-chat-pill text-pink-300" data-testid="mode-note">
           {content}
         </div>
       </motion.div>
@@ -185,8 +185,8 @@ export function ChatMessage({
 
       <div className={cn("flex flex-col gap-1", compact ? "max-w-[85%]" : "max-w-[85%] md:max-w-[75%]", isBot ? "items-start" : "items-end")}>
         {isBot && isFinancialAdvice && (
-          <div className="flex items-center gap-1.5 text-xs font-medium text-warning bg-warning/10 px-2 py-1 rounded-md border border-warning/20 mb-1">
-            <AlertTriangle className="w-3.5 h-3.5" />
+          <div className="chb-chat-pill text-warning mb-1">
+            <AlertTriangle className="w-3 h-3" aria-hidden="true" />
             This is informational only. Not financial advice.
           </div>
         )}
@@ -202,7 +202,7 @@ export function ChatMessage({
             )}
             {biasLabel && (
               <div
-                className="flex items-center gap-1 text-[10px] uppercase tracking-wider font-medium text-pink-300 bg-pink-500/10 border border-pink-500/30 px-2 py-0.5 rounded-md mb-1"
+                className="chb-chat-pill text-pink-400 mb-1"
                 title="Bias perspective active when this answer was generated"
                 data-testid="badge-bias-label"
               >
@@ -214,11 +214,18 @@ export function ChatMessage({
 
         <div
           className={cn(
-            "shadow-sm relative",
-            compact ? "px-3 py-2 text-sm" : "px-4 py-3 text-sm md:text-base",
+            "relative",
+            compact ? "px-3.5 py-2.5 text-sm" : "px-4 py-3 text-sm md:text-base",
+            // Editorial bubble: dropped the speech-bubble tail (the
+            // rounded-tl-sm / rounded-tr-sm asymmetry that read as a
+            // standard chat-app convention) in favour of a quiet
+            // hairline-bordered card with a single accent stroke on
+            // the speaker side. Bot gets a subtle emerald left rule;
+            // user gets a quieter right rule. Same affordance, less
+            // chat-app chrome.
             isBot
-              ? "bg-[hsl(var(--card))] border border-[hsl(var(--border))] rounded-2xl rounded-tl-sm"
-              : "bg-[hsl(var(--secondary))] border border-[hsl(var(--border))] rounded-2xl rounded-tr-sm"
+              ? "bg-[hsl(var(--card))] border border-[hsl(var(--border))] border-l-2 border-l-emerald-500/40 rounded-md"
+              : "bg-[hsl(var(--secondary))] border border-[hsl(var(--border))] border-r-2 border-r-foreground/25 rounded-md"
           )}
         >
           <div className="whitespace-pre-wrap leading-relaxed">
@@ -275,7 +282,7 @@ export function ChatMessage({
 
         {/* Metadata & Actions */}
         <div className="flex flex-wrap items-center gap-3 px-1 mt-1">
-          <span className="text-[10px] text-muted-foreground/70 font-medium tracking-wide uppercase">
+          <span className="chb-chat-meta text-muted-foreground/80">
             {formatTime(timestamp)}
           </span>
 
@@ -323,13 +330,13 @@ export function ChatMessage({
             <button
               type="button"
               onClick={() => setTraceOpen((v) => !v)}
-              className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-muted-foreground hover:text-foreground"
+              className="chb-chat-meta inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
               data-testid="button-toggle-thought-trace"
             >
-              <Brain className="w-3.5 h-3.5" />
+              <Brain className="w-3.5 h-3.5" aria-hidden="true" />
               Thought trace
-              <span className="text-muted-foreground/60">
-                ({thoughtTrace.chunks.length} sources)
+              <span className="text-muted-foreground/60 not-italic font-sans text-[11px]">
+                {thoughtTrace.chunks.length} {thoughtTrace.chunks.length === 1 ? "source" : "sources"}
               </span>
               {traceOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
             </button>
@@ -396,7 +403,7 @@ export function ChatMessage({
                                     target="_blank"
                                     rel="noreferrer noopener"
                                     title="Open the locally indexed copy of this source — bundled with the static site, no network call to the original host."
-                                    className="inline-flex items-center gap-1 px-1.5 py-px rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[10px] uppercase tracking-wider hover:bg-emerald-500/20"
+                                    className="chb-chat-meta text-emerald-400 hover:text-emerald-300 ml-1"
                                     data-testid={`citation-local-copy-${i + 1}`}
                                   >
                                     local copy
@@ -410,7 +417,7 @@ export function ChatMessage({
                               className="inline-flex items-center gap-1 text-amber-400/90"
                               title="This citation has no public URL — it comes from operator notes or a non-web source."
                             >
-                              <span className="font-mono text-[10px] uppercase tracking-wider px-1.5 py-px rounded bg-amber-500/10 border border-amber-500/30">
+                              <span className="chb-chat-pill text-amber-300">
                                 internal note
                               </span>
                               <span className="text-amber-200/90">
@@ -451,7 +458,7 @@ export function ChatMessage({
                   </div>
                 </div>
                 <div className="mt-3 pt-3 border-t border-[hsl(var(--border))] flex justify-between items-center">
-                  <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{article.category}</span>
+                  <span className="chb-chat-meta text-muted-foreground">{article.category}</span>
                   <button
                     onClick={(e) => { e.stopPropagation(); handleRequestUpdate(); }}
                     className="text-xs text-muted-foreground hover:text-emerald-400 transition-colors"
@@ -638,7 +645,7 @@ function FeedbackButtons({
   if (state === "thanked") {
     return (
       <span
-        className="text-[10px] uppercase tracking-wider text-muted-foreground/70"
+        className="chb-chat-meta text-muted-foreground/80"
         data-testid="feedback-thanks"
       >
         {given === 1 ? "Thanks for the upvote" : "Thanks — noted"}
@@ -651,7 +658,7 @@ function FeedbackButtons({
       <button
         type="button"
         onClick={() => given && submit(given, comment)}
-        className="text-[10px] uppercase tracking-wider text-rose-400 hover:text-rose-300"
+        className="chb-chat-meta text-rose-400 hover:text-rose-300"
         data-testid="feedback-retry"
       >
         Couldn't save · retry
@@ -680,7 +687,7 @@ function FeedbackButtons({
         />
         <button
           type="submit"
-          className="text-[10px] uppercase tracking-wider px-2 py-1 rounded bg-rose-500/10 border border-rose-500/30 text-rose-300 hover:bg-rose-500/20"
+          className="chb-chat-meta px-2 py-1 rounded text-rose-400 hover:text-rose-300 border border-rose-500/30 hover:border-rose-400/50"
           data-testid="button-feedback-submit"
         >
           Send
@@ -688,7 +695,7 @@ function FeedbackButtons({
         <button
           type="button"
           onClick={() => given && submit(given, "")}
-          className="text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground"
+          className="chb-chat-meta text-muted-foreground hover:text-foreground"
           data-testid="button-feedback-skip"
         >
           Skip
@@ -735,24 +742,22 @@ function SourceBadge({
   if (source === "qa-cache") {
     return (
       <div
-        className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-medium text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-md mb-1"
+        className="chb-chat-pill text-emerald-400 mb-1"
         title="Matched a curated Q&A in the persona's knowledge bank — instant, deterministic, zero model tokens spent."
         data-testid="badge-qa-cache"
       >
-        <Sparkles className="w-3 h-3" />
-        Curated &middot; Instant
+        Curated, instant
       </div>
     );
   }
   if (source === "openclaw") {
     return (
       <div
-        className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-medium text-violet-300 bg-violet-500/10 border border-violet-500/30 px-2 py-0.5 rounded-md mb-1"
+        className="chb-chat-pill text-violet-400 mb-1"
         title="Answered by your own OpenAI-compatible LLM endpoint (OpenClaw mode). No cloud call made by Greater."
         data-testid="badge-openclaw"
       >
-        <ShieldCheck className="w-3 h-3" />
-        OpenClaw &middot; BYO model
+        OpenClaw — your own model
       </div>
     );
   }
@@ -760,31 +765,28 @@ function SourceBadge({
     if (localOnly) {
       return (
         <div
-          className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-medium text-amber-300 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-md mb-1"
+          className="chb-chat-pill text-amber-400 mb-1"
           title="Cloud fallback is rate-limited for this session — answered by the in-browser model only."
           data-testid="badge-local-only"
         >
-          <ShieldCheck className="w-3 h-3" />
-          Local-only &middot; cloud rate-limited
+          Local-only, cloud rate-limited
         </div>
       );
     }
     return (
-      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md mb-1">
-        <ShieldCheck className="w-3 h-3" />
-        Local &middot; Private
+      <div className="chb-chat-pill text-emerald-400 mb-1">
+        Local, private
       </div>
     );
   }
   // Reason-aware label so the badge stays truthful per-message even
   // after the global LLM status changes.
-  let label = "Cloud mode";
-  if (cloudReason === "loading") label = "Cloud fallback: local model loading";
-  else if (cloudReason === "unsupported") label = "Cloud mode: WebGPU unsupported";
-  else if (cloudReason === "local-error") label = "Cloud fallback: local inference error";
+  let label = "Cloud";
+  if (cloudReason === "loading") label = "Cloud fallback, local model loading";
+  else if (cloudReason === "unsupported") label = "Cloud, WebGPU unsupported";
+  else if (cloudReason === "local-error") label = "Cloud fallback, local inference error";
   return (
-    <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-medium text-sky-400 bg-sky-500/10 border border-sky-500/20 px-2 py-0.5 rounded-md mb-1">
-      <Cloud className="w-3 h-3" />
+    <div className="chb-chat-pill text-sky-400 mb-1">
       {label}
     </div>
   );

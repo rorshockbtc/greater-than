@@ -309,6 +309,110 @@
 }
 
 /**
+ * Editorial chat-pill. Replaces the legacy
+ *   text-[10px] uppercase tracking-wider font-medium px-2 py-0.5
+ *   rounded-md bg-X/10 border border-X/30
+ * chat-pill chrome — five copies of which were stacking under every
+ * bot reply and reading as the standard AI-template badge soup. The
+ * editorial replacement is a small italic-serif label preceded by a
+ * coloured leading dot. The dot inherits the consumer's text colour
+ * via currentColor, so callers just set `text-emerald-400` (or
+ * whatever hue) and drop every background/border/padding/uppercase
+ * class.
+ */
+.chb-chat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.78rem;
+  letter-spacing: -0.005em;
+  text-transform: none;
+  line-height: 1.2;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.chb-chat-pill::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+/**
+ * Editorial chat-metadata text — timestamps, "thanks for the upvote",
+ * trace-toggle button, "internal note" filemark. Sentence-case italic
+ * serif at low contrast. Replaces the uppercase-tracking-wider
+ * muted-foreground pattern that was stamped on every secondary chrome
+ * element in the widget.
+ */
+.chb-chat-meta {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.2;
+}
+
+/**
+ * Light-theme contrast overrides for the editorial chat utilities.
+ * The `text-{hue}-300/400` tints chosen for legibility on the slate
+ * dark widget background read as washed-out pastel on the pale light
+ * widget surface — failing WCAG AA. Inside the light-themed widget
+ * pull each *-300/-400 tint down to the matching *-700 which passes
+ * AA on white. Scoped to the two new chat utilities and to
+ * `[data-theme="light"]` so this does not leak out into the rest of
+ * the marketing site.
+ */
+[data-theme="light"] .chb-chat-pill.text-pink-300,
+[data-theme="light"] .chb-chat-pill.text-pink-400,
+[data-theme="light"] .chb-chat-meta.text-pink-300,
+[data-theme="light"] .chb-chat-meta.text-pink-400 { color: rgb(190 24 93); }
+
+[data-theme="light"] .chb-chat-pill.text-amber-300,
+[data-theme="light"] .chb-chat-pill.text-amber-400,
+[data-theme="light"] .chb-chat-meta.text-amber-300,
+[data-theme="light"] .chb-chat-meta.text-amber-400 { color: rgb(180 83 9); }
+
+[data-theme="light"] .chb-chat-pill.text-emerald-300,
+[data-theme="light"] .chb-chat-pill.text-emerald-400,
+[data-theme="light"] .chb-chat-meta.text-emerald-300,
+[data-theme="light"] .chb-chat-meta.text-emerald-400 { color: rgb(4 120 87); }
+
+[data-theme="light"] .chb-chat-pill.text-violet-300,
+[data-theme="light"] .chb-chat-pill.text-violet-400,
+[data-theme="light"] .chb-chat-meta.text-violet-300,
+[data-theme="light"] .chb-chat-meta.text-violet-400 { color: rgb(109 40 217); }
+
+[data-theme="light"] .chb-chat-pill.text-sky-300,
+[data-theme="light"] .chb-chat-pill.text-sky-400,
+[data-theme="light"] .chb-chat-meta.text-sky-300,
+[data-theme="light"] .chb-chat-meta.text-sky-400 { color: rgb(3 105 161); }
+
+[data-theme="light"] .chb-chat-pill.text-rose-300,
+[data-theme="light"] .chb-chat-pill.text-rose-400,
+[data-theme="light"] .chb-chat-meta.text-rose-300,
+[data-theme="light"] .chb-chat-meta.text-rose-400 { color: rgb(190 18 60); }
+
+/**
+ * Financial-advice warning bubble. The default `text-warning` token
+ * is HSL 35 100% 55% — a vivid amber that pops on dark surfaces but
+ * sits at ~3.1:1 against white, just under WCAG AA. Inside the
+ * light-themed widget bump it to the same amber-700 the chat-pill
+ * uses so the warning stays legible on the pale surface.
+ */
+[data-theme="light"] .chb-chat-pill.text-warning { color: rgb(180 83 9); }
+
+/**
  * Serif headline utility — Fraunces with optical-size + tighter
  * tracking. Applied selectively to hero H1s to break up the
  * uniform Inter look that reads as AI-generated. Editorial

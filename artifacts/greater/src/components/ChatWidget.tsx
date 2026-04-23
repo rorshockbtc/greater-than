@@ -1775,13 +1775,12 @@ function ModeBadge({
     return (
       <span
         className={cn(
-          'inline-flex items-center gap-1 text-[9px] font-mono tracking-wide px-1.5 py-px rounded border border-violet-500/40 bg-violet-500/10',
-          isDark ? 'text-violet-200' : 'text-violet-700',
+          'chb-chat-pill',
+          isDark ? 'text-violet-300' : 'text-violet-700',
         )}
         title="OpenClaw mode — chat is being served by your own OpenAI-compatible endpoint. Greater is not making any cloud calls."
         data-testid="badge-mode"
       >
-        <span className={cn('font-bold', isDark ? 'text-violet-400' : 'text-violet-700')}>&gt;</span>
         OpenClaw mode
       </span>
     );
@@ -1790,8 +1789,8 @@ function ModeBadge({
     return (
       <span
         className={cn(
-          'inline-flex items-center gap-1 text-[9px] font-mono tracking-wide px-1.5 py-px rounded border border-pink-500/40 bg-pink-500/10',
-          isDark ? 'text-pink-200' : 'text-pink-700',
+          'chb-chat-pill',
+          isDark ? 'text-pink-300' : 'text-pink-700',
         )}
         title={
           pipeName
@@ -1800,14 +1799,13 @@ function ModeBadge({
         }
         data-testid="badge-mode"
       >
-        <span className={cn('font-bold', isDark ? 'text-pink-400' : 'text-pink-700')}>&gt;</span>
         Greater mode
       </span>
     );
   }
   return (
     <span
-      className="inline-flex items-center gap-1 text-[9px] font-mono tracking-wide px-1.5 py-px rounded border border-[hsl(var(--widget-border))] bg-white/5 text-[hsl(var(--widget-muted))]"
+      className="chb-chat-pill text-[hsl(var(--widget-muted))]"
       title="Generic mode — no Pipe is loaded for this demo. The FOSS shell runs honestly without one; mounting a Pipe under data/pipes/ unlocks Greater mode for this persona."
       data-testid="badge-mode"
     >
@@ -1867,7 +1865,7 @@ function ReadinessPill({
 
   return (
     <span
-      className={cn('flex items-center gap-1 text-[10px] tracking-wide truncate font-medium', color)}
+      className={cn('chb-chat-meta inline-flex items-center gap-1.5 truncate', color)}
       data-testid="status-llm-pill"
       title={label}
     >
