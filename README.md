@@ -37,6 +37,89 @@ the integration into your stack. That's `colonhyphenbracket`.
 
 ---
 
+## Host it yourself in 5 minutes (no terminal required)
+
+The Bitcoin demo runs **entirely in the visitor's browser**. No
+backend. No database. No API keys. That means a non-developer can put
+a working copy of the bot on the public internet without ever opening
+a terminal.
+
+The path is:
+
+1. **Fork this repo on GitHub.** Click the "Fork" button at the top
+   of [github.com/rorshockbtc/greater-than](https://github.com/rorshockbtc/greater-than).
+   You now own a copy.
+2. **Connect your fork to a free static host.** Cloudflare Pages,
+   Vercel, and Netlify all do the same job here — pick whichever you
+   already have an account on.
+   - Build command: `pnpm install && pnpm --filter @workspace/greater run build`
+   - Output / publish directory: `artifacts/greater/dist/public`
+   - Environment variables: **none required.**
+3. **Deploy.** The host gives you a public URL in a couple of minutes.
+   That URL is your bot.
+
+That's it. You now have a Bitcoin support chat running on your own
+domain, with the model executing in your visitors' browsers, no
+per-message bill, no vendor sitting between you and them.
+
+### Keeping your copy up to date — automagically
+
+GitHub has a "Sync fork" button on every fork. Click it whenever you
+want to pull in upstream improvements (new catalog branches, security
+fixes, design polish). Your static host watches the fork and
+automatically rebuilds when it sees the change. You never run an
+update command.
+
+If you want it truly hands-off, drop a daily GitHub Action into your
+fork that auto-presses Sync Fork for you. (A starter workflow for that
+will land in `.github/workflows/sync-upstream.yml` shortly — track
+[the open issue](https://github.com/rorshockbtc/greater-than/issues)
+if you want to be pinged when it does.)
+
+### What the static install does NOT include
+
+To set expectations honestly:
+
+- **No URL ingestion.** The "paste a URL and the bot will learn from
+  it" feature needs the API server. The static install ships with the
+  curated Bitcoin catalog only.
+- **No contact form delivery.** The form will render but submissions
+  will go nowhere without a Web3Forms key.
+- **No admin feedback inbox.** Only relevant if you plan to read what
+  visitors are searching for.
+- **No cloud-LLM answer polish.** The bot answers from the catalog
+  brief verbatim — which is the point of catalog-first; the briefs
+  are hand-written. If you want the answers paraphrased per visitor,
+  the [full Quickstart](#quickstart) below adds the cloud fallback.
+
+For most non-developer operators, the static install is the right
+default. Add the API server later if you actually need any of the
+above.
+
+### Switching the bot from "Bitcoin" to your own niche
+
+Edit JSON files in the GitHub web editor — no clone, no terminal:
+
+1. Open `artifacts/greater/public/catalog/bitcoin/` in your fork on
+   github.com.
+2. Add or replace the `<branch>/<leaf>.json` files with content that
+   matches your domain. Each leaf is a 3-paragraph brief with cited
+   sources. The structure is documented in
+   [`docs/INSTALL.md`](./docs/INSTALL.md) under "Track A — Bitcoin
+   operators."
+3. Bump the `version` field in `index.json`. (Required so visitors'
+   browsers fetch the new tree instead of the cached old one.)
+4. Save. Your static host sees the commit, rebuilds, and your bot
+   updates within a couple of minutes.
+
+This is the **caveat the README owes you up front:** Greater is an
+early-stage product. The catalog you ship is yours to maintain, the
+shell will keep getting better, and the install path above is
+specifically designed so that the maintenance cost on you stays close
+to zero.
+
+---
+
 ## Try it now
 
 The launch demo is wired live: a FinTech bot grounded in the
