@@ -1,7 +1,49 @@
 {
   "id": "privacy",
   "title": "On-chain privacy and chain analysis",
-  "summary": "Address reuse, coinjoin, payjoin, silent payments, what surveillance firms can actually see, taproot's privacy implications.",
-  "stub": true,
-  "edges": []
+  "summary": "Address reuse, coinjoin, payjoin, silent payments, what blockchain surveillance firms can and can't see, taproot's privacy implications. Practical and philosophical takes on financial privacy.",
+  "edges": [
+    {
+      "id": "address-reuse",
+      "label": "Address reuse and the default privacy floor",
+      "summary": "Why receiving twice to the same address ties your transactions together, and how HD wallets are designed to make a fresh address the easy path.",
+      "kind": "leaf",
+      "searchTerms": ["address reuse", "reuse address", "reusing address", "fresh address", "static address", "hd wallet privacy", "common-input-ownership", "common input ownership", "input clustering"]
+    },
+    {
+      "id": "coinjoin",
+      "label": "Coinjoin",
+      "summary": "Equal-output coinjoins (JoinMarket, the WabiSabi family) break the one-to-one input/output mapping a chain analyst relies on. What they actually achieve and what they don't.",
+      "kind": "leaf",
+      "searchTerms": ["coinjoin", "coin join", "joinmarket", "wabisabi", "wasabi", "samourai", "whirlpool", "mixer", "mixing", "anonymity set", "equal output", "chaumian"]
+    },
+    {
+      "id": "payjoin",
+      "label": "Payjoin (BIP78)",
+      "summary": "A pay-to-merchant transaction where the recipient secretly contributes an input. The output amounts no longer add up to a single sender's coins, breaking the common-input-ownership heuristic.",
+      "kind": "leaf",
+      "searchTerms": ["payjoin", "pay join", "bip78", "bip-78", "bip 78", "p2ep", "pay to endpoint", "receiver contribution", "non-interactive payjoin"]
+    },
+    {
+      "id": "silent-payments",
+      "label": "Silent payments (BIP352)",
+      "summary": "A static address you can publish anywhere that produces a unique on-chain output for every payment, with no extra interactivity and no on-chain notification.",
+      "kind": "leaf",
+      "searchTerms": ["silent payments", "silent payment", "bip352", "bip-352", "bip 352", "sp1", "static address", "reusable address", "ecdh address", "stealth address"]
+    },
+    {
+      "id": "taproot-privacy",
+      "label": "Taproot's privacy implications",
+      "summary": "Why taproot makes single-sig, multisig, and complex script spends look identical on chain, and the limits of that guarantee.",
+      "kind": "leaf",
+      "searchTerms": ["taproot privacy", "taproot fungibility", "schnorr privacy", "musig2", "musig 2", "key path spend", "script path", "p2tr", "bip341 privacy", "bip 341 privacy"]
+    },
+    {
+      "id": "surveillance-firms",
+      "label": "What chain analysis firms actually do",
+      "summary": "The clustering heuristics, the exchange-subpoena pipeline, and the gap between marketing claims and what's structurally provable from the chain alone.",
+      "kind": "leaf",
+      "searchTerms": ["chain analysis", "chainalysis", "elliptic", "ciphertrace", "blockchain surveillance", "surveillance firm", "kyc subpoena", "cluster", "clustering heuristic", "deanonymize", "tag exchange"]
+    }
+  ]
 }

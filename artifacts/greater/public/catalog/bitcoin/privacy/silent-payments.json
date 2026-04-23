@@ -1,0 +1,23 @@
+{
+  "id": "silent-payments",
+  "label": "Silent payments (BIP352)",
+  "brief": "Silent payments give a recipient one static identifier — looks like an address, starts with `sp1` — that they can put in a bio or on a donation page, where every payment to it produces a unique, fresh on-chain output that only the recipient can spend [1]. There is no on-chain notification, no extra round-trip with the sender, and no shared secret stored anywhere reusable.\n\nThe construction is elliptic-curve Diffie-Hellman between the sender's input keys and the recipient's published key, mixed with the transaction's outpoints to produce a derivation tweak. The recipient scans new blocks looking for outputs whose key matches what their own scan key would derive against the sender's input pubkeys. From the chain's perspective the output looks like any other taproot output with no metadata of any kind [2].\n\nThe design fixes both halves of the static-identifier problem at once: the donor gets the convenience of a fixed thing they can copy from a webpage, and the recipient gets per-payment uncorrelatable outputs without ever publishing them. The honest tradeoff is scanning cost. The recipient (or their full node) has to do an EC operation per transaction in the chain to detect incoming payments, which is fine for a personal node and harder for a phone wallet — current implementations rely on dedicated indexers or BIP158-style filters tuned for silent payments [3]. BIP352 is finalized; the rollout is happening one wallet at a time.",
+  "sources": [
+    {
+      "label": "BIP352 — Silent Payments",
+      "url": "https://github.com/bitcoin/bips/blob/master/bip-0352.mediawiki",
+      "excerpt": "The recipient publishes one silent payment address. The sender uses ECDH between the recipient's public scan and spend keys and the input keys of the funding transaction to derive a one-time output script. The recipient scans the chain by performing the matching ECDH operation against transaction input keys to identify payments to themselves."
+    },
+    {
+      "label": "Optech — Silent payments topic",
+      "url": "https://bitcoinops.org/en/topics/silent-payments/",
+      "excerpt": "Silent payments produce taproot outputs that are indistinguishable on-chain from any other single-sig taproot spend. There is no notification step and no per-payment interactivity required from the recipient. The cost is on the recipient side: continuously scanning new blocks to detect payments addressed to them."
+    },
+    {
+      "label": "Josibake — Silent Payments BIP352 explainer (Spiral)",
+      "url": "https://spiral.xyz/blog/silent-payments/",
+      "excerpt": "Existing static-address proposals either required the sender to do something different (BIP47 notification transactions) or the recipient to publish many addresses in advance. Silent payments require neither: one published identifier, no on-chain notification, and per-payment unlinkability for the recipient."
+    }
+  ],
+  "relatedLeafIds": ["address-reuse", "taproot-privacy"]
+}

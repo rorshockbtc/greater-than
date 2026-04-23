@@ -1,5 +1,13 @@
 # Greater
 
+**For people who aren't developers:** Greater is a free chat widget you
+can drop on a website. When a visitor asks a question, the answer is
+written by a small AI model running *inside the visitor's own browser* —
+not on a server you have to pay per-message for. The Bitcoin demo at
+[hire.colonhyphenbracket.pink](https://hire.colonhyphenbracket.pink/demo/blockstream)
+is the live version. Everything below is for people who want to host
+their own.
+
 > Sovereign-by-default support bots. FOSS shell, persona-tuned demos,
 > browser-local inference. **No per-message API tax. No vendor between
 > you and your customers.**

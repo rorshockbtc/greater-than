@@ -1,0 +1,23 @@
+{
+  "id": "hd-wallets-bip32",
+  "label": "HD wallets and BIP32 derivation",
+  "brief": "An HD (hierarchical deterministic) wallet derives every one of its keys from a single seed via a deterministic tree. From the seed you compute a master extended key; from that master, child keys at any path you like; from any child, more children, indefinitely [1]. The practical consequence: backing up the seed backs up the entire wallet — current keys, future keys, every account you'll ever derive from it — without needing to copy out individual private keys ever.\n\nThe derivation path you see on wallet screens — usually written `m/84'/0'/0'/0/5` or similar — encodes which branch of the tree the key lives on. The BIP44/49/84/86 conventions assign meaning to the first few levels: purpose (script type — 84' is native segwit, 86' is taproot), coin type (0' is Bitcoin), account index, change-or-receive, and address index [2]. Two wallets that agree on those conventions can both sweep the same seed and find the same coins; that's why \"recover seed in any BIP39-compatible wallet\" works in practice.\n\nThe `'` mark means the derivation step is hardened: the parent's private key is required to derive the child. Without hardening, the math allows a third party with the parent xpub plus any child private key to compute the parent private key — fine inside a single wallet that controls everything, catastrophic if you've shared an xpub for watch-only purposes [3]. This is why all account-level paths are hardened: it lets you safely hand out an account xpub for receive-address generation by another device without exposing the master.",
+  "sources": [
+    {
+      "label": "BIP32 — Hierarchical Deterministic Wallets",
+      "url": "https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki",
+      "excerpt": "An HD wallet uses a single seed to deterministically generate a tree of keypairs. Parents derive children via HMAC-SHA512; hardened derivation steps require the parent's private key, while non-hardened steps can be performed with the parent extended public key alone. This split enables both fully-online watch-only setups and securely-held signing keys."
+    },
+    {
+      "label": "BIP44 — Multi-Account Hierarchy for Deterministic Wallets",
+      "url": "https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki",
+      "excerpt": "Defines the path m / purpose' / coin_type' / account' / change / address_index. Adopted with purpose=84' for native segwit (BIP84) and purpose=86' for taproot (BIP86). The shared convention is what allows different wallet implementations to discover each other's funds from the same seed."
+    },
+    {
+      "label": "Mastering Bitcoin — Chapter 5: Wallets",
+      "url": "https://github.com/bitcoinbook/bitcoinbook/blob/develop/ch05_wallets.adoc",
+      "excerpt": "Hardened derivation breaks the parent-public-key-to-child-public-key relationship at that step. The reason is to contain the damage if a child private key leaks while the parent extended public key is also exposed: without hardening, the combination would allow recovery of the parent private key."
+    }
+  ],
+  "relatedLeafIds": ["seed-phrases-bip39", "descriptors"]
+}

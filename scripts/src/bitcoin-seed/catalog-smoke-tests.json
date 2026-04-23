@@ -1,6 +1,6 @@
 {
   "version": "v1",
-  "description": "Catalog smoke tests for the Bitcoin pack (Task #68). Each case asserts that a representative visitor query lands on a specific authored leaf via the catalog navigator. Three fully-built branches today (austrian-monetary, core-internals, lightning); the remaining stub branches return graceful-degradation messages and aren't tested for confidence.",
+  "description": "Catalog smoke tests for the Bitcoin pack. Each case asserts that a representative visitor query lands on a specific authored leaf via the catalog navigator. All 8 branches are now fully built: austrian-monetary, core-internals, lightning, privacy, mining-pow, wallets-keys, whitepaper-precursors, operational-questions.",
   "cases": [
     { "query": "what is sound money", "expectedLeafId": "sound-money", "minConfidence": 0.4 },
     { "query": "explain the regression theorem and how bitcoin satisfies it", "expectedLeafId": "regression-theorem", "minConfidence": 0.5 },
@@ -32,7 +32,40 @@
     { "query": "explain channel splicing and how routing fees work on lightning", "expectedLeafId": "channel-management", "minConfidence": 0.4 },
     { "query": "what is a lightning service provider and how do jit channels work", "expectedLeafId": "lightning-services", "minConfidence": 0.4 },
     { "query": "what is the difference between cooperative close and force close on lightning", "expectedLeafId": "payment-channels", "minConfidence": 0.3 },
-    { "query": "how does multi-path payment let lightning route a large amount", "expectedLeafId": "htlc-routing", "minConfidence": 0.3 }
+    { "query": "how does multi-path payment let lightning route a large amount", "expectedLeafId": "htlc-routing", "minConfidence": 0.3 },
+
+    { "query": "what is coinjoin and how does it improve privacy", "expectedLeafId": "coinjoin", "minConfidence": 0.4 },
+    { "query": "explain payjoin and how bip78 breaks the common-input-ownership heuristic", "expectedLeafId": "payjoin", "minConfidence": 0.4 },
+    { "query": "what are silent payments and how do they work", "expectedLeafId": "silent-payments", "minConfidence": 0.4 },
+    { "query": "how does taproot improve privacy on chain", "expectedLeafId": "taproot-privacy", "minConfidence": 0.4 },
+    { "query": "what do chain analysis firms actually see on the blockchain", "expectedLeafId": "surveillance-firms", "minConfidence": 0.4 },
+    { "query": "why is address reuse bad for privacy", "expectedLeafId": "address-reuse", "minConfidence": 0.4 },
+
+    { "query": "why does bitcoin use proof of work instead of proof of stake", "expectedLeafId": "why-pow", "minConfidence": 0.4 },
+    { "query": "how does the difficulty adjustment work and what happens when hashrate drops", "expectedLeafId": "difficulty-adjustment", "minConfidence": 0.4 },
+    { "query": "are asics centralizing bitcoin mining", "expectedLeafId": "asics-and-centralization", "minConfidence": 0.4 },
+    { "query": "explain how mining pools work and what stratum v2 changes", "expectedLeafId": "pool-dynamics", "minConfidence": 0.4 },
+    { "query": "what is the security budget problem after the subsidy decays", "expectedLeafId": "security-budget", "minConfidence": 0.4 },
+    { "query": "how much energy does bitcoin actually use and where does it come from", "expectedLeafId": "energy-use", "minConfidence": 0.4 },
+
+    { "query": "how do hd wallets work with bip32 derivation paths", "expectedLeafId": "hd-wallets-bip32", "minConfidence": 0.4 },
+    { "query": "what is a bip39 seed phrase and what does the passphrase do", "expectedLeafId": "seed-phrases-bip39", "minConfidence": 0.4 },
+    { "query": "explain output descriptors and why they matter", "expectedLeafId": "descriptors", "minConfidence": 0.4 },
+    { "query": "what should i look for in a hardware signer", "expectedLeafId": "hardware-signers", "minConfidence": 0.4 },
+    { "query": "how does a 2-of-3 multisig actually protect against theft and loss", "expectedLeafId": "multisig", "minConfidence": 0.4 },
+    { "query": "how do i set up bitcoin inheritance for my heirs", "expectedLeafId": ["inheritance", "backup-procedures"], "minConfidence": 0.4 },
+
+    { "query": "explain the bitcoin whitepaper and what it actually contributed", "expectedLeafId": "the-whitepaper", "minConfidence": 0.4 },
+    { "query": "what is hashcash and how is it related to bitcoin mining", "expectedLeafId": "hashcash", "minConfidence": 0.4 },
+    { "query": "tell me about wei dai's b-money proposal", "expectedLeafId": "b-money", "minConfidence": 0.4 },
+    { "query": "what was nick szabo's bit gold concept", "expectedLeafId": "bit-gold", "minConfidence": 0.4 },
+    { "query": "explain hal finney's reusable proofs of work rpow", "expectedLeafId": "rpow", "minConfidence": 0.4 },
+    { "query": "who were the cypherpunks and how do they connect to bitcoin", "expectedLeafId": "cypherpunks", "minConfidence": 0.4 },
+
+    { "query": "how should a non-expert evaluate a hardware signer brand without taking the project's word for it", "expectedLeafId": ["choosing-a-signer", "hardware-signers"], "minConfidence": 0.3 },
+    { "query": "how can a small business accept bitcoin without a custodian", "expectedLeafId": "receiving-without-custodian", "minConfidence": 0.4 },
+    { "query": "what's the right way to back up a bitcoin wallet", "expectedLeafId": "backup-procedures", "minConfidence": 0.4 },
+    { "query": "i broadcast a bitcoin payment to the wrong destination by mistake, is there any way to undo or recover it", "expectedLeafId": ["recovery-when-things-go-wrong", "transaction-anatomy"], "minConfidence": 0.2 }
   ],
   "antiDriftCases": [
     { "query": "should I buy ethereum instead of bitcoin", "expectKind": "refuse" },

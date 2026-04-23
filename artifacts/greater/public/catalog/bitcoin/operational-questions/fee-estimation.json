@@ -1,0 +1,23 @@
+{
+  "id": "fee-estimation",
+  "label": "Fee estimation and getting a transaction confirmed",
+  "brief": "The Bitcoin fee market is an auction for the next ten minutes of block space. Each block holds roughly 1 MB of transactions weighted by witness; miners include transactions in descending order of fee per virtual byte (sat/vB) until the block is full [1]. If you bid above what the marginal included transaction in the next block paid, you will be in that block. If you bid below, your transaction will sit in mempools at the same priority as everyone else's underbids and confirm whenever fee demand drops to your level — could be the next block, could be next week.\n\nWhat your wallet's fee picker is reading: most wallets pull from a fee-estimation service (mempool.space, your own node's `estimatesmartfee` RPC, or a vendor's heuristic) that publishes the lowest sat/vB seen included in the last N blocks at various confirmation targets. \"Fast\" usually means targeting the next block; \"medium\" means within the next 3–6 blocks; \"economy\" means within the day. These are estimates of a future auction, not guarantees — fees can spike between when you sign and when you broadcast [2].\n\nWhat to do when an under-fee transaction is stuck: replace-by-fee (RBF) lets you re-broadcast the same transaction with a higher fee, replacing the original in mempools that respect BIP125 — almost all of them do. Child-pays-for-parent (CPFP) lets you spend an output of the stuck transaction in a new transaction that bundles a high-enough fee to cover both, incentivizing miners to mine the parent in order to mine the child [3]. RBF requires you to have signaled it on the original (most modern wallets do by default); CPFP requires you to have a spendable output of the stuck transaction (often the change). If neither is available, the transaction will eventually drop out of mempools (typically after two weeks of non-confirmation) and the inputs become spendable in a new transaction.",
+  "sources": [
+    {
+      "label": "Bitcoin Optech — Topic: Fee management",
+      "url": "https://bitcoinops.org/en/topics/fee-management/",
+      "excerpt": "Bitcoin transaction fees are paid by the spender to the miner that includes the transaction in a block. Miners select transactions in descending order of effective fee per weight unit. The fee market is an auction over the next block; estimating the right bid involves predicting demand from other transactions over the confirmation horizon the user is willing to accept."
+    },
+    {
+      "label": "mempool.space — Documentation",
+      "url": "https://mempool.space/docs",
+      "excerpt": "Fee estimates are computed from observed mempool state and recent block contents. The 'next block' estimate is the lowest fee rate in the projected next block; longer-horizon estimates are projected from current mempool depth and historical fee-clearing patterns. Estimates are not guarantees — fee demand can change between estimate and broadcast."
+    },
+    {
+      "label": "Bitcoin Optech — Topic: Replace-by-fee and CPFP",
+      "url": "https://bitcoinops.org/en/topics/replace-by-fee/",
+      "excerpt": "RBF (BIP125) allows a transaction signaling replaceability to be replaced by another transaction with a higher fee. CPFP allows a child transaction to bundle additional fees that incentivize miners to also mine the parent. Both mechanisms are standard in node policy and are the canonical responses to a transaction stuck below the current clearing fee."
+    }
+  ],
+  "relatedLeafIds": ["running-a-node", "receiving-without-custodian"]
+}

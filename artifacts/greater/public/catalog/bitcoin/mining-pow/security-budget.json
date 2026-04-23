@@ -1,0 +1,23 @@
+{
+  "id": "security-budget",
+  "label": "The security budget question",
+  "brief": "The block reward has two parts: the subsidy (newly issued coins, halving every four years) and the fees (paid by users for inclusion). The subsidy is currently 3.125 BTC per block, dropping to ~1.5625 in 2028, ~0.78 in 2032, and asymptotically toward zero by 2140 [1]. The honest open question in Bitcoin's long-run economics is whether on-chain fee demand will grow fast enough to keep total miner revenue — and therefore the energy expended on security — at a level that deters majority-hashrate attacks once the subsidy is no longer carrying the load.\n\nThere are basically three positions on this. The first holds that block-space is a perpetually scarce resource; as Bitcoin's monetary base appreciates, the world's willingness to pay for final settlement on the base layer rises with it, and fees naturally fill the gap [2]. The second holds that Lightning, sidechains, and ecash mints will absorb so much usage that mainchain fee demand thins out, and that the resulting security budget will be small enough to invite trouble — usually proposed alongside changes like tail emission or demurrage. The third holds that the question is already partly answered: fee-only revenue periods (the brief 2023–2024 inscription episode, post-halving fee spikes) have shown the chain can sustain meaningful per-block revenue without the subsidy doing the work [3].\n\nWhat the protocol guarantees: the supply schedule is fixed and changing it would require near-unanimous social consensus, which has no precedent. What the protocol does not guarantee: that the equilibrium fee level at any future point will be \"enough\" by anyone's particular threat model. That part is genuinely emergent, depends on global block-space demand, and is the single biggest empirical question Bitcoin will answer over the next several decades.",
+  "sources": [
+    {
+      "label": "Bitcoin Wiki — Controlled supply",
+      "url": "https://en.bitcoin.it/wiki/Controlled_supply",
+      "excerpt": "The block subsidy halves every 210,000 blocks (approximately every four years). Total issuance asymptotically approaches 21 million BTC by approximately the year 2140, after which miner revenue will consist entirely of transaction fees. The schedule is fixed in consensus rules and any change would require a hard fork."
+    },
+    {
+      "label": "Lyn Alden — Bitcoin's Security and the Future of Mining",
+      "url": "https://www.lynalden.com/bitcoins-security-model/",
+      "excerpt": "If Bitcoin continues to grow as a settlement layer for higher-level systems, demand for inclusion in scarce block space rises with the value being settled. The security budget in fiat terms can remain large even as the per-block coin issuance trends to zero, provided the asset itself continues to appreciate and to host meaningful settlement traffic."
+    },
+    {
+      "label": "Hasu & James Prestwich — A Model for Bitcoin's Security and the Declining Block Subsidy (2020)",
+      "url": "https://research.paradigm.xyz/bitcoins-security-model",
+      "excerpt": "The security budget question has no settled answer. Empirical fee revenue has varied across cycles, and the long-run equilibrium depends on factors — adoption curve, block-space demand from second-layer settlement — that are not knowable in advance. The architecture commits to discovering the answer rather than legislating one."
+    }
+  ],
+  "relatedLeafIds": ["why-pow", "energy-use"]
+}

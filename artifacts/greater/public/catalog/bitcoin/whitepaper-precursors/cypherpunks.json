@@ -1,0 +1,23 @@
+{
+  "id": "cypherpunks",
+  "label": "The Cypherpunks",
+  "brief": "The Cypherpunks were a loose group of cryptographers, programmers, and writers who organized around an electronic mailing list founded in 1992 by Eric Hughes, Tim May, and John Gilmore. The shared premise: privacy in the late twentieth century would not survive without strong cryptography in everyday hands, and the people best positioned to deliver that cryptography were programmers willing to publish working code rather than wait for institutions to permit it [1]. Hughes's 1993 \"A Cypherpunk's Manifesto\" is the one-page summary — \"Cypherpunks write code\" — and it remains the cleanest articulation of the project's method.\n\nThe list was where most of the precursors to Bitcoin were first proposed and argued over. Wei Dai posted b-money there in November 1998. Adam Back announced Hashcash on the list in 1997. Hal Finney was a long-time contributor and later author of RPOW. Nick Szabo posted essays that became Bit Gold. The technical contributions of those years — strong public-key cryptography for individuals (PGP), anonymous remailers, electronic cash schemes (DigiCash and many others), the basic argument that backdoored crypto is bad crypto — were largely worked out on this list and a small handful of related forums [2].\n\nSatoshi published the Bitcoin whitepaper to a successor mailing list (the \"cryptography\" list maintained by Perry Metzger) in October 2008, and the early Bitcoin software was developed in dialog with veterans of the cypherpunk movement: Hal Finney was the first non-Satoshi to run a node and the first recipient of a Bitcoin transaction; Wei Dai exchanged email with Satoshi before publication [3]. Bitcoin is the cypherpunks' one durable practical success in monetary applications: not the first digital cash project they tried, but the first one that survived contact with real adversaries and continued running.",
+  "sources": [
+    {
+      "label": "Eric Hughes — A Cypherpunk's Manifesto (1993)",
+      "url": "https://www.activism.net/cypherpunk/manifesto.html",
+      "excerpt": "Privacy is necessary for an open society in the electronic age. Privacy is not secrecy. A private matter is something one doesn't want the whole world to know, but a secret matter is something one doesn't want anybody to know. We the Cypherpunks are dedicated to building anonymous systems. We are defending our privacy with cryptography, with anonymous mail forwarding systems, with digital signatures, and with electronic money. Cypherpunks write code."
+    },
+    {
+      "label": "Steven Levy — Crypto Rebels (Wired, 1993)",
+      "url": "https://www.wired.com/1993/02/crypto-rebels/",
+      "excerpt": "Tim May's vision: 'Computer technology is on the verge of providing the ability for individuals and groups to communicate and interact with each other in a totally anonymous manner. Two persons may exchange messages, conduct business, and negotiate electronic contracts without ever knowing the True Name, or legal identity, of the other.' The Cypherpunks were the people building toward that future, mostly by writing code and shipping it."
+    },
+    {
+      "label": "Nakamoto Institute — Cypherpunk Library",
+      "url": "https://nakamotoinstitute.org/library/",
+      "excerpt": "The Library collects the foundational essays and proposals of the cypherpunk movement, including b-money, Bit Gold, RPOW, Hashcash, the Crypto Anarchist Manifesto, and the Cypherpunk's Manifesto. The intellectual environment Bitcoin emerged from is preserved in these documents; the Bitcoin whitepaper is best read as a reply to them."
+    }
+  ],
+  "relatedLeafIds": ["the-whitepaper", "b-money", "bit-gold", "rpow"]
+}

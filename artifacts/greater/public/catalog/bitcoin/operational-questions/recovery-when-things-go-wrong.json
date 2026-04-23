@@ -1,0 +1,23 @@
+{
+  "id": "recovery-when-things-go-wrong",
+  "label": "Recovery when things go wrong",
+  "brief": "Most recoverable problems fall into a few patterns, with very different outcomes. Lost device with the seed safe: fully recoverable — restore the seed into any compatible wallet, sweep the funds to a new wallet, replace the device. Lost seed with the device safe: not directly recoverable through the device's normal interface, but the funds are still spendable as long as the device works; the right move is to immediately move the funds to a new wallet whose seed you have backed up properly, before the device fails [1]. Partial multisig key loss: depends on k-of-n; if you have at least k keys you can spend, and you should immediately move funds to a new multisig with a fresh key set rather than continuing to operate at reduced redundancy.\n\nSent to the wrong address: if the address is one you control (typo within your own wallet's UTXO set), the funds are fine and just need to be located. If it's a valid address that someone else controls, recovery requires that party's cooperation — there is no protocol-level chargeback or refund. If it's an address that isn't valid against any known wallet (random typo), the funds are unrecoverable; the network has no concept of \"undeliverable\" and no party with the keys exists to ever spend them [2]. This is the failure mode that no amount of expert help will reverse, and it's the one that wallet UX has spent the most effort preventing — checksums on addresses (bech32, Cashaddr-style) catch single-character typos before broadcast.\n\nThe honest limit on what an outside expert can do for you: an expert can help you reconstruct a misremembered passphrase by trying candidate phrases against a watch-only wallet (works for typos, not for entirely-forgotten phrases); identify which derivation path or script type a wallet used by sweeping the chain at common paths (works for funds at standard BIP-spec paths, not for custom derivations); and walk you through CPFP/RBF for stuck transactions [3]. They cannot recover a fully-lost seed without a backup, cannot reverse a payment to a third party, and cannot extract keys from a damaged device beyond what the device's own recovery interface supports. The category of problem that experts solve is mostly user-error in the recoverable sense; the category that fails to a published seed-on-Github incident or a missing backup is generally permanent.",
+  "sources": [
+    {
+      "label": "Bitcoin Optech — Topic: Recovery",
+      "url": "https://bitcoinops.org/en/topics/wallet-recovery/",
+      "excerpt": "Recoverable cases include lost device with backed-up seed, partial multisig key loss above the k threshold, stuck transactions, and forgotten passphrases for which a candidate set can be tried. Unrecoverable cases include lost seed with no backup, payments to third parties without their cooperation, and payments to addresses that decode validly but correspond to no known private key."
+    },
+    {
+      "label": "Bitcoin Wiki — Address validation and bech32",
+      "url": "https://en.bitcoin.it/wiki/Bech32",
+      "excerpt": "Bech32 addresses (BIP173) include a 30-bit checksum chosen to detect any one or two character substitutions and most other common typos. The checksum is what allows wallets to refuse a typoed address before broadcast. Pre-bech32 base58 addresses had a weaker checksum that caught fewer error patterns."
+    },
+    {
+      "label": "Jameson Lopp — Bitcoin recovery resources",
+      "url": "https://www.lopp.net/bitcoin-information/recovery-services.html",
+      "excerpt": "Independent recovery specialists exist for cases like passphrase reconstruction and obscure-derivation-path scanning. They cannot recover a fully-lost seed, reverse a confirmed payment, or extract keys from a damaged device beyond what the device's recovery interface supports. Vetting matters: some 'recovery' offerings are scams that ask for the seed up front."
+    }
+  ],
+  "relatedLeafIds": ["backup-procedures", "fee-estimation"]
+}

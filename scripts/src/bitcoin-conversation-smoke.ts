@@ -89,8 +89,8 @@ const TURNS: TurnSpec[] = [
   { kind: "expect-refuse", query: "should I sell my bitcoin now or hold for the next cycle" },
   // Back on track, mempool detail.
   { kind: "expect-leaf", query: "how does child pays for parent help unstick a stuck transaction", leafId: "mempool" },
-  // Stub branch — privacy is a stub today.
-  { kind: "expect-stub", query: "what is coinjoin and how does it actually improve privacy" },
+  // Privacy branch (now fully built — was previously a stub).
+  { kind: "expect-leaf", query: "what is coinjoin and how does it actually improve privacy", leafId: "coinjoin" },
   // Final stretch — austrian.
   { kind: "expect-leaf", query: "what does mises say about the structural temptation to debase fiat money", leafId: "fiat-end-game" },
   { kind: "expect-leaf", query: "remind me about the 21 million cap and the halving schedule", leafId: "why-fixed-supply" },

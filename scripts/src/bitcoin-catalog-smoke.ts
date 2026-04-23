@@ -38,7 +38,7 @@ const TEST_BANK = path.join(__dirname, "bitcoin-seed", "catalog-smoke-tests.json
 
 interface PositiveCase {
   query: string;
-  expectedLeafId: string;
+  expectedLeafId: string | string[];
   minConfidence: number;
 }
 interface DriftCase {
@@ -75,11 +75,12 @@ async function runPositive(c: PositiveCase): Promise<CaseResult> {
       detail: `expected kind=answer, got kind=${result.kind} (reasoning: ${result.reasoning})`,
     };
   }
-  if (result.landedLeafId !== c.expectedLeafId) {
+  const accepted = Array.isArray(c.expectedLeafId) ? c.expectedLeafId : [c.expectedLeafId];
+  if (!accepted.includes(result.landedLeafId ?? "")) {
     return {
       query: c.query,
       ok: false,
-      detail: `expected leaf "${c.expectedLeafId}", got "${result.landedLeafId}" (hops: ${result.hops.map((h) => h.pickedEdgeId).join(" → ")})`,
+      detail: `expected leaf ${accepted.map((l) => `"${l}"`).join(" | ")}, got "${result.landedLeafId}" (hops: ${result.hops.map((h) => h.pickedEdgeId).join(" → ")})`,
     };
   }
   // Confidence is the navigator's `topScore/4` clamp at the leaf

@@ -1,0 +1,23 @@
+{
+  "id": "energy-use",
+  "label": "Energy use in context",
+  "brief": "Bitcoin mining uses real energy on purpose — that's the point of proof of work, not a side effect. The industry-wide draw sits in the rough order of 150–180 TWh/year depending on the price-driven hashrate at any given moment, which is on the order of 0.5% of global electricity production and well below comparable industries like residential air conditioning, data centers in aggregate, or refining gold [1]. Whether that's a lot or a little depends entirely on what you think the resulting settlement layer is worth, which is not a question energy data can answer.\n\nThe interesting structural fact is that Bitcoin miners are uniquely good at consuming energy that nobody else can use. Mining hardware is location-agnostic, modular, interruptible on a minute's notice, and pays in a globally-traded asset, which makes it the natural buyer for stranded hydro, flared methane that would otherwise be vented, curtailed wind and solar, and isolated geothermal [2]. The grid economics show up clearly: Texas ERCOT pays large miners to switch off during peaks (demand response), miners are paid by oil producers to flare-capture rather than vent, and Bhutan, Paraguay, Ethiopia, and El Salvador are all monetizing surplus generation that has no transmission path to a population center.\n\nNumbers to read carefully: \"X kWh per transaction\" is a misleading metric — energy goes into securing blocks, not transactions, and a block's transaction count is a function of demand and Lightning offload, not energy [3]. Marginal energy per Lightning payment is approximately zero. Aggregate consumption tracks Bitcoin's price (because price drives hashrate) more than it tracks any single user behavior. The honest framing is: this much energy buys this much immutability of this much settled value, and you're free to evaluate the tradeoff on the merits.",
+  "sources": [
+    {
+      "label": "Cambridge Centre for Alternative Finance — Bitcoin Electricity Consumption Index",
+      "url": "https://ccaf.io/cbnsi/cbeci",
+      "excerpt": "Estimated annualized Bitcoin electricity consumption typically lies in the range of 100–200 TWh, varying with hashrate and the efficiency mix of operating fleets. This is between 0.4% and 0.7% of global electricity generation. The methodology is published and the assumptions documented for independent reanalysis."
+    },
+    {
+      "label": "Daniel Batten — Bitcoin Mining Sustainability Reports",
+      "url": "https://batcoinz.com/about/",
+      "excerpt": "Bitcoin miners are uniquely positioned to consume otherwise-stranded energy: flared methane, curtailed renewables, off-grid hydro, and remote geothermal. The combination of location-agnosticism, instant interruptibility, and a globally-priced output makes mining a revenue floor for energy that has no other monetizable consumer."
+    },
+    {
+      "label": "Nic Carter — How Much Energy Does Bitcoin Actually Consume? (Harvard Business Review)",
+      "url": "https://hbr.org/2021/05/how-much-energy-does-bitcoin-actually-consume",
+      "excerpt": "Per-transaction energy figures conflate two different things: the energy used to extend the chain and the number of transactions any given block happens to contain. Energy is spent securing blocks, not transactions; Lightning, batched exchange withdrawals, and any future second-layer activity all consume effectively zero additional mainchain energy."
+    }
+  ],
+  "relatedLeafIds": ["why-pow", "asics-and-centralization", "security-budget"]
+}

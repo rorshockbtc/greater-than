@@ -87,7 +87,7 @@ A new deterministic retrieval smoke test (`scripts/src/smoke-test.ts`) embeds th
 - **Low-band (2 tests):** gold-standard arguments, SegWit activation politics. Expects top score ≥ 0.25–0.30.
 - **Irrelevant (3 tests):** unladen-swallow airspeed, pizza toppings, 2024 Best Director. Expects top score ≤ 0.30 — the live UI's hard-refusal branch fires below this threshold.
 
-Test cases live in `scripts/src/bitcoin-seed/smoke-tests.json` — plain JSON, no TypeScript required to add a new one. `docs/TESTING.md` is a 5-minute "add your own test" guide aimed at FOSS contributors. The whole suite runs in CI on every corpus rebuild via `.github/workflows/rebuild-corpus-on-merge.yml`; failures block deploys.
+Test cases live in `scripts/src/bitcoin-seed/smoke-tests.json` — plain JSON, no TypeScript required to add a new one. `docs/TESTING.md` is a 5-minute "add your own test" guide aimed at FOSS contributors. (The historical `.github/workflows/rebuild-corpus-on-merge.yml` that ran the suite on every push has been removed; reintroducing it is a tracked follow-up. For now, run the smoke suite manually before deploys.)
 
 Sample expected output:
 
@@ -131,7 +131,7 @@ Every source has its license, canonical URL, and attribution mechanism documente
 - `scripts/src/build-bitcoin-seed.ts` — `BundleDoc` source_type union extended; `fetchLongFormWorks()` generic fetcher; in-process re-chunk pass; chunker bug fix; word-count reporting
 - `scripts/src/bitcoin-seed/mises-works.json` — 18 curated Mises URLs
 - `scripts/src/bitcoin-seed/nakamoto-works.json` — 27 curated Nakamoto URLs
-- `.github/workflows/rebuild-corpus-on-merge.yml` — CI now also triggers on smoke-test changes
+- ~~`.github/workflows/rebuild-corpus-on-merge.yml`~~ — historical; removed pending CI rework (tracked follow-up)
 
 **Smoke test**
 - `scripts/src/smoke-test.ts` — deterministic retrieval test runner with content-hash embedding cache
@@ -166,14 +166,14 @@ The Bitcoin pack now ships a **catalog navigator** instead of the flat embedding
 **How it works.** Hand-curated tree at `artifacts/greater/public/catalog/bitcoin/`:
 
 - **L1 root** with 8 branches (Austrian monetary thought, Bitcoin Core internals, Lightning, Privacy, Wallets/keys, Mining/PoW, Whitepaper/precursors, Operational how-to).
-- **L2 leaves** under each branch — fully authored for `austrian-monetary` and `core-internals` (6 leaves each); the other 6 branches ship as `stub` for graceful degradation.
+- **L2 leaves** under each branch — **all 8 of 8 branches fully authored** (April 2026 fill-in: privacy, mining-pow, wallets-keys, whitepaper-precursors, operational-questions). 48 leaves total, 6 per branch, each with a tight ~3-paragraph brief, inline `[1][2]` citations, and 2-3 real-URL sources (BIPs, Optech, Mastering Bitcoin, Nakamoto Institute, Cambridge CCAF, Lopp's resource list, etc.).
 - A small **BM25-lite ranker** (`artifacts/greater/src/llm/catalog/navigator.ts`) walks ROOT → BRANCH → LEAF, scoring edges by label + summary + an optional hidden `searchTerms[]` array.
 - A **deterministic anti-drift gate** (`artifacts/greater/src/llm/catalog/antiDrift.ts`) refuses shitcoin/scam/financial-advice queries before the navigator ever descends. Regex, not LLM — no chance of accidental engagement.
 - **Per-doc JIT layer** at `artifacts/greater/public/corpus/bitcoin/<slug>.json` (built by `build-bitcoin-seed`) lets leaves reference long-form documents without bundling the full 11 MB seed.
 
 **Per-pack flag.** `SeedBundleConfig.useCatalog: true` short-circuits the flat-embed install path. `AskOptions.useCatalog: { packSlug }` routes `ask()` through the navigator. The fintech persona in `ChatWidget` injects the option; other personas continue to use the flat pipeline.
 
-**Smoke harness.** `pnpm --filter @workspace/scripts run bitcoin-catalog-smoke` runs 25 query→leaf cases (no transformers dep, deterministic). `pnpm --filter @workspace/scripts run bitcoin-conversation-smoke` runs a 25-turn adversarial conversation including shitcoin probes, financial-advice probes, and consistency checks (asking the same thing twice should land the same leaf).
+**Smoke harness.** `pnpm --filter @workspace/scripts run bitcoin-catalog-smoke` runs ~58 query→leaf cases plus 9 anti-drift probes (no transformers dep, deterministic). The runner accepts either a single `expectedLeafId` or an array of acceptable leaves for queries where two adjacent leaves both legitimately answer. `pnpm --filter @workspace/scripts run bitcoin-conversation-smoke` runs a 25-turn adversarial conversation including shitcoin probes, financial-advice probes, and consistency checks (asking the same thing twice should land the same leaf).
 
 See `docs/INSTALL.md` for the operator-facing guide and the rationale for which pack should use catalog vs. flat-embed.
 
