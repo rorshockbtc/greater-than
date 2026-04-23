@@ -95,7 +95,7 @@ JavaScript libraries (build-time and runtime)
 
 * Wouter (routing)
   Copyright (c) Alexey Taktarov
-  Licence: ISC
+  Licence: Unlicense (public-domain dedication, see https://unlicense.org)
 
 * Express
   Copyright (c) TJ Holowaychuk and Express contributors
@@ -119,6 +119,21 @@ JavaScript libraries (build-time and runtime)
 
 * zod, clsx, tailwind-merge, class-variance-authority
   Various authors. All licensed MIT.
+
+* lightningcss (transitive via Tailwind v4)
+  Copyright (c) Devon Govett
+  Licence: Mozilla Public Licence 2.0
+  https://www.mozilla.org/en-US/MPL/2.0/
+  MPL 2.0 covers only the lightningcss source files themselves;
+  using lightningcss as a build-time dependency does not impose
+  MPL on Greater's own source code.
+
+* sharp / @img/sharp-libvips (image processing, build-time)
+  Copyright (c) Lovell Fuller, libvips contributors
+  Licence: Apache 2.0 (sharp), LGPL-3.0-or-later (libvips)
+  Used at build time only; not redistributed in the deployed
+  bundle. Operators who redistribute the unmodified npm packages
+  retain the upstream licence terms.
 
 ================================================================
 

@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import rateLimit from "express-rate-limit";
 import crypto from "crypto";
 import { ilike, or } from "drizzle-orm";
 import { db, articlesTable } from "@workspace/db";
@@ -14,7 +15,36 @@ import { generateLLMResponse } from "../lib/llm.js";
 
 const router: IRouter = Router();
 
-router.post("/chat", async (req, res): Promise<void> => {
+/* -------------------------------------------------------------- */
+/*  Rate limiting                                                 */
+/*                                                                */
+/*  /chat is the cloud-LLM fallback path. The browser-local model */
+/*  is the default flow; /chat is hit only when WebGPU is         */
+/*  unavailable AND the per-session client-side budget            */
+/*  (CLOUD_CALL_BUDGET, default 3) hasn't been spent. A server-   */
+/*  side limiter is the backstop against any caller that bypasses */
+/*  the client-side cap — direct fetch, scripted abuse,           */
+/*  someone forking the widget and removing the cap. /escalate    */
+/*  posts a Zendesk ticket payload and is similarly limited.      */
+/* -------------------------------------------------------------- */
+
+const chatLimiter = rateLimit({
+  windowMs: 60_000,
+  limit: 20,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many chat requests; try again in a minute." },
+});
+
+const escalateLimiter = rateLimit({
+  windowMs: 60_000,
+  limit: 6,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many escalations; try again in a minute." },
+});
+
+router.post("/chat", chatLimiter, async (req, res): Promise<void> => {
   const parsed = SendMessageBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });
@@ -94,7 +124,7 @@ router.post("/chat", async (req, res): Promise<void> => {
   res.json(SendMessageResponse.parse(responseData));
 });
 
-router.post("/escalate", async (req, res): Promise<void> => {
+router.post("/escalate", escalateLimiter, async (req, res): Promise<void> => {
   const parsed = EscalateTicketBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: parsed.error.message });

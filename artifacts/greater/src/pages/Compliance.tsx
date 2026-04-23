@@ -117,10 +117,13 @@ export default function Compliance() {
           <p className="callout">
             <strong>What this means for a deployer.</strong> If your
             deployment cannot tolerate any cloud egress, set{" "}
-            <code>CLOUD_CALL_BUDGET</code> to <code>0</code> in{" "}
-            <code>LLMProvider.tsx</code>. The widget will surface a
-            "WebGPU unsupported — please use a Chromium-based browser"
-            message instead of falling back.
+            <code>VITE_CLOUD_CALL_BUDGET=0</code> in your <code>.env</code>{" "}
+            (or edit the default in <code>LLMProvider.tsx</code>). The
+            widget will surface a "WebGPU unsupported — please use a
+            Chromium-based browser" message instead of falling back.
+            The api-server also rate-limits the <code>/chat</code> route
+            server-side as a backstop, so the cap holds even against
+            a caller that has stripped the client-side budget.
           </p>
         </Section>
 

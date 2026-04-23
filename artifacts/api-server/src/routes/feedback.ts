@@ -1,5 +1,6 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import rateLimit from "express-rate-limit";
+import crypto from "node:crypto";
 import { desc, eq, and, gte, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db, feedbackTable } from "@workspace/db";
@@ -153,9 +154,29 @@ router.post(
 
 const ADMIN_KEY = process.env.ADMIN_FEEDBACK_KEY ?? "";
 
+/**
+ * Admin-feedback endpoint guard.
+ *
+ * Header-only (`x-admin-key`). The query-string fallback that used
+ * to be accepted (`?key=`) was removed because query strings are
+ * leak-prone — they appear in access logs, browser history, and
+ * Referer headers when the page links out.
+ *
+ * The compare is constant-time via `crypto.timingSafeEqual` after
+ * length-equalisation, and any mismatch returns 404 so the
+ * existence of the route is not a positive signal to a probing
+ * attacker.
+ */
 function adminGuard(req: Request, res: Response): boolean {
-  const key = (req.query.key ?? req.headers["x-admin-key"] ?? "") as string;
-  if (!ADMIN_KEY || key !== ADMIN_KEY) {
+  if (!ADMIN_KEY) {
+    res.status(404).json({ error: "Not found" });
+    return false;
+  }
+  const provided = (req.headers["x-admin-key"] ?? "") as string;
+  const a = Buffer.from(provided, "utf8");
+  const b = Buffer.from(ADMIN_KEY, "utf8");
+  const ok = a.length === b.length && crypto.timingSafeEqual(a, b);
+  if (!ok) {
     res.status(404).json({ error: "Not found" });
     return false;
   }

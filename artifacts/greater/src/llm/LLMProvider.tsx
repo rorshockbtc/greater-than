@@ -406,7 +406,30 @@ function normalizeBaseUrl(url: string): string {
  * to the in-browser model for the rest of the session. Resets only
  * when the browser tab is closed.
  */
-const CLOUD_CALL_BUDGET = 3;
+/**
+ * Cloud-fallback budget. Resolved once at module load.
+ *
+ * Operators can set `VITE_CLOUD_CALL_BUDGET=0` in their `.env` to
+ * opt out of cloud fallback entirely — visitors without WebGPU
+ * then see a "browser unsupported" message instead of the cloud
+ * path firing. They can also raise it for trusted internal
+ * deployments. The default of 3 matches the published compliance
+ * posture (`COMPLIANCE.md`).
+ *
+ * This is a UX/cost control, NOT the security control on the
+ * cloud path — that lives in the api-server's `/chat` rate
+ * limiter (`artifacts/api-server/src/routes/chat.ts`), which
+ * applies regardless of what the client claims its budget is.
+ */
+const RAW_CLOUD_BUDGET = (
+  import.meta as { env: { VITE_CLOUD_CALL_BUDGET?: string } }
+).env.VITE_CLOUD_CALL_BUDGET;
+const PARSED_CLOUD_BUDGET =
+  RAW_CLOUD_BUDGET !== undefined ? parseInt(RAW_CLOUD_BUDGET, 10) : NaN;
+const CLOUD_CALL_BUDGET =
+  Number.isFinite(PARSED_CLOUD_BUDGET) && PARSED_CLOUD_BUDGET >= 0
+    ? PARSED_CLOUD_BUDGET
+    : 3;
 const CLOUD_CALLS_STORAGE_KEY = "greater:cloud-calls-used";
 
 const LLMContext = createContext<LLMContextValue | null>(null);

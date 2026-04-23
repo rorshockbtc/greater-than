@@ -68,15 +68,19 @@ documented in `COMPLIANCE.md` and `threat_model.md`:
 
 - The default flow runs inference in the visitor's browser — message
   content does not leave the device.
-- The cloud-fallback path (3-call cap per session, badged "Cloud")
-  *does* send message content to Together.AI when WebGPU is
-  unavailable. Operators who cannot accept this should set the
-  `CLOUD_CALL_BUDGET` to `0`.
+- The cloud-fallback path at `POST /api/chat` (3-call cap per
+  session by default, badged "Cloud") *does* send message content
+  to Together.AI when WebGPU is unavailable. Operators who cannot
+  accept this should set `VITE_CLOUD_CALL_BUDGET=0` in their
+  `.env`. The api-server additionally rate-limits the route at 20
+  req/min/IP server-side as a backstop against any caller that
+  bypasses the client-side cap.
 - `VITE_WEB3FORMS_ACCESS_KEY` is publicly visible in the bundle by
   design — Web3Forms uses public access keys with origin allowlisting.
 - The admin-feedback endpoint uses a shared secret
-  (`ADMIN_FEEDBACK_KEY`) sent as a header; it is intended for
-  single-operator use, not multi-tenant administration.
+  (`ADMIN_FEEDBACK_KEY`) sent as the `x-admin-key` header,
+  compared in constant-time. It is intended for single-operator
+  use, not multi-tenant administration.
 
 ## Dependency hygiene
 

@@ -66,12 +66,18 @@ shell is intentionally anonymous by default.
   the visitor's tab. Anything the visitor types is the visitor's; the
   shell must not exfiltrate it on the default flow.
 - **Visitor browser ↔ api-server** — the only routes that cross this
-  boundary are: ingestion (`POST /ingest`), escalation/contact form
-  proxy, cloud-LLM fallback (`POST /chat/cloud`), and feedback
-  submission. The api-server is untrusted from the browser's
-  perspective and the browser is untrusted from the api-server's
-  perspective. Every request is rate-limited; ingestion is also
-  daily-quota'd per IP.
+  boundary are: ingestion (`POST /api/ingest`, `POST /api/ingest/sitemap`,
+  `POST /api/ingest/rss`), cloud-LLM fallback (`POST /api/chat`),
+  ticket escalation (`POST /api/escalate`), and feedback submission
+  (`POST /api/feedback`, `POST /api/suggestion`). The api-server is
+  untrusted from the browser's perspective and the browser is
+  untrusted from the api-server's perspective. Every browser-reachable
+  route is rate-limited via `express-rate-limit`:
+  - `/api/ingest*` — 30 req/min/IP burst + 500 pages/day/IP quota.
+  - `/api/chat` — 20 req/min/IP (server-side backstop on top of the
+    client-side per-session `CLOUD_CALL_BUDGET`).
+  - `/api/escalate` — 6 req/min/IP.
+  - `/api/feedback`, `/api/suggestion` — 12 req/min/IP each.
 - **api-server ↔ PostgreSQL** — direct credentialed access via
   Drizzle ORM. SQL injection at this boundary would expose all
   persisted data.
@@ -117,14 +123,23 @@ shell is intentionally anonymous by default.
 There are no per-visitor accounts. The two spoofing surfaces are:
 
 - **Admin feedback endpoint** uses a shared secret
-  (`ADMIN_FEEDBACK_KEY`) compared in constant-time on the
-  api-server. Anyone with the key can read submitted feedback. The
+  (`ADMIN_FEEDBACK_KEY`) sent in the `x-admin-key` header.
+  `adminGuard()` in `feedback.ts` length-equalises and
+  constant-time compares with `crypto.timingSafeEqual`; failures
+  return 404 so the route does not advertise itself. Query-string
+  fallback (`?key=`) was removed because query strings leak through
+  access logs, browser history, and Referer headers. The shared
   key MUST be kept server-side and out of any client bundle.
-- **Cloud-fallback proxy** is reachable by any browser. Spoofing
-  the operator's origin to abuse the Together.AI quota is mitigated
-  by the per-session 3-call cap and a per-IP rate limiter. Operators
-  who self-host MUST NOT remove the cap without a replacement
-  abuse-prevention strategy.
+- **Cloud-fallback proxy (`/api/chat`)** is reachable by any
+  browser. Two layers protect Together.AI quota:
+  1. **Client-side**: per-session `CLOUD_CALL_BUDGET`
+     (`VITE_CLOUD_CALL_BUDGET`, default 3, settable to 0 to opt
+     out of the path entirely). UX/cost control.
+  2. **Server-side**: `chatLimiter` (20 req/min/IP) in
+     `routes/chat.ts`. This is the actual security control; it
+     applies regardless of what the client claims its budget is,
+     so a forked widget that strips the cap still cannot run away
+     with operator quota.
 
 ### Tampering
 
@@ -194,16 +209,28 @@ There are no per-visitor accounts. The two spoofing surfaces are:
 
 ### Elevation of Privilege
 
-- **SSRF on `/ingest`** is the headline elevation risk.
+- **SSRF on `/api/ingest*`** is the headline elevation risk.
   `artifacts/api-server/src/routes/ingest.ts` enforces:
   - DNS-resolved IP must not be loopback (127/8, ::1), link-local
     (169.254/16, fe80::/10, including the AWS metadata endpoint),
     private RFC1918 (10/8, 172.16/12, 192.168/16), unique-local
     IPv6 (fc00::/7), 0.0.0.0, broadcast, multicast, or reserved.
-  - Redirects are re-resolved and re-validated; an attacker cannot
-    return a 302 to an internal address after the initial check
-    passes.
-  - Sitemap-discovered URLs are re-validated through the same guard.
+  - Redirects are re-resolved and re-validated through the same
+    guard before being followed.
+  - Child sitemap URLs (sitemap-of-sitemaps entries) are
+    re-validated before fetching.
+  - The `/api/ingest/extract` endpoint re-validates its input URL
+    on every call.
+  - Caveat: the `/api/ingest/sitemap` response returns the list of
+    discovered page URLs **without** running each one through the
+    SSRF guard first (the cost would be a DNS lookup per URL on a
+    sitemap of up to 5 000 URLs). This is bounded because the only
+    supported way for the client to fetch a returned URL is via
+    `/api/ingest/extract`, which re-validates. Direct callers MUST
+    NOT trust the URL list as already-vetted.
+  - Caveat: a determined attacker can arrange a DNS rebinding
+    TOCTOU between the guard's `dns.lookup()` precheck and the
+    eventual `fetch()`. This is documented under deferred risks.
 - **Authorization** — the admin-feedback endpoint is the only role-
   gated surface. The check runs server-side against
   `ADMIN_FEEDBACK_KEY` on every request.
@@ -233,7 +260,22 @@ These are documented so they are not re-discovered as surprises:
   proxy the contact form through their own backend.
 - **Cloud-fallback path can leak message content to Together.AI** —
   accepted, badged in UI, capped per session. Operators who cannot
-  accept this should set `CLOUD_CALL_BUDGET=0`.
+  accept this should set `VITE_CLOUD_CALL_BUDGET=0` (and rely on
+  the api-server's `/api/chat` limiter as the backstop).
+- **Sitemap response is not pre-filtered through SSRF guard** —
+  accepted as a cost trade-off (DNS lookup per URL on lists of up
+  to 5 000 URLs). Mitigated end-to-end by `/api/ingest/extract`
+  revalidation; documented under Elevation of Privilege.
+- **DNS rebinding TOCTOU on the SSRF guard** — accepted as a
+  residual risk. The current architecture validates the resolved
+  IP and then fetches by hostname; an adversary controlling the
+  authoritative DNS server can return a public A record to the
+  guard and a private one to `fetch()`. A full mitigation requires
+  resolving once and connecting to the resolved IP with the
+  hostname pinned in the SNI/Host header — feasible but not yet
+  implemented. The realistic exploitation surface is operator-
+  initiated ingestion of attacker-supplied URLs, which is already
+  daily-quota'd per IP.
 - **Marketing site loads Google Webfonts** — accepted, documented
   in `COMPLIANCE.md`. Operators who need offline-only fonts should
   self-host a font subset.
