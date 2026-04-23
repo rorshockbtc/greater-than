@@ -1,0 +1,25 @@
+{
+  "slug": "nakamotoinstitute-org-library-bitcoin-f3c682cd",
+  "source_url": "https://nakamotoinstitute.org/library/bitcoin/",
+  "source_label": "Satoshi Nakamoto — Bitcoin: A Peer-to-Peer Electronic Cash System",
+  "excerpt": "Transactions broadcast on a best-effort basis. Nodes do not need to forward every transaction; they just need to forward enough that miners can build blocks. The mempool is the natural staging area for this.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "mempool",
+      "leaf_label": "The mempool, fee estimation, and RBF"
+    },
+    {
+      "pack": "bitcoin",
+      "leaf_id": "p2p-network",
+      "leaf_label": "Peer discovery, addrman, and eclipse defenses"
+    },
+    {
+      "pack": "bitcoin",
+      "leaf_id": "utxo-model",
+      "leaf_label": "UTXO model versus account model"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

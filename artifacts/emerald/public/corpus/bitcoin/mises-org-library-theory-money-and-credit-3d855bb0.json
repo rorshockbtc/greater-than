@@ -1,0 +1,25 @@
+{
+  "slug": "mises-org-library-theory-money-and-credit-3d855bb0",
+  "source_url": "https://mises.org/library/theory-money-and-credit",
+  "source_label": "Ludwig von Mises — The Theory of Money and Credit",
+  "excerpt": "The objective exchange-value of money which rules in the market today is derived from yesterday's under the influence of the subjective valuations of the persons taking part in transactions on the market.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "regression-theorem",
+      "leaf_label": "Mises's regression theorem and Bitcoin"
+    },
+    {
+      "pack": "bitcoin",
+      "leaf_id": "sound-money",
+      "leaf_label": "What is sound money"
+    },
+    {
+      "pack": "bitcoin",
+      "leaf_id": "unit-of-account",
+      "leaf_label": "Bitcoin as a unit of account and Gresham's law"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

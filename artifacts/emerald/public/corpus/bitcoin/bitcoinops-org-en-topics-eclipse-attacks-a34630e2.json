@@ -1,0 +1,15 @@
+{
+  "slug": "bitcoinops-org-en-topics-eclipse-attacks-a34630e2",
+  "source_url": "https://bitcoinops.org/en/topics/eclipse-attacks/",
+  "source_label": "Bitcoin Optech — Topics on Eclipse Attacks",
+  "excerpt": "Anchor connections, asmap-based AS-aware bucketing, feeler probes, and outbound diversity across network types together raise the cost of eclipsing a Core node above what a casual attacker can sustain.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "p2p-network",
+      "leaf_label": "Peer discovery, addrman, and eclipse defenses"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

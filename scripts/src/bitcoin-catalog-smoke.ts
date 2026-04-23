@@ -60,6 +60,7 @@ interface CaseResult {
   query: string;
   ok: boolean;
   detail: string;
+  chunks?: { internalSlug?: string; page_url: string }[];
 }
 
 async function runPositive(c: PositiveCase): Promise<CaseResult> {
@@ -96,6 +97,10 @@ async function runPositive(c: PositiveCase): Promise<CaseResult> {
     query: c.query,
     ok: true,
     detail: `→ ${result.landedLeafId} (conf ${conf.toFixed(3)}, hops ${result.hops.length})`,
+    chunks: result.chunks.map((ch) => ({
+      internalSlug: ch.internalSlug,
+      page_url: ch.page_url,
+    })),
   };
 }
 
@@ -132,9 +137,49 @@ async function main() {
     if (!r.ok) failed++;
   }
 
+  // Local-copy guarantee: every catalog leaf citation must resolve to
+  // a real file under public/corpus/bitcoin/<slug>.json. The chat trace
+  // renders a "local copy" badge using `internalSlug` (or a fallback
+  // computed from the URL); if the corresponding file is missing in
+  // the static deploy, the badge 404s. Asserting here means a curator
+  // adding new sources who forgets to run `build-catalog-corpus`
+  // breaks the smoke build before broken links ship.
+  let corpusFailed = 0;
+  for (const r of positiveResults) {
+    if (!r.ok || !r.chunks?.length) continue;
+    for (const c of r.chunks) {
+      if (!c.internalSlug) continue;
+      const localPath = path.join(
+        REPO_ROOT,
+        "artifacts",
+        "emerald",
+        "public",
+        "corpus",
+        "bitcoin",
+        `${c.internalSlug}.json`,
+      );
+      try {
+        await readFile(localPath, "utf8");
+      } catch {
+        console.log(
+          `  FAIL  local-copy missing for ${c.page_url}\n        expected ${localPath}`,
+        );
+        corpusFailed++;
+      }
+    }
+  }
+  if (corpusFailed > 0) {
+    console.error(
+      `${corpusFailed} citation(s) had no local copy. Run \`pnpm --filter @workspace/scripts run build-catalog-corpus\`.`,
+    );
+    process.exit(1);
+  }
+
   console.log("");
   if (failed === 0) {
-    console.log(`All ${positiveResults.length + driftResults.length} cases passed.`);
+    console.log(
+      `All ${positiveResults.length + driftResults.length} cases passed (local-copy resolved for every cited source).`,
+    );
   } else {
     console.error(`${failed} case(s) failed.`);
     process.exit(1);

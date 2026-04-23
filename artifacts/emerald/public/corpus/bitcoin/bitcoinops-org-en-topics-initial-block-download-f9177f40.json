@@ -1,0 +1,15 @@
+{
+  "slug": "bitcoinops-org-en-topics-initial-block-download-f9177f40",
+  "source_url": "https://bitcoinops.org/en/topics/initial-block-download/",
+  "source_label": "Bitcoin Optech — Topics on Initial Block Download",
+  "excerpt": "The chainstate is the authoritative per-node view of all currently-unspent outputs. Historical block data is necessary for re-validation and for serving peers but not for validating new blocks once the chainstate is in place.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "node-architecture",
+      "leaf_label": "IBD, chainstate, indexing options"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

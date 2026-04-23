@@ -1,0 +1,15 @@
+{
+  "slug": "nakamotoinstitute-org-library-hyperbitcoinization-d54f295b",
+  "source_url": "https://nakamotoinstitute.org/library/hyperbitcoinization/",
+  "source_label": "Daniel Krawisz — Hyperbitcoinization",
+  "excerpt": "The transition is not gradual in its later stages. Once the harder money becomes the dominant store of value and a critical mass of transactions reference it directly, the unit-of-account function flips comparatively quickly.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "unit-of-account",
+      "leaf_label": "Bitcoin as a unit of account and Gresham's law"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

@@ -31,6 +31,7 @@ import type {
 } from "./types";
 import type { ChatTurn, RetrievedChunk } from "../types";
 import { detectDrift, renderDriftRedirect } from "./antiDrift";
+import { slugForSource } from "./slug";
 
 /* -------------------------------------------------------------- */
 /*  Loader contract                                               */
@@ -229,9 +230,12 @@ function sourceToChunk(
     score: confidence,
     // Plumbed end-to-end: catalog source → synthetic chunk → trace UI.
     // ChatMessage shows a "local copy" badge linking to
-    // /corpus/<packSlug>/<internalSlug>.json when present. Absent on
-    // leaves whose curator hasn't (yet) registered an internal copy.
-    internalSlug: source.internalSlug,
+    // /corpus/<packSlug>/<internalSlug>.json. Curators may pin an
+    // explicit slug on the source; otherwise we derive one from the
+    // URL using the same FNV-1a algorithm as the corpus builder, so
+    // every cited source has a working local-copy target as long as
+    // the matching corpus file is present at deploy time.
+    internalSlug: source.internalSlug ?? slugForSource(source.url),
   };
 }
 

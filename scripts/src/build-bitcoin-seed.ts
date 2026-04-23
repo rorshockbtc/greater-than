@@ -42,6 +42,7 @@ import { randomBytes } from "node:crypto";
 
 import { JSDOM } from "jsdom";
 import { Readability } from "@mozilla/readability";
+import { slugForSource } from "../../artifacts/emerald/src/llm/catalog/slug";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -846,33 +847,6 @@ async function main() {
   console.log(
     `Synced public copy → ${PUBLIC_OUTPUT_PATH} (gitignored; the web app fetches it on first load).`,
   );
-}
-
-/**
- * Slugify a source URL into a filesystem-safe filename. Stable across
- * runs (same URL → same slug) so a partial rebuild doesn't orphan
- * old per-doc files. Hash suffix disambiguates URLs whose human-readable
- * portion collides (e.g. two BitcoinTalk threads with the same title
- * but different message ids).
- */
-function slugForSource(url: string): string {
-  const human = url
-    .replace(/^https?:\/\//, "")
-    .replace(/[^a-zA-Z0-9]+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "")
-    .toLowerCase()
-    .slice(0, 80);
-  // 8-char hash suffix from a tiny FNV-1a; collision probability is
-  // negligible at our document counts but the suffix means we never
-  // have to special-case duplicates.
-  let h = 2166136261;
-  for (let i = 0; i < url.length; i++) {
-    h ^= url.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  const hex = (h >>> 0).toString(16).padStart(8, "0");
-  return `${human}-${hex}`;
 }
 
 interface CorpusIndexEntry {

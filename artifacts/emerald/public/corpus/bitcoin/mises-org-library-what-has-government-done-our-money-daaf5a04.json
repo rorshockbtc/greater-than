@@ -1,0 +1,20 @@
+{
+  "slug": "mises-org-library-what-has-government-done-our-money-daaf5a04",
+  "source_url": "https://mises.org/library/what-has-government-done-our-money",
+  "source_label": "Murray N. Rothbard — What Has Government Done to Our Money?",
+  "excerpt": "The history of money has been the history of government interference with that money. Every state-managed currency has eventually been inflated; not as an accident, but as the working-out of the underlying incentive structure.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "fiat-end-game",
+      "leaf_label": "Fiat dilution and the historical record"
+    },
+    {
+      "pack": "bitcoin",
+      "leaf_id": "sound-money",
+      "leaf_label": "What is sound money"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

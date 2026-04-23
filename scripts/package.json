@@ -7,6 +7,7 @@
     "hello": "tsx ./src/hello.ts",
     "seed-articles": "tsx ./src/seed-articles.ts",
     "build-bitcoin-seed": "tsx ./src/build-bitcoin-seed.ts",
+    "build-catalog-corpus": "tsx ./src/build-catalog-corpus.ts",
     "build-greater-seed": "tsx ./src/build-greater-seed.ts",
     "build-qa-bank": "tsx ./src/build-qa-bank.ts",
     "check-optech-rss": "tsx ./src/check-optech-rss.ts",

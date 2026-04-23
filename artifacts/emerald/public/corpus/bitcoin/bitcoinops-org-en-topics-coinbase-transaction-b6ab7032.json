@@ -1,0 +1,15 @@
+{
+  "slug": "bitcoinops-org-en-topics-coinbase-transaction-b6ab7032",
+  "source_url": "https://bitcoinops.org/en/topics/coinbase-transaction/",
+  "source_label": "Bitcoin Optech — Topics on Coinbase",
+  "excerpt": "The 100-block coinbase maturity rule is the protocol's defence against shallow reorgs invalidating coinbase outputs that have already been spent downstream. It is not a consensus optimisation but a safety property.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "block-template",
+      "leaf_label": "Block templates, the coinbase, and witness commitments"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

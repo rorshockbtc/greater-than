@@ -1,0 +1,15 @@
+{
+  "slug": "mises-org-wire-bitcoin-and-austrian-economics-2aff5d29",
+  "source_url": "https://mises.org/wire/bitcoin-and-austrian-economics",
+  "source_label": "Mises Institute Wire — Bitcoin and Austrian Economics",
+  "excerpt": "Some Austrians argue that Bitcoin cannot satisfy the regression theorem and therefore cannot become money in the technical sense; others have shown that the theorem applies more loosely than the strict reading suggests.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "regression-theorem",
+      "leaf_label": "Mises's regression theorem and Bitcoin"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

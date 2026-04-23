@@ -1,0 +1,35 @@
+{
+  "slug": "bitcoinops-org-en-newsletters-703b409a",
+  "source_url": "https://bitcoinops.org/en/newsletters/",
+  "source_label": "Bitcoin Optech — collected newsletters",
+  "excerpt": "getblocktemplate returns a candidate block with all transactions selected, fees totaled, and the coinbase value computed. The miner then iterates the nonce (and the coinbase extranonce on rollover) to find a hash that meets the target.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "block-template",
+      "leaf_label": "Block templates, the coinbase, and witness commitments"
+    },
+    {
+      "pack": "bitcoin",
+      "leaf_id": "consensus-rules",
+      "leaf_label": "Consensus rules, soft forks, hard forks"
+    },
+    {
+      "pack": "bitcoin",
+      "leaf_id": "mempool",
+      "leaf_label": "The mempool, fee estimation, and RBF"
+    },
+    {
+      "pack": "bitcoin",
+      "leaf_id": "node-architecture",
+      "leaf_label": "IBD, chainstate, indexing options"
+    },
+    {
+      "pack": "bitcoin",
+      "leaf_id": "p2p-network",
+      "leaf_label": "Peer discovery, addrman, and eclipse defenses"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

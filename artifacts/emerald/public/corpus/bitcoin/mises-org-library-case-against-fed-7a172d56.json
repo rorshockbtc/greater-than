@@ -1,0 +1,15 @@
+{
+  "slug": "mises-org-library-case-against-fed-7a172d56",
+  "source_url": "https://mises.org/library/case-against-fed",
+  "source_label": "Murray N. Rothbard — The Case Against the Fed",
+  "excerpt": "The very existence of a central bank with discretionary control over the money supply is the underlying mechanism of monetary mischief. Removing the discretion is the only structural fix.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "why-fixed-supply",
+      "leaf_label": "Why a fixed supply matters"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

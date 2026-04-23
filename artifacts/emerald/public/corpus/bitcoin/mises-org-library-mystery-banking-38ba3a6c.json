@@ -1,0 +1,20 @@
+{
+  "slug": "mises-org-library-mystery-banking-38ba3a6c",
+  "source_url": "https://mises.org/library/mystery-banking",
+  "source_label": "Murray N. Rothbard — The Mystery of Banking",
+  "excerpt": "Throughout history, government has displayed a remarkable consistency in finding ways to debase the money — clipping coins, lowering precious-metal content, suspending convertibility, printing notes.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "sound-money",
+      "leaf_label": "What is sound money"
+    },
+    {
+      "pack": "bitcoin",
+      "leaf_id": "unit-of-account",
+      "leaf_label": "Bitcoin as a unit of account and Gresham's law"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

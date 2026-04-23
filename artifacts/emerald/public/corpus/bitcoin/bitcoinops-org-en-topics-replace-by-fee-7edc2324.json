@@ -1,0 +1,15 @@
+{
+  "slug": "bitcoinops-org-en-topics-replace-by-fee-7edc2324",
+  "source_url": "https://bitcoinops.org/en/topics/replace-by-fee/",
+  "source_label": "Bitcoin Optech — Topics on Replace-by-Fee",
+  "excerpt": "BIP-125 opt-in RBF lets a transaction signal its replaceability via the sequence field. Full RBF treats every transaction as implicitly replaceable, removing the zero-conf-as-payment fiction at the cost of breaking some legacy assumptions.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "mempool",
+      "leaf_label": "The mempool, fee estimation, and RBF"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

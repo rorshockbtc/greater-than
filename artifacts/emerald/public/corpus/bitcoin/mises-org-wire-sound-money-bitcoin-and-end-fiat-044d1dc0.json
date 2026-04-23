@@ -1,0 +1,15 @@
+{
+  "slug": "mises-org-wire-sound-money-bitcoin-and-end-fiat-044d1dc0",
+  "source_url": "https://mises.org/wire/sound-money-bitcoin-and-end-fiat",
+  "source_label": "Mises Institute Wire — Sound Money, Bitcoin, and the End of Fiat",
+  "excerpt": "The post-1971 dollar has lost roughly 95% of its purchasing power against a stable basket of goods. Other major fiat currencies show similar trajectories. This is not unusual; it is the historical default.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "fiat-end-game",
+      "leaf_label": "Fiat dilution and the historical record"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

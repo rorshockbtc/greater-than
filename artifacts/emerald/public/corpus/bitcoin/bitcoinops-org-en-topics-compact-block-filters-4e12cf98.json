@@ -1,0 +1,15 @@
+{
+  "slug": "bitcoinops-org-en-topics-compact-block-filters-4e12cf98",
+  "source_url": "https://bitcoinops.org/en/topics/compact-block-filters/",
+  "source_label": "Bitcoin Optech — Topics on Pruning and Indexing",
+  "excerpt": "blockfilterindex maintains BIP-158 compact filters per block, enabling light clients to download a small filter and check it locally for relevance instead of leaking their addresses to a server.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "node-architecture",
+      "leaf_label": "IBD, chainstate, indexing options"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

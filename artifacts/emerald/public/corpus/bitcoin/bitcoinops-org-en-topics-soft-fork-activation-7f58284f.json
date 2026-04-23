@@ -1,0 +1,15 @@
+{
+  "slug": "bitcoinops-org-en-topics-soft-fork-activation-7f58284f",
+  "source_url": "https://bitcoinops.org/en/topics/soft-fork-activation/",
+  "source_label": "Bitcoin Optech — Topics on Soft Fork Activation",
+  "excerpt": "BIP-9 version bits, BIP-8 lockinontimeout, and the speedy-trial parameter sets are mechanisms for coordinating a soft fork's activation across miners and node operators without coercing simultaneous upgrades.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "consensus-rules",
+      "leaf_label": "Consensus rules, soft forks, hard forks"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

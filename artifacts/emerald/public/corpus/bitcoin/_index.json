@@ -1,0 +1,157 @@
+{
+  "version": "v1",
+  "pack": "bitcoin",
+  "generated_by": "build-catalog-corpus",
+  "documents": [
+    {
+      "slug": "bitcoinops-org-en-newsletters-703b409a",
+      "source_url": "https://bitcoinops.org/en/newsletters/",
+      "source_label": "Bitcoin Optech — collected newsletters",
+      "cited_by_count": 5
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-coinbase-transaction-b6ab7032",
+      "source_url": "https://bitcoinops.org/en/topics/coinbase-transaction/",
+      "source_label": "Bitcoin Optech — Topics on Coinbase",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-compact-block-filters-4e12cf98",
+      "source_url": "https://bitcoinops.org/en/topics/compact-block-filters/",
+      "source_label": "Bitcoin Optech — Topics on Pruning and Indexing",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-eclipse-attacks-a34630e2",
+      "source_url": "https://bitcoinops.org/en/topics/eclipse-attacks/",
+      "source_label": "Bitcoin Optech — Topics on Eclipse Attacks",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-initial-block-download-f9177f40",
+      "source_url": "https://bitcoinops.org/en/topics/initial-block-download/",
+      "source_label": "Bitcoin Optech — Topics on Initial Block Download",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-replace-by-fee-7edc2324",
+      "source_url": "https://bitcoinops.org/en/topics/replace-by-fee/",
+      "source_label": "Bitcoin Optech — Topics on Replace-by-Fee",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-segregated-witness-7618badc",
+      "source_url": "https://bitcoinops.org/en/topics/segregated-witness/",
+      "source_label": "Bitcoin Optech — Topics on Segregated Witness",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "bitcoinops-org-en-topics-soft-fork-activation-7f58284f",
+      "source_url": "https://bitcoinops.org/en/topics/soft-fork-activation/",
+      "source_label": "Bitcoin Optech — Topics on Soft Fork Activation",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-library-austrian-theory-trade-cycle-and-other-essays-c9f91b79",
+      "source_url": "https://mises.org/library/austrian-theory-trade-cycle-and-other-essays",
+      "source_label": "Mises, Hayek, Rothbard, Haberler — The Austrian Theory of the Trade Cycle",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-library-case-against-fed-7a172d56",
+      "source_url": "https://mises.org/library/case-against-fed",
+      "source_label": "Murray N. Rothbard — The Case Against the Fed",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-library-economics-one-lesson-f9c42588",
+      "source_url": "https://mises.org/library/economics-one-lesson",
+      "source_label": "Henry Hazlitt — Economics in One Lesson",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-library-ethics-money-production-c89fb739",
+      "source_url": "https://mises.org/library/ethics-money-production",
+      "source_label": "Jörg Guido Hülsmann — The Ethics of Money Production",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-library-man-economy-and-state-power-and-market-b1eb227e",
+      "source_url": "https://mises.org/library/man-economy-and-state-power-and-market",
+      "source_label": "Murray N. Rothbard — Man, Economy, and State",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-library-mystery-banking-38ba3a6c",
+      "source_url": "https://mises.org/library/mystery-banking",
+      "source_label": "Murray N. Rothbard — The Mystery of Banking",
+      "cited_by_count": 2
+    },
+    {
+      "slug": "mises-org-library-theory-money-and-credit-3d855bb0",
+      "source_url": "https://mises.org/library/theory-money-and-credit",
+      "source_label": "Ludwig von Mises — The Theory of Money and Credit",
+      "cited_by_count": 3
+    },
+    {
+      "slug": "mises-org-library-what-has-government-done-our-money-daaf5a04",
+      "source_url": "https://mises.org/library/what-has-government-done-our-money",
+      "source_label": "Murray N. Rothbard — What Has Government Done to Our Money?",
+      "cited_by_count": 2
+    },
+    {
+      "slug": "mises-org-wire-bitcoin-and-austrian-economics-2aff5d29",
+      "source_url": "https://mises.org/wire/bitcoin-and-austrian-economics",
+      "source_label": "Mises Institute Wire — Bitcoin and Austrian Economics",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-wire-sound-money-bitcoin-and-end-fiat-044d1dc0",
+      "source_url": "https://mises.org/wire/sound-money-bitcoin-and-end-fiat",
+      "source_label": "Mises Institute Wire — Sound Money, Bitcoin, and the End of Fiat",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "mises-org-wire-why-bitcoin-revolutionary-85a21743",
+      "source_url": "https://mises.org/wire/why-bitcoin-revolutionary",
+      "source_label": "Mises Institute Wire — Why Bitcoin Is Revolutionary",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "nakamotoinstitute-org-library-bitcoin-and-the-rhetoric-of-anarchy-bee654c1",
+      "source_url": "https://nakamotoinstitute.org/library/bitcoin-and-the-rhetoric-of-anarchy/",
+      "source_label": "Daniel Krawisz — Bitcoin and the Rhetoric of Anarchy",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "nakamotoinstitute-org-library-bitcoin-f3c682cd",
+      "source_url": "https://nakamotoinstitute.org/library/bitcoin/",
+      "source_label": "Satoshi Nakamoto — Bitcoin: A Peer-to-Peer Electronic Cash System",
+      "cited_by_count": 3
+    },
+    {
+      "slug": "nakamotoinstitute-org-library-hyperbitcoinization-d54f295b",
+      "source_url": "https://nakamotoinstitute.org/library/hyperbitcoinization/",
+      "source_label": "Daniel Krawisz — Hyperbitcoinization",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "nakamotoinstitute-org-library-satoshi-posts-9212fc4c",
+      "source_url": "https://nakamotoinstitute.org/library/satoshi/posts/",
+      "source_label": "Satoshi Nakamoto — collected forum posts",
+      "cited_by_count": 2
+    },
+    {
+      "slug": "nakamotoinstitute-org-library-the-mises-regression-theorem-aaf2e44b",
+      "source_url": "https://nakamotoinstitute.org/library/the-mises-regression-theorem/",
+      "source_label": "Konrad S. Graf — The Mises Regression Theorem and Bitcoin",
+      "cited_by_count": 1
+    },
+    {
+      "slug": "nakamotoinstitute-org-library-trusted-third-parties-d53ffdb1",
+      "source_url": "https://nakamotoinstitute.org/library/trusted-third-parties/",
+      "source_label": "Nick Szabo — Trusted Third Parties Are Security Holes",
+      "cited_by_count": 1
+    }
+  ]
+}

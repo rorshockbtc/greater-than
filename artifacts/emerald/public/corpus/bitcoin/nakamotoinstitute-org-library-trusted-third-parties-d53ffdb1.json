@@ -1,0 +1,15 @@
+{
+  "slug": "nakamotoinstitute-org-library-trusted-third-parties-d53ffdb1",
+  "source_url": "https://nakamotoinstitute.org/library/trusted-third-parties/",
+  "source_label": "Nick Szabo — Trusted Third Parties Are Security Holes",
+  "excerpt": "An accounting system based on shared state requires trust in whoever maintains that state. A system based on owners signing over discrete tokens to other owners requires no such trust.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "utxo-model",
+      "leaf_label": "UTXO model versus account model"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

@@ -1,0 +1,15 @@
+{
+  "slug": "nakamotoinstitute-org-library-the-mises-regression-theorem-aaf2e44b",
+  "source_url": "https://nakamotoinstitute.org/library/the-mises-regression-theorem/",
+  "source_label": "Konrad S. Graf — The Mises Regression Theorem and Bitcoin",
+  "excerpt": "Bitcoin's earliest direct demand came from those who valued the system itself — its open-source code, its censorship resistance, the elegance of the consensus mechanism. This non-monetary appraisal grounded the bootstrap into monetary use, exactly as the theorem requires.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "regression-theorem",
+      "leaf_label": "Mises's regression theorem and Bitcoin"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

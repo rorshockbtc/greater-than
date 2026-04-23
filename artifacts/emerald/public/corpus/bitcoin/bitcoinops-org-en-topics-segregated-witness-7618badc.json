@@ -1,0 +1,15 @@
+{
+  "slug": "bitcoinops-org-en-topics-segregated-witness-7618badc",
+  "source_url": "https://bitcoinops.org/en/topics/segregated-witness/",
+  "source_label": "Bitcoin Optech — Topics on Segregated Witness",
+  "excerpt": "The witness commitment is a hash of all witness data, placed in a special OP_RETURN in the coinbase. This anchors the witness data cryptographically to the block while keeping the legacy block hash unchanged.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "block-template",
+      "leaf_label": "Block templates, the coinbase, and witness commitments"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

@@ -1,0 +1,15 @@
+{
+  "slug": "mises-org-library-economics-one-lesson-f9c42588",
+  "source_url": "https://mises.org/library/economics-one-lesson",
+  "source_label": "Henry Hazlitt — Economics in One Lesson",
+  "excerpt": "Inflation is itself a form of taxation. Perhaps the worst form, because it is the most concealed. It falls on those who are unable to defend themselves and rewards those nearest the source of the new money.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "inflation-malinvestment",
+      "leaf_label": "The Cantillon effect, inflation, and malinvestment"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

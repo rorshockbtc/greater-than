@@ -1,0 +1,20 @@
+{
+  "slug": "nakamotoinstitute-org-library-satoshi-posts-9212fc4c",
+  "source_url": "https://nakamotoinstitute.org/library/satoshi/posts/",
+  "source_label": "Satoshi Nakamoto — collected forum posts",
+  "excerpt": "Coins have to get initially distributed somehow, and a constant rate seems like the best formula. The fact that new coins are produced means the money supply increases by a planned amount, but this does not necessarily result in inflation.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "why-fixed-supply",
+      "leaf_label": "Why a fixed supply matters"
+    },
+    {
+      "pack": "bitcoin",
+      "leaf_id": "utxo-model",
+      "leaf_label": "UTXO model versus account model"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

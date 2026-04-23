@@ -1,0 +1,15 @@
+{
+  "slug": "mises-org-library-ethics-money-production-c89fb739",
+  "source_url": "https://mises.org/library/ethics-money-production",
+  "source_label": "Jörg Guido Hülsmann — The Ethics of Money Production",
+  "excerpt": "Inflation is the inevitable companion of fiat money, because the option to inflate is itself a fiscal resource. No issuer with that option ultimately leaves it unused; the question is only the timing and the magnitude.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "fiat-end-game",
+      "leaf_label": "Fiat dilution and the historical record"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

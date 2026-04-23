@@ -1,0 +1,15 @@
+{
+  "slug": "mises-org-wire-why-bitcoin-revolutionary-85a21743",
+  "source_url": "https://mises.org/wire/why-bitcoin-revolutionary",
+  "source_label": "Mises Institute Wire — Why Bitcoin Is Revolutionary",
+  "excerpt": "What Bitcoin offers that no prior monetary system did is a credibly-bound supply schedule that does not depend on the trustworthiness of any issuer. The schedule is enforced by every node, in software each operator runs against the others.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "why-fixed-supply",
+      "leaf_label": "Why a fixed supply matters"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

@@ -1,0 +1,15 @@
+{
+  "slug": "mises-org-library-man-economy-and-state-power-and-market-b1eb227e",
+  "source_url": "https://mises.org/library/man-economy-and-state-power-and-market",
+  "source_label": "Murray N. Rothbard — Man, Economy, and State",
+  "excerpt": "The early receivers of the new money will be enriched at the expense of the late receivers, who find prices rising before their incomes do. This is the Cantillon effect of monetary expansion — a hidden redistribution that no headline statistic captures.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "inflation-malinvestment",
+      "leaf_label": "The Cantillon effect, inflation, and malinvestment"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

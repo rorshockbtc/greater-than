@@ -1,0 +1,15 @@
+{
+  "slug": "nakamotoinstitute-org-library-bitcoin-and-the-rhetoric-of-anarchy-bee654c1",
+  "source_url": "https://nakamotoinstitute.org/library/bitcoin-and-the-rhetoric-of-anarchy/",
+  "source_label": "Daniel Krawisz — Bitcoin and the Rhetoric of Anarchy",
+  "excerpt": "The community's preference for soft forks over hard forks is a deep institutional commitment: it preserves the right of any individual operator to opt out of an upgrade without being expelled from the network.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "consensus-rules",
+      "leaf_label": "Consensus rules, soft forks, hard forks"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}

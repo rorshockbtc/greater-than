@@ -1,0 +1,15 @@
+{
+  "slug": "mises-org-library-austrian-theory-trade-cycle-and-other-essays-c9f91b79",
+  "source_url": "https://mises.org/library/austrian-theory-trade-cycle-and-other-essays",
+  "source_label": "Mises, Hayek, Rothbard, Haberler — The Austrian Theory of the Trade Cycle",
+  "excerpt": "When the rate of interest is artificially lowered by credit expansion, entrepreneurs are misled into starting projects whose completion would require more capital than the community is in fact prepared to save. The crisis comes when the underlying scarcity of capital reasserts itself.",
+  "cited_by": [
+    {
+      "pack": "bitcoin",
+      "leaf_id": "inflation-malinvestment",
+      "leaf_label": "The Cantillon effect, inflation, and malinvestment"
+    }
+  ],
+  "generated_by": "build-catalog-corpus",
+  "generated_at": "static"
+}
