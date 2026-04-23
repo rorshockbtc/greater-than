@@ -104,6 +104,15 @@ export interface KbChunk {
    * populated only by catalog leaves; legacy chunks leave it absent.
    */
   internalSlug?: string;
+
+  /**
+   * Pack slug owning this chunk's per-document local copy. Used by
+   * the chat UI to build the `corpus/<packSlug>/<internalSlug>.json`
+   * "local copy" URL. Today only catalog packs (Bitcoin) populate
+   * this; legacy embedding chunks leave it absent and the UI falls
+   * back to omitting the local-copy badge.
+   */
+  packSlug?: string;
 }
 
 /**

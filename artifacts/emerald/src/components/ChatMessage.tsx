@@ -376,8 +376,8 @@ export function ChatMessage({
                             // sovereign visitor can verify the citation
                             // against the static repo without trusting
                             // the upstream host.
-                            const local = c.internalSlug
-                              ? `${import.meta.env.BASE_URL}corpus/bitcoin/${c.internalSlug}.json`
+                            const local = c.internalSlug && c.packSlug
+                              ? `${import.meta.env.BASE_URL}corpus/${c.packSlug}/${c.internalSlug}.json`
                               : null;
                             return (
                               <span className="inline-flex items-center gap-1.5 flex-wrap">

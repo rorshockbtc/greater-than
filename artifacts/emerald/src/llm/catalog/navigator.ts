@@ -252,10 +252,27 @@ async function jitLoadChunkBodies(
           tel("[Catalog]", `JIT corpus miss (${res.status}) for ${chunk.internalSlug}`);
           return;
         }
-        const payload = (await res.json()) as { body?: string };
+        const payload = (await res.json()) as {
+          body?: string;
+          chunks?: Array<{ text?: string }>;
+        };
+        // Two emitter shapes coexist in the repo: `build-catalog-corpus`
+        // writes a flat `body`; the legacy `build-bitcoin-seed` per-doc
+        // dump writes a `chunks[]` array. Accept either so JIT
+        // enrichment never silently degrades when an operator runs the
+        // seed builder after corpus generation.
+        let text = "";
         if (typeof payload.body === "string" && payload.body.length > 0) {
-          chunk.text = payload.body;
-          tel("[Catalog]", `JIT corpus loaded ${chunk.internalSlug} (${payload.body.length} chars)`);
+          text = payload.body;
+        } else if (Array.isArray(payload.chunks)) {
+          text = payload.chunks
+            .map((c) => (typeof c.text === "string" ? c.text : ""))
+            .filter(Boolean)
+            .join("\n\n");
+        }
+        if (text.length > 0) {
+          chunk.text = text;
+          tel("[Catalog]", `JIT corpus loaded ${chunk.internalSlug} (${text.length} chars)`);
         }
       } catch (err) {
         tel("[Catalog]", `JIT corpus error for ${chunk.internalSlug}: ${(err as Error).message}`);
@@ -291,6 +308,7 @@ function sourceToChunk(
     // every cited source has a working local-copy target as long as
     // the matching corpus file is present at deploy time.
     internalSlug: source.internalSlug ?? slugForSource(source.url),
+    packSlug,
   };
 }
 
