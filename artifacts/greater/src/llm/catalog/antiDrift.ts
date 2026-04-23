@@ -41,7 +41,7 @@ const SCAM_RE =
   /\b(to\s+the\s+moon|when\s+lambo|100x|10x|1000x|presale|airdrop|rug(?:\s?pull)?|ponzi|pump|shill|degen)\b/i;
 
 const ADVICE_RE =
-  /\b(should\s+i\s+(buy|sell|invest|hold|stack|take\s+out|borrow|put|use\s+leverage)|is\s+(it|now|today)\s+(a\s+)?good\s+time|price\s+(prediction|target|forecast)|will\s+(btc|bitcoin|the\s+price)\s+(hit|reach|go|moon|crash)|how\s+much\s+will\s+(btc|bitcoin)\s+be\s+worth|take\s+out\s+a?\s*(loan|heloc|mortgage|line\s+of\s+credit)|use\s+leverage|put\s+my\s+(paycheck|salary|savings|life\s+savings)|(buy|sell)\s+the\s+(dip|top)|when\s+to\s+(buy|sell))\b/i;
+  /\b(should\s+i\s+(buy|sell|invest|hold|stack|take\s+out|borrow|put|use\s+leverage|use\s+(?:phoenix|breez|zeus|mutiny|voltage|coldcard|trezor|ledger|jade|specter|sparrow|electrum|bluewallet|wallet\s+of\s+satoshi|alby|strike|cash\s+app|swan|river|kraken|coinbase|binance)|trust\s+(?:phoenix|breez|voltage|coldcard|trezor|ledger))|is\s+(it|now|today)\s+(a\s+)?good\s+time|price\s+(prediction|target|forecast)|will\s+(btc|bitcoin|the\s+price)\s+(hit|reach|go|moon|crash)|how\s+much\s+will\s+(btc|bitcoin)\s+be\s+worth|take\s+out\s+a?\s*(loan|heloc|mortgage|line\s+of\s+credit)|use\s+leverage|put\s+my\s+(paycheck|salary|savings|life\s+savings)|(buy|sell)\s+the\s+(dip|top)|when\s+to\s+(buy|sell)|which\s+(wallet|hardware\s+wallet|hw\s+wallet|exchange|lsp|node|service|provider|implementation|client|app)\s+(is|do|should|would|are)|(recommend|suggest)\s+(?:me\s+|us\s+)?(?:a\s+|an\s+|some\s+|the\s+best\s+)?(?:\w+\s+)?(wallet|exchange|lsp|hardware\s+wallet|hw\s+wallet|node|service|provider|hardware)|what(?:'?s| is)\s+the\s+best\s+(wallet|exchange|lsp|hardware\s+wallet|hw\s+wallet|node|service|provider))\b/i;
 
 export interface DriftDetection {
   kind: DriftKind;
