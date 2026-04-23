@@ -14,6 +14,7 @@ import { PipeStatusPanel } from './PipeStatusPanel';
 import { BiasToggle } from './BiasToggle';
 import { DisclaimerBanner } from './DisclaimerBanner';
 import { ModelInfoPopover } from '@/llm/ModelInfoPopover';
+import { debugLog } from '@/lib/debugLog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -228,6 +229,11 @@ export function ChatWidget({
       line,
     ].slice(-MAX_TERMINAL_LINES);
     setTerminalLines([...terminalLinesRef.current]);
+    // Mirror to debug-log sink for live shit-tests (?debug=1).
+    // Telemetry events are the diagnostic gold the chat bubble UI
+    // throws away — retrieval scores, refusal reasons, embedder
+    // failures, catalog navigation steps. No-op when debug is off.
+    debugLog({ kind: 'telemetry', tag, text });
   }, []);
   const [importedHarnessText, setImportedHarnessText] = useState<string>("");
   // Local Harness charter — user-authored text read from localStorage and
@@ -467,6 +473,15 @@ export function ChatWidget({
       timestamp: new Date(),
     };
     setMessages((prev) => [...prev, userMsg]);
+    debugLog({
+      kind: 'user-message',
+      personaSlug,
+      routeSlug,
+      personaBrand,
+      biasId: pipe.activeBiasId,
+      biasLabel: activeBiasOption?.label,
+      message: userText,
+    });
 
     // Curated Q&A cache wins over EVERY other path — local, cloud,
     // OpenClaw — when the bank has loaded for this persona AND the
@@ -763,6 +778,21 @@ export function ChatWidget({
         isHardRefusal: showRefusalActions,
       };
       setMessages((prev) => [...prev, botMsg]);
+      debugLog({
+        kind: 'bot-message-local',
+        source: botMsg.responseSource,
+        latencyMs: askLatency,
+        topRetrievalScore,
+        reasoning,
+        isHardRefusal,
+        isWeakContextReply,
+        catalogLeafId: answer.catalogLeafId,
+        retrievedChunks: (answer.thoughtTrace?.chunks ?? []).map((c) => ({
+          score: c.score,
+          source: c.page_label,
+        })),
+        replyPreview: answer.text.slice(0, 600),
+      });
       // Push the catalog leaf id (when present) into the sticky-context
       // ring buffer so the next turn's navigator can prefer the same
       // branch on near-tie scores. De-duped so revisiting a leaf
@@ -801,6 +831,11 @@ export function ChatWidget({
       // surface the failure inline (we can't quietly hammer the paid
       // endpoint forever just because local crashed).
       console.error('Local inference failed, falling back to cloud:', err);
+      debugLog({
+        kind: 'local-failure',
+        errorMessage: (err as Error)?.message ?? String(err),
+        errorStack: (err as Error)?.stack?.split('\n').slice(0, 5).join('\n'),
+      });
       await tryCloudOrLocal(userText, 'local-error');
     } finally {
       setIsLocalGenerating(false);
@@ -943,6 +978,15 @@ export function ChatWidget({
       };
 
       setMessages((prev) => [...prev, botMsg]);
+      debugLog({
+        kind: 'bot-message-cloud',
+        cloudReason,
+        trustScore: response.trustScore,
+        biasId: response.biasId,
+        biasLabel: response.biasLabel,
+        sourcesCount: response.sources?.length ?? 0,
+        replyPreview: response.reply.slice(0, 600),
+      });
       if (cloudReason === 'local-error') {
         toast({
           title: 'Used cloud fallback',
