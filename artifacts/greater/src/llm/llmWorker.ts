@@ -4,12 +4,10 @@
  * In-browser LLM + embedder worker for Greater.
  *
  * - Embedder: onnx-community/bge-small-en-v1.5 (small, fast, ~30MB).
- * - LLM:     onnx-community/Llama-3.2-1B-Instruct-q4f16 (~800MB,
- *            WebGPU-accelerated). Picked over Llama-3.2-3B because
- *            the 1B variant has the most stable WebGPU build at
- *            this time and downloads in <1 minute on a typical home
- *            connection. Same chat-template format; trivial swap if
- *            we move up to 3B later.
+ * - LLM:     SmolLM2-135M-Instruct by default (~90MB, q4 on WebGPU).
+ *            The main thread picks the model id at init time so we
+ *            can ship a tiny conversational default and opt into a
+ *            larger model on demand without a second worker.
  *
  * The worker is intentionally stateless about the corpus: the main
  * thread owns IndexedDB. The worker just embeds and generates.
@@ -24,7 +22,7 @@ import {
   type Tensor,
 } from "@huggingface/transformers";
 import type { WorkerInbound, WorkerOutbound, ChatTurn } from "./types";
-import { EMBEDDER_MODEL_ID, LLM_MODEL_ID } from "./config";
+import { EMBEDDER_MODEL_ID } from "./config";
 
 // Don't try to look up models on the local filesystem; always use the
 // HuggingFace hub (which is browser-cached via OPFS by Transformers.js).
@@ -32,6 +30,7 @@ env.allowLocalModels = false;
 
 let embedder: FeatureExtractionPipeline | null = null;
 let llm: TextGenerationPipeline | null = null;
+let activeLlmModelId: string | null = null;
 
 const ctx = self as unknown as DedicatedWorkerGlobalScope;
 
@@ -39,12 +38,6 @@ function send(msg: WorkerOutbound) {
   ctx.postMessage(msg);
 }
 
-/**
- * Narrow ProgressInfo to the file/progress/status fields we surface.
- * The transformers.js union covers initiate / download / progress /
- * done; "file", "progress", and "status" are present on the relevant
- * variants and absent on others, so we read them defensively.
- */
 function readProgress(p: ProgressInfo): {
   file?: string;
   progress: number;
@@ -58,44 +51,102 @@ function readProgress(p: ProgressInfo): {
   return { file, progress, status };
 }
 
-async function loadAll() {
-  try {
-    // device: "wasm" + dtype: "fp32" pinned for the embedder. With
-    // device unset the pipeline inherits whatever backend was
-    // initialised last (which would be the LLM's WebGPU below) and
-    // bge-small has no WebGPU-runnable file. With dtype unset it
-    // auto-picks a quantized variant. Both pins together keep the
-    // embedder on a CPU/wasm path it actually supports. Note: the
-    // embedder model was also moved from the legacy `Xenova/`
-    // namespace to `onnx-community/` (see config.ts) because the
-    // Xenova upload's ONNX metadata predates the v4 JSEP runtime
-    // and throws `invalid data location: undefined for input
-    // "input_ids"` regardless of these pins. This is the live path
-    // for the homepage meta-bot and any non-catalog-first persona,
-    // so it has to actually run.
-    embedder = await pipeline("feature-extraction", EMBEDDER_MODEL_ID, {
-      device: "wasm",
-      dtype: "fp32",
-      progress_callback: (p: ProgressInfo) => {
-        const { file, progress, status } = readProgress(p);
-        send({ type: "progress", stage: "embedder", file, progress, status });
-      },
-    });
-    send({ type: "ready", stage: "embedder" });
+/**
+ * Mirror progress to the worker's own console so a developer can
+ * actually see what the model load is doing without staring at React
+ * state. This was invisible before and made "is the model even
+ * downloading?" unanswerable from the browser console.
+ */
+function logProgress(stage: "embedder" | "llm", p: ProgressInfo) {
+  const { file, progress, status } = readProgress(p);
+  const pct = progress >= 0 ? `${progress.toFixed(0)}%` : "?";
+  // eslint-disable-next-line no-console
+  console.info(`[llmWorker] ${stage} · ${status ?? "…"} · ${file ?? ""} · ${pct}`);
+}
 
-    llm = await pipeline("text-generation", LLM_MODEL_ID, {
-      device: "webgpu",
-      dtype: "q4f16",
-      progress_callback: (p: ProgressInfo) => {
-        const { file, progress, status } = readProgress(p);
-        send({ type: "progress", stage: "llm", file, progress, status });
-      },
-    });
-    send({ type: "ready", stage: "llm" });
-    send({ type: "ready", stage: "all" });
+/**
+ * Internal helper used by both the initial load and the in-place
+ * swap. Returns the constructed pipeline rather than mutating the
+ * module-level `llm` so callers can decide *when* (and whether) to
+ * commit the new pipeline. This is what makes `swapLlm` transactional:
+ * if the download / pipeline construction throws, the previous
+ * `llm` is left untouched.
+ */
+async function buildLlmPipeline(
+  modelId: string,
+  dtype: string,
+): Promise<TextGenerationPipeline> {
+  // eslint-disable-next-line no-console
+  console.info(`[llmWorker] loading LLM: ${modelId} · ${dtype}`);
+  return (await pipeline("text-generation", modelId, {
+    device: "webgpu",
+    dtype: dtype as "q4" | "q4f16" | "q8" | "fp16" | "fp32",
+    progress_callback: (p: ProgressInfo) => {
+      logProgress("llm", p);
+      const { file, progress, status } = readProgress(p);
+      send({ type: "progress", stage: "llm", file, progress, status });
+    },
+  })) as TextGenerationPipeline;
+}
+
+async function loadEmbedder() {
+  embedder = await pipeline("feature-extraction", EMBEDDER_MODEL_ID, {
+    device: "wasm",
+    dtype: "fp32",
+    progress_callback: (p: ProgressInfo) => {
+      logProgress("embedder", p);
+      const { file, progress, status } = readProgress(p);
+      send({ type: "progress", stage: "embedder", file, progress, status });
+    },
+  });
+  send({ type: "ready", stage: "embedder" });
+}
+
+async function loadLlm(modelId: string, dtype: string) {
+  llm = await buildLlmPipeline(modelId, dtype);
+  activeLlmModelId = modelId;
+  send({ type: "ready", stage: "llm", modelId });
+}
+
+async function loadAll(llmModelId: string, llmDtype: string) {
+  try {
+    await loadEmbedder();
+    await loadLlm(llmModelId, llmDtype);
+    send({ type: "ready", stage: "all", modelId: llmModelId });
   } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error("[llmWorker] load failed:", err);
     send({
       type: "error",
+      message: err instanceof Error ? err.message : String(err),
+    });
+  }
+}
+
+async function swapLlm(modelId: string, dtype: string) {
+  if (modelId === activeLlmModelId) return;
+  try {
+    // Build the replacement pipeline FIRST. Don't drop `llm` yet —
+    // if the download or pipeline construction throws (network, OOM,
+    // cancelled fetch, model id typo), we want the previously loaded
+    // model to remain usable. This is what makes the swap
+    // transactional: either we end up holding a working new model,
+    // or we end up holding the previous working model. We never
+    // strand the worker between two unloaded states.
+    const next = await buildLlmPipeline(modelId, dtype);
+    llm = next;
+    activeLlmModelId = modelId;
+    // Best-effort dispose of the prior pipeline. The transformers.js
+    // types don't expose a uniform dispose contract, so we hint the
+    // GC by dropping our last reference; WebGPU buffers backing the
+    // old model will free on the next idle.
+    send({ type: "ready", stage: "all", modelId });
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error("[llmWorker] swap failed:", err);
+    send({
+      type: "error",
+      stage: "llm",
       message: err instanceof Error ? err.message : String(err),
     });
   }
@@ -107,13 +158,10 @@ async function handleEmbed(id: string, text: string) {
     pooling: "mean",
     normalize: true,
   })) as Tensor;
-  // Tensor.data is a Float32Array. Convert to plain array for
-  // structured-clone friendliness with IndexedDB downstream.
   const vector = Array.from(out.data as Float32Array);
   send({ type: "embedResult", id, vector });
 }
 
-/** Shape of the assistant turn returned by chat-mode generation. */
 interface AssistantTurn {
   role: string;
   content: string;
@@ -151,11 +199,6 @@ async function handleGenerate(
     max_new_tokens: maxNewTokens,
     do_sample: false,
     return_full_text: false,
-    // Transformers.js v3 accepts a callback_function for streaming.
-    // We emit a telemetry ping on the first token so the terminal
-    // panel shows "first token in Xms" as it happens, then a light
-    // per-token count so the panel scrolls. We do NOT emit the raw
-    // token text so the system prompt is never visible in the UI.
     callback_function: (_: unknown) => {
       tokenCount += 1;
       if (firstTokenMs === null) {
@@ -188,7 +231,9 @@ ctx.onmessage = async (e: MessageEvent<WorkerInbound>) => {
   const msg = e.data;
   try {
     if (msg.type === "init") {
-      await loadAll();
+      await loadAll(msg.llmModelId, msg.llmDtype);
+    } else if (msg.type === "swapLlm") {
+      await swapLlm(msg.llmModelId, msg.llmDtype);
     } else if (msg.type === "embed") {
       await handleEmbed(msg.id, msg.text);
     } else if (msg.type === "generate") {

@@ -4,6 +4,8 @@ import { MessageSquare, Send, Bot, Loader2, ChevronDown, Maximize2, Minimize2, S
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSendMessage, useEscalateTicket } from '@workspace/api-client-react';
 import { ChatMessage, type MessageProps } from './ChatMessage';
+import type { ChipOption } from './ChatChips';
+import { classifyIntent, pickTemplate } from '@/llm/intentClassifier';
 import { SecurityPanel } from './SecurityPanel';
 import { KnowledgePanel } from './KnowledgePanel';
 import { QaBankPanel } from './QaBankPanel';
@@ -657,6 +659,61 @@ export function ChatWidget({
       // (the (b) branch requires a 2nd-person address or "this bot").
       const escalationIntent =
         /\b(?:contact|reach|talk to|speak to|email|message)\s+(?:a\s+)?(?:human|person|someone|you|support|team)\b|\b(?:human|live|real)\s+(?:agent|person|support|help)\b|\bget\s+me\s+(?:a|to a)\s+(?:human|person)\b|\b(?:this\s+(?:bot|thing)|you|you'?re|are\s+you)\s+(?:is\s+|being\s+|just\s+|actually\s+|deliberately\s+|fucking\s+|really\s+)*(?:useless|broken|obtuse|worthless|shitty|shittiest|garbage|trash|terrible|awful|stupid|dumb|a\s+joke)\b|\bthis\s+(?:isn'?t|is\s+not)\s+working\b|\bthis\s+(?:thing\s+|bot\s+)?(?:sucks|blows)\b|\b(?:fuck\s+(?:you|this|off)|wtf|for\s+fuck'?s\s+sake|what'?s\s+wrong\s+with\s+you)\b|\b(?:i\s+)?give\s+up\b/i;
+      // Intent classifier — runs BEFORE the catalog walk so a turn
+      // like "hi", "thanks", "what can you do?", or "are you a bot?"
+      // never accidentally lands on a real bitcoin leaf via a single
+      // token collision. Only fires for high-confidence non-content
+      // matches; everything else (including ambiguous turns) falls
+      // through to the existing catalog/synthesis path.
+      const intent = classifyIntent(userText);
+      if (
+        intent.kind !== 'content' &&
+        intent.confidence >= 0.85 &&
+        !escalationIntent.test(userText)
+      ) {
+        const replyText = pickTemplate(intent.templates);
+        const intentBotMsg: MessageProps = {
+          id: uuidv4(),
+          role: 'bot',
+          content: replyText,
+          timestamp: new Date(),
+          trustScore: 0.99,
+          ciBreakdown: `Intent: ${intent.kind} — short conversational reply, no catalog walk.`,
+          responseSource: 'local',
+          biasLabel: activeBiasOption?.label,
+          biasId: activeBiasOption ? pipe.activeBiasId : undefined,
+          latencyMs: 0,
+        };
+        // Capability-probe gets the curated suggested-prompt list as
+        // chips so the visitor has a one-tap path into real content
+        // without us guessing what they meant. Falls back to no
+        // chips if no suggested prompts are configured for this
+        // persona — the reply text alone still invites a question.
+        if (
+          intent.kind === 'capability-probe' &&
+          suggestedPrompts &&
+          suggestedPrompts.length > 0
+        ) {
+          intentBotMsg.chips = suggestedPrompts
+            .slice(0, 6)
+            .map((p, i) => ({ id: `cap-${i}`, label: p }));
+          intentBotMsg.chipsCaption = 'Pick a topic';
+        }
+        setMessages((prev) => [...prev, intentBotMsg]);
+        debugLog({
+          kind: 'bot-message-local',
+          source: 'local',
+          latencyMs: 0,
+          reasoning: `Intent classifier: ${intent.kind} (${intent.confidence.toFixed(2)})`,
+          isHardRefusal: false,
+          isWeakContextReply: false,
+          replyPreview: replyText.slice(0, 600),
+        });
+        consecutiveClarifiesRef.current = 0;
+        lastClarifyOptionsRef.current = null;
+        setIsLocalGenerating(false);
+        return;
+      }
       if (escalationIntent.test(userText)) {
         // The user turn is already in `messages` — handleSend pushed
         // it before calling runLocal. Don't re-append it here or the
@@ -935,6 +992,20 @@ export function ChatWidget({
         latencyMs: askLatency,
         cosineScore: topRetrievalScore,
         isHardRefusal: showRefusalActions,
+        // Render the navigator's clarifyOptions as clickable chips
+        // (when present) — every clarify turn becomes a one-tap path
+        // into the chosen branch instead of asking the visitor to
+        // type "1" or to copy a label. Caption is suppressed on
+        // clarify turns since the bubble itself already says "do you
+        // mean…".
+        chips:
+          answer.clarifyOptions && answer.clarifyOptions.length > 0
+            ? answer.clarifyOptions.map((o) => ({
+                id: o.id,
+                label: o.label,
+                summary: o.summary,
+              }))
+            : undefined,
       };
       setMessages((prev) => [...prev, botMsg]);
       debugLog({
@@ -1644,6 +1715,18 @@ export function ChatWidget({
                             }
                           : undefined
                       }
+                      onChipPick={
+                        msg.chips && msg.chips.length > 0
+                          ? (opt: ChipOption) => {
+                              // Clicking a chip is the same as the
+                              // visitor typing the chip's label —
+                              // route through the normal pipeline so
+                              // the bubble, telemetry, and history
+                              // all stay coherent.
+                              void handleSend(opt.label);
+                            }
+                          : undefined
+                      }
                     />
                   );
                 })}
@@ -1718,10 +1801,15 @@ export function ChatWidget({
                         G
                       </span>
                     </div>
-                    <div className="px-4 py-3 bg-[hsl(var(--widget-card))] border border-[hsl(var(--widget-border))] border-l-2 border-l-[hsl(328_99%_58%)]/40 rounded-md flex items-center gap-1.5">
+                    <div className="px-4 py-3 bg-[hsl(var(--widget-card))] border border-[hsl(var(--widget-border))] border-l-2 border-l-[hsl(328_99%_58%)]/40 rounded-md flex items-center gap-2">
                       <span className="w-1.5 h-1.5 bg-[hsl(328_99%_58%)]/60 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                       <span className="w-1.5 h-1.5 bg-[hsl(328_99%_58%)]/60 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                       <span className="w-1.5 h-1.5 bg-[hsl(328_99%_58%)]/60 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      {isLocalGenerating && (
+                        <span className="text-[11px] italic text-[hsl(var(--widget-muted))] ml-1">
+                          Checking my notes…
+                        </span>
+                      )}
                     </div>
                   </motion.div>
                 )}

@@ -233,6 +233,16 @@ export interface ProgressEvent {
 export interface ReadyEvent {
   type: "ready";
   stage: LoadStage | "all";
+  /**
+   * The LLM model id that's now actually loaded in the worker.
+   * Set on `stage: "all"` and on the ready event emitted by a
+   * successful `swapLlm`. The provider uses this to update its
+   * `activeLlmModelId` only AFTER the worker confirms the swap,
+   * so a failed deep-model download leaves the small model active
+   * (and the upgrade affordance still visible) instead of stranding
+   * the UI on a model that isn't loaded.
+   */
+  modelId?: string;
 }
 
 export interface ErrorEvent {
@@ -281,7 +291,33 @@ export interface TelemetryEvent {
   text: string;
 }
 
-export type WorkerInbound = { type: "init" } | EmbedRequest | GenerateRequest;
+/**
+ * Initial worker boot. The main thread picks the model id + dtype
+ * (so the user can ship the small default and later opt into the
+ * deeper variant without recreating the whole worker).
+ */
+export interface InitRequest {
+  type: "init";
+  llmModelId: string;
+  llmDtype: string;
+}
+
+/**
+ * Replace the loaded LLM with a different model in the same worker.
+ * Used by the "Load deeper model" path so we don't have to spin up
+ * a second worker (and a second embedder) just to upgrade.
+ */
+export interface SwapLlmRequest {
+  type: "swapLlm";
+  llmModelId: string;
+  llmDtype: string;
+}
+
+export type WorkerInbound =
+  | InitRequest
+  | SwapLlmRequest
+  | EmbedRequest
+  | GenerateRequest;
 export type WorkerOutbound =
   | ProgressEvent
   | ReadyEvent
@@ -314,6 +350,12 @@ export interface ModelInfo {
   embedderName: string;
   approxSizeMb: number;
   loadedAt: Date | null;
+  /** True when the larger optional LLM is the one currently loaded. */
+  isDeepModel: boolean;
+  /** True when an upgrade to the deeper model is offered (i.e. small loaded). */
+  deepModelAvailable: boolean;
+  /** Approx download size in MB for the deeper model. */
+  deepModelSizeMb: number;
 }
 
 export interface LocalAnswer {

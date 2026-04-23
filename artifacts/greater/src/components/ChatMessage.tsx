@@ -6,6 +6,7 @@ import { TrustBadge } from './TrustBadge';
 import { useToast } from '@/hooks/use-toast';
 import type { Article } from '@workspace/api-client-react';
 import type { CloudReason, ResponseSource, RetrievedChunk, ThoughtTrace } from '@/llm/types';
+import { ChatChips, type ChipOption } from './ChatChips';
 
 export interface MessageProps {
   id: string;
@@ -87,6 +88,17 @@ export interface MessageProps {
   onContact?: () => void;
   /** Re-focus the chat input so the visitor can reword the question. */
   onRephrase?: () => void;
+  /**
+   * Optional clickable chips rendered below the bubble. Used for
+   * catalog clarify menus and for related-branch escape hatches on
+   * confident answers. Click sends the chip's label as the next
+   * user message (handler supplied by ChatWidget).
+   */
+  chips?: ChipOption[];
+  /** Optional caption above the chip row (e.g. "Related topics"). */
+  chipsCaption?: string;
+  /** Click handler — receives the picked chip object. */
+  onChipPick?: (option: ChipOption) => void;
 }
 
 export function ChatMessage({
@@ -115,6 +127,9 @@ export function ChatMessage({
   onBrowseKb,
   onContact,
   onRephrase,
+  chips,
+  chipsCaption,
+  onChipPick,
 }: MessageProps) {
   const isBot = role === 'bot';
   const { toast } = useToast();
@@ -256,6 +271,13 @@ export function ChatMessage({
               parent passes the corresponding handlers, so this row
               is invisible (and zero-cost) on every non-refusal turn
               and on hosts that haven't wired the handlers up yet. */}
+          {isBot && chips && chips.length > 0 && onChipPick && (
+            <ChatChips
+              options={chips}
+              onPick={onChipPick}
+              caption={chipsCaption}
+            />
+          )}
           {isBot && isHardRefusal && (onBrowseKb || onContact || onRephrase) && (
             <div
               className="mt-3 pt-3 border-t border-[hsl(var(--border))] flex flex-wrap gap-2"

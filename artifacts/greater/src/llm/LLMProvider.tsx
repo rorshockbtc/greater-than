@@ -36,6 +36,11 @@ import {
 // defeating the lazy-load design.
 import {
   APPROX_SIZE_MB,
+  APPROX_SIZE_MB_DEEP,
+  LLM_DTYPE,
+  LLM_DTYPE_DEEP,
+  LLM_MODEL_ID_DEEP,
+  LLM_QUANTIZATION_LABEL_DEEP,
   EMBEDDER_MODEL_ID,
   LLM_MODEL_ID,
   LLM_QUANTIZATION_LABEL,
@@ -335,6 +340,13 @@ interface LLMContextValue {
    */
   testOpenClawConnection: (override?: Partial<OpenClawConfig>) => Promise<OpenClawHealth>;
   clearCacheAndReload: () => Promise<void>;
+  /**
+   * Swap the loaded LLM in place for the larger SmolLM2-360M model.
+   * The default is the small ~90 MB SmolLM2-135M; this triggers a
+   * one-time ~250 MB download, after which the upgraded model
+   * handles all subsequent generations. The embedder is untouched.
+   */
+  loadDeepModel: () => void;
 }
 
 const OPENCLAW_STORAGE_KEY = "greater:openclaw-config";
@@ -440,6 +452,26 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
   const [loadStageLabel, setLoadStageLabel] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loadedAt, setLoadedAt] = useState<Date | null>(null);
+  /**
+   * Mirrors `loadedAt` so the worker `error` handler can decide
+   * whether a failure is "first-time load failed" (no prior model;
+   * status → error) or "swap of an already-loaded model failed"
+   * (keep status → ready and bubble a non-fatal warning). React
+   * state would be stale inside the closure; the ref is always
+   * current.
+   */
+  const loadedAtRef = useRef<Date | null>(null);
+  /**
+   * Which LLM model id is currently loaded (or about to be loaded).
+   * Starts as the small default; flips to the deep id when the user
+   * opts into the upgrade. Refs mirror the state so the worker
+   * init/swap callbacks can read the latest value without depending
+   * on render order.
+   */
+  const [activeLlmModelId, setActiveLlmModelId] =
+    useState<string>(LLM_MODEL_ID);
+  const activeLlmModelIdRef = useRef<string>(LLM_MODEL_ID);
+  const activeLlmDtypeRef = useRef<string>(LLM_DTYPE);
   const [bundleProgress, setBundleProgress] = useState<
     (BundleLoadProgress & { slug: string }) | null
   >(null);
@@ -976,10 +1008,30 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
                 console.error("Seed indexing failed:", err);
               });
           } else if (msg.stage === "all") {
+            // Commit the active model id ONLY now — i.e. only after
+            // the worker reports the new pipeline is built. This is
+            // the consumer half of the transactional swap contract:
+            // `loadDeepModel` does NOT mutate `activeLlmModelId`
+            // optimistically, because if the deep-model download
+            // throws, the worker keeps the previous (small) model
+            // loaded and we want the UI to stay honest about what's
+            // actually serving inference.
+            if (msg.modelId && msg.modelId !== activeLlmModelIdRef.current) {
+              activeLlmModelIdRef.current = msg.modelId;
+              activeLlmDtypeRef.current =
+                msg.modelId === LLM_MODEL_ID_DEEP
+                  ? LLM_DTYPE_DEEP
+                  : LLM_DTYPE;
+              setActiveLlmModelId(msg.modelId);
+            }
             setStatus("ready");
             setProgress(100);
             setLoadStageLabel("");
-            setLoadedAt(new Date());
+            {
+              const now = new Date();
+              loadedAtRef.current = now;
+              setLoadedAt(now);
+            }
             // Signal the wiki compiler that the WebGPU model is ready.
             // We pass a generate wrapper so the compiler can run inference
             // without importing the worker directly.
@@ -992,6 +1044,24 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
           if (msg.id && pendingRef.current.has(msg.id)) {
             pendingRef.current.get(msg.id)!.reject(new Error(msg.message));
             pendingRef.current.delete(msg.id);
+          } else if (
+            msg.stage === "llm" &&
+            activeLlmModelIdRef.current &&
+            loadedAtRef.current
+          ) {
+            // Swap failure (deep-model download blew up) AND a model
+            // is already loaded. The worker's transactional swap
+            // contract guarantees the previously loaded model is
+            // still serving inference, so restore status to "ready"
+            // rather than dropping the whole bot into "error". The
+            // user keeps the small model and the upgrade button
+            // remains visible for a retry.
+            setStatus("ready");
+            setProgress(100);
+            setLoadStageLabel("");
+            setErrorMessage(
+              `Deep-model download failed (${msg.message}). Still serving the ${APPROX_SIZE_MB} MB model.`,
+            );
           } else {
             setStatus("error");
             setErrorMessage(msg.message);
@@ -1016,7 +1086,11 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
         setStatus("error");
         setErrorMessage(e.message || "Worker crashed");
       };
-      w.postMessage({ type: "init" });
+      w.postMessage({
+        type: "init",
+        llmModelId: activeLlmModelIdRef.current,
+        llmDtype: activeLlmDtypeRef.current,
+      });
       setStatus("loading-embedder");
     } catch (err) {
       setStatus("error");
@@ -1864,14 +1938,50 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
 
   const modelInfo: ModelInfo = useMemo(
     () => ({
-      llmName: LLM_MODEL_ID,
-      llmQuantization: LLM_QUANTIZATION_LABEL,
+      llmName: activeLlmModelId,
+      llmQuantization:
+        activeLlmModelId === LLM_MODEL_ID_DEEP
+          ? LLM_QUANTIZATION_LABEL_DEEP
+          : LLM_QUANTIZATION_LABEL,
       embedderName: EMBEDDER_MODEL_ID,
-      approxSizeMb: APPROX_SIZE_MB,
+      approxSizeMb:
+        activeLlmModelId === LLM_MODEL_ID_DEEP
+          ? APPROX_SIZE_MB_DEEP
+          : APPROX_SIZE_MB,
       loadedAt,
+      isDeepModel: activeLlmModelId === LLM_MODEL_ID_DEEP,
+      deepModelAvailable: activeLlmModelId !== LLM_MODEL_ID_DEEP,
+      deepModelSizeMb: APPROX_SIZE_MB_DEEP,
     }),
-    [loadedAt],
+    [activeLlmModelId, loadedAt],
   );
+
+  /**
+   * Swap the loaded LLM to the larger SmolLM2-360M model in place.
+   * The user opts in via the model info popover; we send the new
+   * model id to the worker, which discards the small model's
+   * weights and downloads the bigger one. The embedder is untouched.
+   */
+  const loadDeepModel = useCallback(() => {
+    if (activeLlmModelIdRef.current === LLM_MODEL_ID_DEEP) return;
+    if (!workerRef.current) return;
+    // Producer half of the transactional swap contract: do NOT
+    // touch `activeLlmModelIdRef` / `setActiveLlmModelId` here.
+    // The provider commits the new model id only on the worker's
+    // `ready stage:"all"` message (see onmessage above). On
+    // failure the worker emits an `error` and keeps the previous
+    // model loaded; we restore status to "ready" so the small
+    // model continues to serve inference and the upgrade button
+    // remains visible for a retry.
+    setStatus("loading-llm");
+    setProgress(-1);
+    setLoadStageLabel(`LLM · downloading ${APPROX_SIZE_MB_DEEP} MB`);
+    workerRef.current.postMessage({
+      type: "swapLlm",
+      llmModelId: LLM_MODEL_ID_DEEP,
+      llmDtype: LLM_DTYPE_DEEP,
+    });
+  }, []);
 
   const embed = useCallback(
     (text: string) => callWorker<number[]>("embed", { text }),
@@ -1943,6 +2053,7 @@ export function LLMProvider({ children }: { children: React.ReactNode }) {
     setOpenClawConfig,
     testOpenClawConnection,
     clearCacheAndReload,
+    loadDeepModel,
   };
 
   return <LLMContext.Provider value={value}>{children}</LLMContext.Provider>;
