@@ -61,6 +61,16 @@ const THREADS_CONFIG = path.join(
   "bitcoin-seed",
   "bitcointalk-threads.json",
 );
+const MISES_CONFIG = path.join(
+  __dirname,
+  "bitcoin-seed",
+  "mises-works.json",
+);
+const NAKAMOTO_CONFIG = path.join(
+  __dirname,
+  "bitcoin-seed",
+  "nakamoto-works.json",
+);
 
 const USER_AGENT =
   "GreaterSeedBuilder/1.0 (+https://hire.colonhyphenbracket.pink) Readability/1.0";
@@ -85,8 +95,20 @@ interface BundleChunk {
 interface BundleDoc {
   source_url: string;
   source_label: string;
-  source_type: "optech" | "github-commit" | "bitcointalk";
+  source_type:
+    | "optech"
+    | "github-commit"
+    | "bitcointalk"
+    | "mises"
+    | "nakamoto";
   bias: Bias;
+  /**
+   * Optional. When present (Mises/Nakamoto sources), it is added to the
+   * `source_label` so citations like [N] surface "Rothbard — *What Has
+   * Government Done to Our Money?*" to the model in its retrieved
+   * snippets.
+   */
+  author?: string;
   chunks: BundleChunk[];
 }
 interface Bundle {
@@ -120,8 +142,19 @@ function formatDuration(ms: number): string {
 function chunkText(input: string): BundleChunk[] {
   const cleaned = input.replace(/\s+/g, " ").trim();
   if (!cleaned) return [];
+  // Split on sentence boundaries. The previous regex looked for `\s{2,}`,
+  // which never matched after the `\s+` collapse above and produced one
+  // giant chunk per document — every long-form source (OpTech newsletter,
+  // Mises book, Nakamoto essay) was landing as a single 1000-10000 word
+  // chunk that the embedder then truncated to its first ~400 words.
+  //
+  // The lookahead `(?=[A-Z"'(\[])` prevents over-splitting on abbreviations
+  // like "e.g.", "i.e.", "U.S.", "v1.5", or "Rothbard, M. N.". A real
+  // sentence boundary is followed by whitespace and then a capital letter,
+  // an opening quote, or an opening paren — abbreviations are followed by
+  // a lowercase continuation.
   const paragraphs = cleaned
-    .split(/(?<=[.!?])\s{2,}/g)
+    .split(/(?<=[.!?])\s+(?=[A-Z"'(\[])/g)
     .map((p) => p.trim())
     .filter(Boolean);
 
@@ -621,11 +654,98 @@ async function fetchBitcoinTalkThreads(
 }
 
 /* -------------------------------------------------------------- */
+/*  Long-form open-licensed works (Mises Institute, Nakamoto       */
+/*  Institute). Both publish under permissive licenses (CC BY 4.0  */
+/*  and MIT respectively) and request canonical-URL citations,     */
+/*  which the bot's system prompt enforces. See docs/SOURCES.md.   */
+/* -------------------------------------------------------------- */
+
+interface LongFormConfig {
+  url: string;
+  label?: string;
+  author?: string;
+}
+
+async function fetchLongFormWorks(
+  configPath: string,
+  sourceType: "mises" | "nakamoto",
+): Promise<BundleDoc[]> {
+  let configRaw: string;
+  try {
+    configRaw = await readFile(configPath, "utf8");
+  } catch {
+    console.log(`No ${sourceType} config; skipping.`);
+    return [];
+  }
+  const config = JSON.parse(configRaw) as LongFormConfig[];
+  console.log(`Fetching ${config.length} ${sourceType} work(s)…`);
+
+  const docs: BundleDoc[] = [];
+  for (let i = 0; i < config.length; i += 1) {
+    const work = config[i];
+    const cachePath = path.join(
+      CACHE_ROOT,
+      sourceType,
+      `${safeKey(work.url)}.json`,
+    );
+    let cached = await readCache<BundleDoc>(cachePath);
+    if (!cached) {
+      try {
+        const html = await politeFetchText(work.url);
+        const body = readabilityExtract(html, work.url);
+        if (!body || body.length < 200) {
+          console.log(
+            `  [${i + 1}/${config.length}] skip ${work.url} (no readable body)`,
+          );
+          continue;
+        }
+        const dom2 = new JSDOM(html, { url: work.url });
+        const title =
+          work.label ??
+          dom2.window.document.querySelector("title")?.textContent?.trim() ??
+          work.url;
+        cached = {
+          source_url: work.url,
+          source_label: title,
+          source_type: sourceType,
+          bias: "neutral",
+          ...(work.author ? { author: work.author } : {}),
+          chunks: chunkText(body),
+        };
+        await writeCache(cachePath, cached);
+      } catch (err) {
+        console.warn(
+          `  [${i + 1}/${config.length}] skip ${work.url}: ${(err as Error).message}`,
+        );
+        continue;
+      }
+    }
+    docs.push(cached);
+  }
+  console.log(
+    `  → ${docs.length} ${sourceType} works (${countChunks(docs)} chunks)`,
+  );
+  return docs;
+}
+
+/* -------------------------------------------------------------- */
 /*  Driver                                                        */
 /* -------------------------------------------------------------- */
 
 function countChunks(docs: BundleDoc[]): number {
   return docs.reduce((n, d) => n + d.chunks.length, 0);
+}
+
+function countWords(docs: BundleDoc[]): number {
+  return docs.reduce(
+    (n, d) =>
+      n +
+      d.chunks.reduce(
+        (m, c) => m + c.text.split(/\s+/).filter(Boolean).length,
+        0,
+      ),
+    0,
+  );
 }
 
 async function main() {
@@ -650,11 +770,32 @@ async function main() {
   console.log("");
   const talk = await fetchBitcoinTalkThreads(THREADS_CONFIG);
   console.log("");
+  const mises = await fetchLongFormWorks(MISES_CONFIG, "mises");
+  console.log("");
+  const nakamoto = await fetchLongFormWorks(NAKAMOTO_CONFIG, "nakamoto");
+  console.log("");
 
+  // Re-chunk every cached document with the current chunker. The fetch
+  // cache stores fully-formed BundleDocs (chunks + metadata) so a chunker
+  // bug fix would otherwise be invisible until every cache entry is
+  // manually invalidated. Re-joining and re-splitting on assembly keeps
+  // the on-disk corpus in lockstep with the chunker source. Cheap: this
+  // runs in milliseconds even for the 7k-doc corpus.
+  const rechunk = (d: BundleDoc): BundleDoc => ({
+    ...d,
+    chunks: chunkText(d.chunks.map((c) => c.text).join(" ")),
+  });
   const bundle: Bundle = {
     version: "v1",
     generated_at: new Date().toISOString(),
-    documents: [...optech, ...core, ...knots, ...talk],
+    documents: [
+      ...optech.map(rechunk),
+      ...core.map(rechunk),
+      ...knots.map(rechunk),
+      ...talk.map(rechunk),
+      ...mises.map(rechunk),
+      ...nakamoto.map(rechunk),
+    ],
   };
 
   await writeJsonAtomic(OUTPUT_PATH, bundle);
@@ -671,6 +812,16 @@ async function main() {
     `  bias breakdown: core=${bundle.documents.filter((d) => d.bias === "core").length}, ` +
       `knots=${bundle.documents.filter((d) => d.bias === "knots").length}, ` +
       `neutral=${bundle.documents.filter((d) => d.bias === "neutral").length}`,
+  );
+  const totalWords = countWords(bundle.documents);
+  console.log(
+    `  source breakdown: optech=${optech.length}, core=${core.length}, ` +
+      `knots=${knots.length}, bitcointalk=${talk.length}, ` +
+      `mises=${mises.length}, nakamoto=${nakamoto.length}`,
+  );
+  console.log(
+    `  word count: ${totalWords.toLocaleString()} ` +
+      `(mises+nakamoto contribute ${countWords([...mises, ...nakamoto]).toLocaleString()})`,
   );
   console.log(
     `Synced public copy → ${PUBLIC_OUTPUT_PATH} (gitignored; the web app fetches it on first load).`,

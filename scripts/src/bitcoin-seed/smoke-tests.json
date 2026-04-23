@@ -1,0 +1,109 @@
+[
+  {
+    "id": "high-rbf",
+    "question": "What is Replace-by-Fee?",
+    "expectedBand": "high",
+    "expectedTopSourceTypeAnyOf": ["optech", "github-commit"],
+    "minTopScore": 0.55,
+    "notes": "Core technical Bitcoin question — must hit OpTech or commit history with high confidence."
+  },
+  {
+    "id": "high-taproot",
+    "question": "What did Taproot change about how transactions are signed?",
+    "expectedBand": "high",
+    "expectedTopSourceTypeAnyOf": ["optech", "github-commit"],
+    "minTopScore": 0.55,
+    "notes": "Core protocol change — should retrieve Schnorr/Taproot OpTech coverage."
+  },
+  {
+    "id": "high-whitepaper",
+    "question": "What problem does the Bitcoin whitepaper claim to solve?",
+    "expectedBand": "high",
+    "expectedTopSourceTypeAnyOf": ["nakamoto", "optech"],
+    "minTopScore": 0.55,
+    "notes": "Whitepaper is in the Nakamoto Institute corpus — the bot should ground its answer there."
+  },
+  {
+    "id": "high-sound-money",
+    "question": "What is sound money according to the Austrian school?",
+    "expectedBand": "high",
+    "expectedTopSourceTypeAnyOf": ["mises"],
+    "minTopScore": 0.50,
+    "notes": "Pure Austrian-economics question — should retrieve from the Mises corpus."
+  },
+  {
+    "id": "high-cantillon",
+    "question": "Explain the Cantillon effect.",
+    "expectedBand": "high",
+    "expectedTopSourceTypeAnyOf": ["mises", "nakamoto"],
+    "minTopScore": 0.50,
+    "notes": "Austrian monetary theory — Mises corpus core territory."
+  },
+  {
+    "id": "high-knots-vs-core",
+    "question": "How does Bitcoin Knots differ from Bitcoin Core?",
+    "expectedBand": "high",
+    "expectedTopSourceTypeAnyOf": ["github-commit", "optech"],
+    "minTopScore": 0.50,
+    "notes": "Implementation distinction — should surface commit history or OpTech."
+  },
+  {
+    "id": "med-double-spend",
+    "question": "How does Bitcoin handle double spends?",
+    "expectedBand": "medium",
+    "expectedTopSourceTypeAnyOf": ["optech", "nakamoto", "github-commit"],
+    "minTopScore": 0.40,
+    "notes": "Paraphrased fundamental — should still ground above the weak-context threshold."
+  },
+  {
+    "id": "med-bit-gold",
+    "question": "What was Nick Szabo's Bit Gold proposal?",
+    "expectedBand": "medium",
+    "expectedTopSourceTypeAnyOf": ["nakamoto"],
+    "minTopScore": 0.45,
+    "notes": "Bitcoin precursor — Nakamoto Institute hosts Szabo's original essay."
+  },
+  {
+    "id": "med-time-preference",
+    "question": "Why does time preference matter for an economy?",
+    "expectedBand": "medium",
+    "expectedTopSourceTypeAnyOf": ["mises"],
+    "minTopScore": 0.40,
+    "notes": "Austrian economics — should retrieve from Mises material."
+  },
+  {
+    "id": "low-gold-standard",
+    "question": "What are the arguments for a gold standard?",
+    "expectedBand": "low",
+    "minTopScore": 0.30,
+    "notes": "Tangentially related — Mises chunks on commodity money should surface in the 0.30-0.50 band."
+  },
+  {
+    "id": "low-segwit-history",
+    "question": "What was the political controversy around SegWit activation?",
+    "expectedBand": "low",
+    "minTopScore": 0.25,
+    "notes": "Historical — corpus may or may not have direct coverage; partial retrieval is acceptable."
+  },
+  {
+    "id": "irrelevant-swallow",
+    "question": "What is the airspeed velocity of an unladen swallow?",
+    "expectedBand": "irrelevant",
+    "maxTopScore": 0.30,
+    "notes": "Should NOT score above the weak-context threshold — graceful refusal expected in the live UI."
+  },
+  {
+    "id": "irrelevant-pizza",
+    "question": "What is the best topping for a Neapolitan pizza?",
+    "expectedBand": "irrelevant",
+    "maxTopScore": 0.30,
+    "notes": "Out-of-domain — should fail to retrieve confidently."
+  },
+  {
+    "id": "irrelevant-celebrity",
+    "question": "Who won the 2024 Best Director Oscar?",
+    "expectedBand": "irrelevant",
+    "maxTopScore": 0.30,
+    "notes": "Out-of-domain and date-bound — corpus has no answer."
+  }
+]

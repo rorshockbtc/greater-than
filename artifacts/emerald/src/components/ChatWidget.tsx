@@ -652,6 +652,21 @@ export function ChatWidget({
         if (remaining > 0) {
           await new Promise((r) => setTimeout(r, remaining));
         }
+      } else {
+        // Universal "thinking floor" for all substantive answers
+        // (in-browser WebGPU, cloud fallback, OpenClaw). The cloud
+        // fallback in particular can return in 200-400ms which makes
+        // the bot feel like it didn't actually consider the question.
+        // 1200-1500ms reads as "deliberated" without becoming sluggish,
+        // and matches the cadence visitors already feel when the local
+        // WebGPU model is in use. Applied AFTER the answer is in hand
+        // so we never delay anything that already took longer than
+        // the floor.
+        const target = 1200 + Math.random() * 300;
+        const remaining = Math.max(0, target - askLatency);
+        if (remaining > 0) {
+          await new Promise((r) => setTimeout(r, remaining));
+        }
       }
       // Either flag triggers the in-bubble 3-action row. We carry
       // the union under the existing `isHardRefusal` MessageProps

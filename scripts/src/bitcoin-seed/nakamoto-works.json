@@ -1,0 +1,137 @@
+[
+  {
+    "url": "https://nakamotoinstitute.org/library/bitcoin/",
+    "label": "Bitcoin: A Peer-to-Peer Electronic Cash System (Satoshi Nakamoto, 2008)",
+    "author": "Satoshi Nakamoto"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/shelling-out/",
+    "label": "Shelling Out: The Origins of Money (Nick Szabo, 2002)",
+    "author": "Nick Szabo"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/bit-gold/",
+    "label": "Bit Gold (Nick Szabo, 2005)",
+    "author": "Nick Szabo"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/b-money/",
+    "label": "b-money (Wei Dai, 1998)",
+    "author": "Wei Dai"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/rpow/",
+    "label": "Reusable Proofs of Work (Hal Finney, 2004)",
+    "author": "Hal Finney"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/trusted-third-parties/",
+    "label": "Trusted Third Parties Are Security Holes (Nick Szabo, 2001)",
+    "author": "Nick Szabo"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/money-blockchains-and-social-scalability/",
+    "label": "Money, Blockchains, and Social Scalability (Nick Szabo, 2017)",
+    "author": "Nick Szabo"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/the-god-protocols/",
+    "label": "The God Protocols (Nick Szabo, 1998)",
+    "author": "Nick Szabo"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/formalizing-securing-relationships/",
+    "label": "Formalizing and Securing Relationships on Public Networks (Nick Szabo, 1997)",
+    "author": "Nick Szabo"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/idea-of-smart-contracts/",
+    "label": "The Idea of Smart Contracts (Nick Szabo, 1997)",
+    "author": "Nick Szabo"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/secure-property-titles/",
+    "label": "Secure Property Titles with Owner Authority (Nick Szabo, 1998)",
+    "author": "Nick Szabo"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/contracts-with-bearer/",
+    "label": "Contracts with Bearer (Nick Szabo, 1999)",
+    "author": "Nick Szabo"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/objections-to-bitgold/",
+    "label": "Objections to Bit Gold (Nick Szabo, 2008)",
+    "author": "Nick Szabo"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/the-playground-of-the-pseudonyms/",
+    "label": "The Playground of the Pseudonyms (Nick Szabo, 2003)",
+    "author": "Nick Szabo"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/measuring-value/",
+    "label": "Measuring Value (Nick Szabo, 2002)",
+    "author": "Nick Szabo"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/advances-in-distributed-security/",
+    "label": "Advances in Distributed Security (Nick Szabo, 2003)",
+    "author": "Nick Szabo"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/computers-and-society/",
+    "label": "Computers and Society (Nick Szabo)",
+    "author": "Nick Szabo"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/the-many-traditions-of-non-governmental-money/",
+    "label": "The Many Traditions of Non-Governmental Money (Nick Szabo, 2008)",
+    "author": "Nick Szabo"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/the-mises-regression-theorem/",
+    "label": "The Mises Regression Theorem and Bitcoin (Konrad S. Graf)",
+    "author": "Konrad S. Graf"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/speculative-attack/",
+    "label": "Speculative Attack (Pierre Rochard, 2014)",
+    "author": "Pierre Rochard"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/bitcoin-and-the-rhetoric-of-anarchy/",
+    "label": "Bitcoin and the Rhetoric of Anarchy (Daniel Krawisz, 2014)",
+    "author": "Daniel Krawisz"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/hyperbitcoinization/",
+    "label": "Hyperbitcoinization (Daniel Krawisz, 2014)",
+    "author": "Daniel Krawisz"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/the-original-value-of-bitcoins/",
+    "label": "The Original Value of Bitcoins (Daniel Krawisz, 2014)",
+    "author": "Daniel Krawisz"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/proof-that-proof-of-work-is-the-only-solution/",
+    "label": "Proof that Proof-of-Work is the Only Solution to the Byzantine Generals' Problem (Daniel Krawisz, 2014)",
+    "author": "Daniel Krawisz"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/economics-of-bitcoin-mining/",
+    "label": "The Economics of Bitcoin Mining (Pierre Rochard)",
+    "author": "Pierre Rochard"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/satoshi/emails/",
+    "label": "Satoshi Nakamoto — collected cryptography mailing list emails",
+    "author": "Satoshi Nakamoto"
+  },
+  {
+    "url": "https://nakamotoinstitute.org/library/satoshi/posts/",
+    "label": "Satoshi Nakamoto — collected forum posts",
+    "author": "Satoshi Nakamoto"
+  }
+]
